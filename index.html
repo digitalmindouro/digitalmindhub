@@ -38,7 +38,7 @@
         --grad-acc: linear-gradient(135deg,#060C96,#3040b8);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
     .auth-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
     .auth-card { background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius); padding: 40px; width: 420px; }
     .auth-logo { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 26px; color: var(--accent); margin-bottom: 6px; }
@@ -59,12 +59,12 @@
     .app-screen.visible { display: flex; min-height: 100vh; }
     .sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 230px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 100; padding: 0; }
     .logo { padding: 24px 22px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; } .logo-img { width: 38px; height: auto; }
-    .logo-mark { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 17px; color: var(--accent); letter-spacing: -.5px; }
-    .logo-sub { font-size: 8px; color: var(--muted); letter-spacing: 3px; text-transform: uppercase; margin-top: 3px; }
+    .logo-mark { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 18px; color: var(--accent); letter-spacing: -.5px; }
+    .logo-sub { font-size: 8px; color: var(--muted); letter-spacing: 3px; text-transform: uppercase; margin-top: 2px; }
     .nav { padding: 20px 14px; flex: 1; }
     .nav-section-label { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); padding: 0 12px; margin-bottom: 6px; margin-top: 24px; font-weight: 600; }
     .nav-section-label:first-child { margin-top: 0; }
-    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-sm); cursor: pointer; font-size: 13px; color: var(--muted); transition: all .2s; margin-bottom: 2px; border: none; background: none; width: 100%; text-align: left; position: relative; } .nav-item::before { content: ''; position: absolute; left: -1px; top: 50%; transform: translateY(-50%); width: 2px; height: 0; border-radius: 1px; background: var(--accent); transition: height .2s; } .nav-item.active::before { height: 20px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-sm); cursor: pointer; font-size: 13px; color: var(--muted); transition: all .2s; margin-bottom: 2px; border: none; background: none; width: 100%; text-align: left; }
     .nav-item:hover { color: var(--text); }
     .nav-item.active { color: var(--text); font-weight: 500; }
     .nav-item .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
@@ -108,7 +108,7 @@
     .form-textarea { resize: vertical; min-height: 70px; }
     .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; min-width: 600px; }
-    thead th { padding: 12px 16px; text-align: left; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; border-bottom: 1px solid var(--border); background: var(--surface2); }
+    thead th { padding: 11px 14px; text-align: left; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; border-bottom: 1px solid var(--border); background: var(--surface2); }
     tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: var(--surface2); }
@@ -206,7 +206,7 @@
     .loading-dots span:nth-child(2) { animation-delay: .2s; background: var(--accent2); }
     .loading-dots span:nth-child(3) { animation-delay: .4s; background: var(--fin); }
     .adm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .adm-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; }
+    .adm-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
     .adm-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
     .adm-icon { width: 30px; height: 30px; border-radius: 7px; background: rgba(6,12,150,.15); display: flex; align-items: center; justify-content: center; font-size: 14px; }
     .adm-card-title { font-weight: 600; font-size: 13px; }
@@ -216,7 +216,7 @@
     .check-box.done { background: var(--adm); border-color: var(--adm); color: #fff; }
     .era-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; background: rgba(6,12,150,.15); color: var(--mkt); border: 1px solid rgba(6,12,150,.3); margin-bottom: 14px; }
     .agenda-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .agenda-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+    .agenda-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 26px; }
     .status-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 500; margin-top: 8px; }
     .status-agendado { background: rgba(6,12,150,.15); color: var(--mkt); }
     .status-concluido { background: rgba(22,163,74,.08); color: var(--success); }
@@ -919,14 +919,14 @@
                         Mapa estratégico
                         <span style="font-size:10px;color:var(--muted);font-weight:400;font-family:'Plus Jakarta Sans',sans-serif;text-transform:none;letter-spacing:0">clique em cada pilar para ver detalhes</span>
                       </div>
-                      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;overflow-x:auto;position:relative">
+                      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;overflow-x:auto">
                         <canvas id="neural-canvas" style="width:100%;height:320px;display:block;cursor:pointer"></canvas>
                       </div>
                     </div>
 
                     <!-- POPUP DETALHE DO P -->
                     <div id="popup-p-overlay" style="display:none;position:fixed;inset:0;background:rgba(18,18,27,.5);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(6px)" onclick="if(event.target===this)fecharPopupP()">
-                      <div style="background:var(--surface);border:1px solid rgba(6,12,150,0.35);border-radius:14px;width:88%;max-width:920px;max-height:86vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 80px rgba(6,12,150,0.12)">
+                      <div style="background:var(--surface);border:1px solid rgba(6,12,150,0.35);border-radius:14px;width:88%;max-width:920px;max-height:86vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 30px 100px rgba(0,0,0,.08)">
                         <div id="popup-p-header" style="padding:16px 20px;border-bottom:1px solid rgba(18,18,27,0.05);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
                           <div style="display:flex;align-items:center;gap:12px">
                             <div id="popup-p-icon" style="font-size:22px">🧭</div>
@@ -3943,7 +3943,7 @@ const DS = {
     const leads=camps.reduce((s,c)=>s+c.leads,0);
     if(!impr){el.innerHTML='<div style="color:var(--muted);font-size:11px;text-align:center;padding:16px">Sem dados no período</div>';return;}
     const steps=[
-      {l:'Impressões',v:impr,pct:100,c:'#2563eb'},
+      {l:'Impressões',v:impr,pct:100,c:'#060C96'},
       {l:'Cliques',v:clk,pct:impr>0?+(clk/impr*100).toFixed(2):0,c:'#8b5cf6'},
       {l:'Leads',v:leads,pct:clk>0?+(leads/clk*100).toFixed(2):0,c:'#059669'}
     ];
@@ -4003,7 +4003,7 @@ const DS = {
     const K='_ch_linha'; if(window[K])window[K].destroy();
     window[K]=new Chart(ctx,{type:'line',data:{
       labels:d.map(c=>c.name.replace(/\[.*?\]\s*/g,'').slice(0,13)),
-      datasets:[{label:m,data:d.map(c=>c[m]),borderColor:'rgba(6,12,150,.8)',
+      datasets:[{label:m,data:d.map(c=>c[m]),borderColor:'rgba(6,12,150,.9)',
         backgroundColor:'rgba(6,12,150,.07)',borderWidth:2,pointRadius:4,
         pointBackgroundColor:d.map((_,i)=>COLORS[i%COLORS.length]),
         pointBorderColor:'var(--surface)',pointBorderWidth:2,fill:true,tension:.4}]
@@ -4077,7 +4077,7 @@ const DS = {
         onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
         <div style="height:85px;background:var(--surface);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
           ${thumb?`<img src="${thumb}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.querySelector('.fallback').style.display='flex';this.style.display='none'"><div class="fallback" style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;font-size:28px">🎨</div>`:'<div style="font-size:28px">🎨</div>'}
-          <div style="position:absolute;inset:0;background:linear-gradient(transparent 55%,rgba(18,18,27,.5))"></div>
+          <div style="position:absolute;inset:0;background:linear-gradient(transparent 55%,rgba(0,0,0,.75))"></div>
           <div style="position:absolute;top:5px;right:5px;font-size:8px;padding:2px 5px;border-radius:4px;font-weight:700;${a.status==='ACTIVE'?'background:rgba(5,150,105,.85);color:#fff':'background:rgba(245,158,11,.85);color:#fff'}">${a.status==='ACTIVE'?'ATIVO':'PAUSADO'}</div>
         </div>
         <div style="padding:7px">
@@ -5543,7 +5543,7 @@ function renderSixpsGrid(){
     const statusLabel=concluido?'✓ Concluído':status==='em_andamento'?'Em andamento':'🔒 Bloqueado';
     const statusBg=concluido?'rgba(16,185,129,.15)':status==='em_andamento'?'rgba(6,12,150,.15)':'rgba(128,128,160,.08)';
     const statusColor=concluido?'var(--success)':status==='em_andamento'?'var(--accent)':'var(--muted)';
-    return `<div class="card" style="cursor:${bloqueado?'not-allowed':'pointer'};opacity:${bloqueado?'.4':'1'};border-color:${concluido?'var(--border)':'var(--border)'};transition:all .25s;position:relative;padding:20px;text-align:center"
+    return `<div class="card" style="cursor:${bloqueado?'not-allowed':'pointer'};opacity:${bloqueado?'.4':'1'};border-color:var(--border);transition:all .25s;position:relative;padding:20px;text-align:center"
       ${!bloqueado?`onclick="abrirP('${p}')" onmouseover="this.style.borderColor='rgba(6,12,150,.15)'" onmouseout="this.style.borderColor='var(--border)'"`:''}>
       <div style="width:36px;height:36px;border-radius:9px;background:${concluido?'var(--accent)':'var(--surface2)'};display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:${concluido?'#fff':'var(--muted)'};font-size:12px;font-weight:700;font-family:'Outfit',sans-serif">${p.toUpperCase()}</div>
       <div style="font-family:'Outfit',sans-serif;font-weight:600;font-size:13px;margin-bottom:4px;color:var(--text)">${cfg.titulo.replace(/P\d — /,'')}</div>
@@ -5600,7 +5600,7 @@ const POPUP_P_CONFIG = {
     {label:'DNA ESTRATÉGICO', desc:'Síntese que orienta TODOS os agentes'},
     {label:'OUTPUT', desc:'Alimenta todos os módulos do sistema'}
   ]},
-  p2:{ icon:'📦', cor:'#060C96', jornada:[
+  p2:{ icon:'📦', cor:'#8b5cf6', jornada:[
     {label:'INVENTÁRIO', desc:'Todos os produtos e serviços atuais'},
     {label:'PRECIFICAÇÃO', desc:'Lógica de preço e margem de cada item'},
     {label:'MODELO DE RECEITA', desc:'Como o dinheiro entra — recorrente, único, % crescimento'},
@@ -5615,14 +5615,14 @@ const POPUP_P_CONFIG = {
     {label:'RESTRIÇÕES', desc:'Quem NÃO pode ser alocado em quais funções'},
     {label:'SINCRONIA', desc:'Custo fixo de pessoal enviado ao Financeiro'}
   ]},
-  p4:{ icon:'⚙️', cor:'#060C96', jornada:[
+  p4:{ icon:'⚙️', cor:'#16a34a', jornada:[
     {label:'MAPEAMENTO', desc:'Do primeiro contato ao resultado entregue'},
     {label:'FUNIL', desc:'Etapas de aquisição → fechamento → entrega'},
     {label:'GARGALOS', desc:'Onde a operação perde velocidade ou qualidade'},
     {label:'AUTOMAÇÕES', desc:'O que pode ser automatizado para ganhar escala'},
     {label:'SINCRONIA', desc:'Etapas do funil enviadas ao CRM de Marketing'}
   ]},
-  p5:{ icon:'🎯', cor:'#060C96', jornada:[
+  p5:{ icon:'🎯', cor:'#f59e0b', jornada:[
     {label:'PERSONA', desc:'Perfil detalhado do cliente ideal real'},
     {label:'DOR CENTRAL', desc:'O problema específico que faz comprar'},
     {label:'PROPOSTA DE VALOR', desc:'Transformação prometida em 1 frase'},
@@ -5630,7 +5630,7 @@ const POPUP_P_CONFIG = {
     {label:'CANAIS', desc:'Onde e como o cliente ideal é encontrado'},
     {label:'SINCRONIA', desc:'Persona e posicionamento enviados ao CRM e Marketing'}
   ]},
-  p6:{ icon:'📈', cor:'#060C96', jornada:[
+  p6:{ icon:'📈', cor:'#dc2626', jornada:[
     {label:'DIAGNÓSTICO', desc:'Situação atual em números reais'},
     {label:'METAS 90 DIAS', desc:'Trabalhando de trás para frente da visão do P1'},
     {label:'KPIs SEMANAIS', desc:'Métricas monitoradas toda segunda-feira'},
@@ -5712,19 +5712,8 @@ function abrirPDoPopup() {
 }
 
 function atualizarFluxograma() {
-  // Injeta resumos reais dos Ps no fluxograma
-  const extrair = (resumo, maxLen) => {
-    if(!resumo) return '—';
-    // Pega primeira linha com conteúdo real (ignora headers ##)
-    const linhas = resumo.split('\n').filter(l=>l.trim() && !l.startsWith('#') && !l.startsWith('*') && l.length > 10);
-    return linhas[0]?.replace(/\*\*/g,'').trim().slice(0,maxLen) || resumo.slice(0,maxLen);
-  };
-  const set = (id, txt) => { const el=document.getElementById(id); if(el) el.textContent=txt; };
-  set('fl-p1-val', extrair(SP.dados.p1_resumo, 30));
-  set('fl-p2-val', extrair(SP.dados.p2_resumo, 30));
-  set('fl-p3-val', extrair(SP.dados.p3_resumo, 30));
-  set('fl-p4-val', extrair(SP.dados.p4_resumo, 30));
-  set('fl-p5-val', extrair(SP.dados.p5_resumo, 35));
+  // Neural canvas — inicializa se ainda não foi
+  setTimeout(initNeuralCanvas, 100);
 }
 
 async function loadConversasSixps(modulo){
@@ -6293,11 +6282,11 @@ const CRM = {
   view: 'kanban',
   estagios: [
     { id:'novo',       label:'🆕 Novo lead',      cor:'#6366f1' },
-    { id:'contato',    label:'📞 Em contato',      cor:'#060C96' },
+    { id:'contato',    label:'📞 Em contato',      cor:'#f59e0b' },
     { id:'proposta',   label:'📄 Proposta',        cor:'#060C96' },
-    { id:'negociacao', label:'🤝 Negociação',      cor:'#060C96' },
-    { id:'fechado',    label:'✅ Fechado',          cor:'#060C96' },
-    { id:'perdido',    label:'❌ Perdido',          cor:'#060C96' }
+    { id:'negociacao', label:'🤝 Negociação',      cor:'#8b5cf6' },
+    { id:'fechado',    label:'✅ Fechado',          cor:'#16a34a' },
+    { id:'perdido',    label:'❌ Perdido',          cor:'#dc2626' }
   ]
 };
 
@@ -7446,13 +7435,11 @@ async function cronoSalvar() {
 
   try {
     if (CRONO.editandoId) {
-      const {error} = await sb.from('cronograma').update(payload).eq('id', CRONO.editandoId);
-      if(error) { alert('Erro: ' + error.message); return; }
+      await sb.from('cronograma').update(payload).eq('id', CRONO.editandoId);
       const idx = CRONO.eventos.findIndex(e => String(e.id) === String(CRONO.editandoId));
       if (idx >= 0) CRONO.eventos[idx] = { ...CRONO.eventos[idx], ...payload };
     } else {
-      const { data: novo, error } = await sb.from('cronograma').insert(payload).select().single();
-      if(error) { alert('Erro: ' + error.message); return; }
+      const { data: novo } = await sb.from('cronograma').insert(payload).select().single();
       if (novo) {
         CRONO.eventos.push(novo);
         CRONO.editandoId = String(novo.id);
@@ -8386,152 +8373,104 @@ function waCarregarLeads() {
   });
 }
 
-init();
-</script>
-
-
 // ══════════════════════════════════════════
-// NEURAL NETWORK CANVAS — Fluxograma Premium
+// NEURAL NETWORK CANVAS — Premium Fluxograma
 // ══════════════════════════════════════════
 function initNeuralCanvas() {
-  const c = document.getElementById('neural-canvas');
+  var c = document.getElementById('neural-canvas');
   if (!c || c.dataset.ok) return;
   c.dataset.ok = '1';
-  const ctx = c.getContext('2d');
-  const dpr = window.devicePixelRatio || 1;
+  var ctx = c.getContext('2d');
+  var dpr = window.devicePixelRatio || 1;
   c.width = c.offsetWidth * dpr;
   c.height = c.offsetHeight * dpr;
   ctx.scale(dpr, dpr);
-  const W = c.offsetWidth, H = c.offsetHeight;
-  const BLUE = '#060C96', BLACK = '#0c0c0e', GRAY = '#d4d4d8', TEXT = '#18181b', MUTED = '#a1a1aa', GREEN = '#16a34a';
+  var W = c.offsetWidth, H = c.offsetHeight;
+  var BLUE = '#060C96', BLACK = '#0c0c0e', GRAY = '#d4d4d8', TEXT = '#18181b', MUTED = '#a1a1aa';
 
-  const nodes = [
+  var nodes = [
     {id:'p1', label:'Propósito',       x:W*.08,  y:H*.26, r:24},
     {id:'p2', label:'Produto',         x:W*.27,  y:H*.12, r:24},
     {id:'p3', label:'Pessoas',         x:W*.46,  y:H*.26, r:24},
     {id:'p4', label:'Processo',        x:W*.65,  y:H*.12, r:24},
     {id:'p5', label:'Posicionamento',  x:W*.84,  y:H*.26, r:24},
     {id:'mc', label:'Matriz Central',  x:W*.46,  y:H*.52, r:20, hub:true},
-    {id:'p6', label:'Performance',     x:W*.46,  y:H*.80, r:28, perf:true},
+    {id:'p6', label:'Performance',     x:W*.46,  y:H*.80, r:28, perf:true}
   ];
-  const edges = [
+  var edges = [
     ['p1','p2'],['p2','p3'],['p3','p4'],['p4','p5'],
     ['p1','mc'],['p2','mc'],['p3','mc'],['p4','mc'],['p5','mc'],
     ['mc','p6']
   ];
-  const parts = [];
+  var parts = [];
   edges.forEach(function(_, i) {
-    for (var j = 0; j < 2; j++)
-      parts.push({e:i, p:Math.random(), s:.001+Math.random()*.002, sz:1.5+Math.random()*1});
+    for (var j = 0; j < 2; j++) parts.push({e:i, p:Math.random(), s:.001+Math.random()*.002, sz:1.5+Math.random()*1});
   });
 
-  // Click detection
   c.addEventListener('click', function(evt) {
     var rect = c.getBoundingClientRect();
-    var mx = (evt.clientX - rect.left);
-    var my = (evt.clientY - rect.top);
+    var mx = evt.clientX - rect.left, my = evt.clientY - rect.top;
     for (var i = 0; i < nodes.length; i++) {
-      var n = nodes[i];
+      var n = nodes[i]; if (n.hub) continue;
       var dx = mx - n.x, dy = my - n.y;
-      if (dx*dx + dy*dy < (n.r+10)*(n.r+10)) {
-        if (n.hub) return;
-        abrirPopupP(n.id);
-        return;
-      }
+      if (dx*dx + dy*dy < (n.r+12)*(n.r+12)) { abrirPopupP(n.id); return; }
     }
   });
-
-  // Hover cursor
   c.addEventListener('mousemove', function(evt) {
     var rect = c.getBoundingClientRect();
-    var mx = (evt.clientX - rect.left);
-    var my = (evt.clientY - rect.top);
+    var mx = evt.clientX - rect.left, my = evt.clientY - rect.top;
     var hit = false;
     for (var i = 0; i < nodes.length; i++) {
-      var n = nodes[i];
-      if (n.hub) continue;
+      var n = nodes[i]; if (n.hub) continue;
       var dx = mx - n.x, dy = my - n.y;
-      if (dx*dx + dy*dy < (n.r+10)*(n.r+10)) { hit = true; break; }
+      if (dx*dx + dy*dy < (n.r+12)*(n.r+12)) { hit = true; break; }
     }
     c.style.cursor = hit ? 'pointer' : 'default';
   });
 
   var t = 0;
   function draw() {
-    ctx.clearRect(0, 0, W, H);
-    t += .006;
-    // Edges
+    ctx.clearRect(0, 0, W, H); t += .006;
     edges.forEach(function(e) {
-      var a = nodes.find(function(n){return n.id===e[0]});
-      var b = nodes.find(function(n){return n.id===e[1]});
+      var a, b;
+      for (var i=0;i<nodes.length;i++) { if(nodes[i].id===e[0]) a=nodes[i]; if(nodes[i].id===e[1]) b=nodes[i]; }
       ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
       ctx.strokeStyle = GRAY; ctx.lineWidth = .5; ctx.stroke();
     });
-    // Particles
     parts.forEach(function(p) {
       p.p += p.s; if (p.p > 1) p.p = 0;
-      var e = edges[p.e];
-      var a = nodes.find(function(n){return n.id===e[0]});
-      var b = nodes.find(function(n){return n.id===e[1]});
+      var e = edges[p.e]; var a, b;
+      for (var i=0;i<nodes.length;i++) { if(nodes[i].id===e[0]) a=nodes[i]; if(nodes[i].id===e[1]) b=nodes[i]; }
       var px = a.x + (b.x - a.x) * p.p, py = a.y + (b.y - a.y) * p.p;
       ctx.beginPath(); ctx.arc(px, py, p.sz, 0, Math.PI*2);
-      ctx.fillStyle = BLUE;
-      ctx.globalAlpha = .4 + Math.sin(t*3 + p.p*6) * .3;
+      ctx.fillStyle = BLUE; ctx.globalAlpha = .4 + Math.sin(t*3 + p.p*6) * .3;
       ctx.fill(); ctx.globalAlpha = 1;
     });
-    // Nodes
     nodes.forEach(function(n, i) {
-      var pulse = n.hub ? 1 + Math.sin(t*1.2)*.04 : 1 + Math.sin(t*1.8+i)*.02;
+      var pulse = n.hub ? 1+Math.sin(t*1.2)*.04 : 1+Math.sin(t*1.8+i)*.02;
       var r = n.r * pulse;
-      // Glow
       ctx.beginPath(); ctx.arc(n.x, n.y, r+8, 0, Math.PI*2);
-      ctx.fillStyle = BLUE; ctx.globalAlpha = .04 + Math.sin(t*1.2+i)*.015;
-      ctx.fill(); ctx.globalAlpha = 1;
-      // Node
+      ctx.fillStyle = BLUE; ctx.globalAlpha = .04+Math.sin(t*1.2+i)*.015; ctx.fill(); ctx.globalAlpha = 1;
       ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, Math.PI*2);
       var st = SP.progresso ? SP.progresso[n.id+'_status'] : '';
       if (n.hub) ctx.fillStyle = BLACK;
       else if (st === 'concluido') ctx.fillStyle = BLUE;
-      else ctx.fillStyle = MUTED;
+      else ctx.fillStyle = '#d4d4d8';
       ctx.fill();
-      // Ring for hub
-      if (n.hub) {
-        ctx.beginPath(); ctx.arc(n.x, n.y, r+1, 0, Math.PI*2);
-        ctx.strokeStyle = BLUE; ctx.lineWidth = 1; ctx.globalAlpha = .5;
-        ctx.stroke(); ctx.globalAlpha = 1;
-      }
-      // ID
-      ctx.fillStyle = '#fff';
-      ctx.font = '600 10px "Plus Jakarta Sans",system-ui';
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      if (n.hub) { ctx.beginPath(); ctx.arc(n.x, n.y, r+1, 0, Math.PI*2); ctx.strokeStyle = BLUE; ctx.lineWidth = 1; ctx.globalAlpha = .5; ctx.stroke(); ctx.globalAlpha = 1; }
+      ctx.fillStyle = '#fff'; ctx.font = '600 10px "Plus Jakarta Sans",system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.fillText(n.hub ? '◆' : n.id.toUpperCase(), n.x, n.y);
-      // Label
-      ctx.fillStyle = TEXT;
-      ctx.font = '500 11px "Plus Jakarta Sans",system-ui';
+      ctx.fillStyle = TEXT; ctx.font = '500 11px "Plus Jakarta Sans",system-ui';
       ctx.fillText(n.label, n.x, n.y + r + 18);
-      // Status
-      if (!n.hub && !n.perf && st === 'concluido') {
-        ctx.fillStyle = BLUE;
-        ctx.font = '400 9px "Plus Jakarta Sans",system-ui';
-        ctx.fillText('concluído', n.x, n.y + r + 30);
-      }
-      if (n.perf) {
-        ctx.fillStyle = MUTED;
-        ctx.font = '400 9px "Plus Jakarta Sans",system-ui';
-        ctx.fillText('OKRs · KPIs · Metas', n.x, n.y + r + 30);
-      }
+      if (!n.hub && !n.perf && st === 'concluido') { ctx.fillStyle = BLUE; ctx.font = '400 9px "Plus Jakarta Sans",system-ui'; ctx.fillText('concluído', n.x, n.y + r + 30); }
+      if (n.perf) { ctx.fillStyle = MUTED; ctx.font = '400 9px "Plus Jakarta Sans",system-ui'; ctx.fillText('OKRs · KPIs · Metas', n.x, n.y + r + 30); }
     });
     requestAnimationFrame(draw);
   }
   draw();
 }
 
-// Override atualizarFluxograma to init canvas
-var _origAtualizarFluxograma = typeof atualizarFluxograma === 'function' ? atualizarFluxograma : null;
-function atualizarFluxograma() {
-  if (_origAtualizarFluxograma) try { _origAtualizarFluxograma(); } catch(e) {}
-  setTimeout(initNeuralCanvas, 100);
-}
-
+init();
+</script>
 </body>
 </html>
