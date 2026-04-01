@@ -372,7 +372,7 @@ tbody tr:hover { background: #fafafb !important; }
 .msg.user .msg-bub { background: #1b1b21 !important; color: #fff !important; }
 .msg.agent .msg-av { background: #1b1b21 !important; }
 .chat-messages { background: #fff !important; }
-    #chat-dash { height: 120px !important; }
+    #chat-dash { height: 100px !important; }
 .chat-input, .fin-input { background: #fff !important; border: 1px solid #dddde0 !important; color: #1b1b21 !important; }
 .chat-input::placeholder { color: #b4b4be !important; }
 .qp, .fq { background: #fff !important; border: 1px solid #ebebed !important; color: #8f8f9c !important; border-radius: 20px !important; }
@@ -414,30 +414,30 @@ tbody tr:hover { background: #fafafb !important; }
 /* ══════════════════════════════════════════════════════ */
 /* HOME — Single screen, no scroll                      */
 /* ══════════════════════════════════════════════════════ */
-.home-wrap { min-height: calc(100vh - 56px); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 32px; text-align: center; gap: 0; }
-.home-hero { margin-bottom: 14px; }
-.home-logo { width: 40px; height: auto; display: block; margin: 0 auto 8px; }
-.home-title { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 28px; letter-spacing: -1.2px; color: #1b1b21; margin-bottom: 4px; }
-.home-sub { font-size: 12px; color: #8f8f9c; font-weight: 400; line-height: 1.6; max-width: 320px; margin: 0 auto; }
+.home-wrap { min-height: calc(100vh - 56px); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 32px; text-align: center; gap: 0; overflow: hidden; }
+.home-hero { margin-bottom: 10px; }
+.home-logo { width: 36px; height: auto; display: block; margin: 0 auto 8px; }
+.home-title { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 24px; letter-spacing: -1.2px; color: #1b1b21; margin-bottom: 2px; }
+.home-sub { font-size: 11px; color: #8f8f9c; font-weight: 400; line-height: 1.6; max-width: 320px; margin: 0 auto; }
 .home-sub strong { color: #1b1b21; font-weight: 500; }
-.home-pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 700px; width: 100%; margin-bottom: 12px; }
-.home-pillar { background: #fff; border: none; border-radius: 12px; padding: 16px 16px; cursor: pointer; transition: all .2s; text-align: left; box-shadow: 0 1px 3px rgba(0,0,0,.04), 0 1px 2px rgba(0,0,0,.02); }
+.home-pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-width: 680px; width: 100%; margin-bottom: 10px; }
+.home-pillar { background: #fff; border: none; border-radius: 12px; padding: 14px 14px; cursor: pointer; transition: all .2s; text-align: left; box-shadow: 0 1px 3px rgba(0,0,0,.04), 0 1px 2px rgba(0,0,0,.02); }
 .home-pillar::after { display: none; }
 .home-pillar:hover { box-shadow: 0 4px 12px rgba(0,0,0,.08); transform: translateY(-1px); }
-.home-pillar-icon { width: 32px; height: 32px; border-radius: 10px; background: #f4f4f5; display: flex; align-items: center; justify-content: center; font-size: 12px; margin-bottom: 10px; color: #1b1b21; font-weight: 700; font-family: 'Outfit', sans-serif; }
-.home-pillar h3 { font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 14px; color: #1b1b21; margin-bottom: 3px; }
-.home-pillar p { font-size: 11px; color: #8f8f9c; }
-.home-pillar-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; }
-.home-pillar-score { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 18px; color: #1b1b21; }
+.home-pillar-icon { width: 28px; height: 28px; border-radius: 10px; background: #f4f4f5; display: flex; align-items: center; justify-content: center; font-size: 11px; margin-bottom: 8px; color: #1b1b21; font-weight: 700; font-family: 'Outfit', sans-serif; }
+.home-pillar h3 { font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 13px; color: #1b1b21; margin-bottom: 3px; }
+.home-pillar p { font-size: 10px; color: #8f8f9c; }
+.home-pillar-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+.home-pillar-score { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 16px; color: #1b1b21; }
 .home-pillar-link { font-size: 11px; color: #2563eb; font-weight: 500; }
-.home-agent { background: #fff; border: none; border-radius: 12px; overflow: hidden; width: 100%; max-width: 700px; box-shadow: 0 1px 3px rgba(0,0,0,.04), 0 1px 2px rgba(0,0,0,.02); }
-.home-agent-header { padding: 8px 14px; border-bottom: 1px solid #f4f4f5; display: flex; align-items: center; gap: 8px; }
+.home-agent { background: #fff; border: none; border-radius: 12px; overflow: hidden; width: 100%; max-width: 680px; box-shadow: 0 1px 3px rgba(0,0,0,.04), 0 1px 2px rgba(0,0,0,.02); }
+.home-agent-header { padding: 6px 12px; border-bottom: 1px solid #f4f4f5; display: flex; align-items: center; gap: 8px; }
 .home-agent-av { width: 26px; height: 26px; border-radius: 7px; background: #1b1b21; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 11px; }
 .home-agent-name { font-size: 12px; font-weight: 500; color: #1b1b21; }
 .home-agent-status { font-size: 10px; color: #16a34a; }
 .home-agent-status::before { content: '● '; font-size: 6px; }
-.home-agent-prompts { display: flex; gap: 4px; flex-wrap: wrap; padding: 4px 12px; border-top: 1px solid #f4f4f5; }
-.home-agent-input { padding: 5px 12px; border-top: 1px solid #f4f4f5; display: flex; gap: 6px; align-items: flex-end; }
+.home-agent-prompts { display: flex; gap: 3px; flex-wrap: wrap; padding: 3px 10px; border-top: 1px solid #f4f4f5; }
+.home-agent-input { padding: 4px 10px; border-top: 1px solid #f4f4f5; display: flex; gap: 6px; align-items: flex-end; }
 
 /* ── Mobile ── */
 @media (max-width: 768px) {
@@ -465,3 +465,75 @@ tbody tr:hover { background: #fafafb !important; }
     background: #1b1b21 !important;
     border-radius: 8px !important;
 }
+
+
+/* ── Home text fixes ── */
+#page-inicio .home-title { color: #1b1b21 !important; }
+#page-inicio .home-sub strong { color: #1b1b21 !important; }
+
+/* ── Chat compact (smaller font, more messages visible) ── */
+.chat-messages { font-size: 12px !important; line-height: 1.5 !important; }
+.msg-bub { font-size: 12px !important; padding: 8px 12px !important; line-height: 1.5 !important; }
+.msg { margin-bottom: 6px !important; gap: 6px !important; }
+.msg-av { width: 24px !important; height: 24px !important; min-width: 24px !important; font-size: 10px !important; border-radius: 6px !important; }
+.chat-input { font-size: 12px !important; }
+.qp, .fq { font-size: 11px !important; padding: 4px 10px !important; }
+
+/* ── Fix 6Ps module view (white text on white bg) ── */
+#sixps-modulo .section-title,
+#sixps-modulo-titulo,
+#sixps-modulo-sub,
+#sixps-dados-titulo { color: #1b1b21 !important; }
+#sixps-agent-name { color: #1b1b21 !important; }
+#sixps-status-label { color: #8f8f9c !important; border-color: #dddde0 !important; }
+#btn-concluir-manual { background: #1b1b21 !important; color: #fff !important; }
+
+/* ── Fix SVG fluxograma container (dark bg) ── */
+#sixps-fluxograma > div:last-child { background: #0f0f14 !important; border-color: rgba(255,255,255,.08) !important; border-radius: 12px !important; }
+
+/* ── Fix popup overlay (6Ps details) ── */
+#popup-p-overlay > div { background: #fff !important; border-color: #ebebed !important; box-shadow: 0 16px 48px rgba(0,0,0,.12) !important; }
+#popup-p-header { border-color: #ebebed !important; background: #fff !important; }
+#popup-p-titulo { color: #1b1b21 !important; }
+#popup-p-sub { color: #8f8f9c !important; }
+#popup-p-conclusao { color: #1b1b21 !important; background: #fafafb !important; border-color: #ebebed !important; }
+#popup-p-minifluxo { color: #1b1b21 !important; }
+#popup-p-abrir-btn { background: #1b1b21 !important; color: #fff !important; border-radius: 8px !important; }
+
+/* ── Financeiro fixes ── */
+.fin-tab.active { background: #1b1b21 !important; color: #fff !important; }
+.fin-tab { color: #8f8f9c !important; }
+#fin-resumo-mes { color: #8f8f9c !important; }
+
+/* ── Marketing tab fixes ── */
+.mkt-tab.active { background: #1b1b21 !important; color: #fff !important; }
+.mkt-tab { color: #8f8f9c !important; }
+.mkt-context-card { background: #fff !important; border-color: #ebebed !important; }
+
+/* ── Metric values — ensure dark text ── */
+.metric-value { color: #1b1b21 !important; }
+.metric-value.positive { color: #16a34a !important; }
+.metric-value.negative { color: #dc2626 !important; }
+.metric-value.neutral { color: #1b1b21 !important; }
+.metric-delta { color: #8f8f9c !important; }
+
+/* ── Section headers across all pages ── */
+.section-header .section-title { color: #1b1b21 !important; }
+.chart-title { color: #1b1b21 !important; }
+.table-title { color: #1b1b21 !important; }
+
+/* ── CRM Kanban ── */
+.kanban-col { background: #fafafb !important; border-color: #ebebed !important; }
+.kanban-col-title { color: #1b1b21 !important; }
+.lead-card { background: #fff !important; border-color: #ebebed !important; box-shadow: 0 1px 2px rgba(0,0,0,.04) !important; }
+.lead-card-name { color: #1b1b21 !important; }
+.lead-card-info { color: #8f8f9c !important; }
+
+/* ── WhatsApp section ── */
+.wa-contact { background: #fff !important; border-color: #ebebed !important; }
+.wa-contact.active { background: #fafafb !important; border-color: #1b1b21 !important; }
+.wa-name { color: #1b1b21 !important; }
+
+/* ── General text color fix for inline style="color:#fff" ── */
+.page .card h3, .page .card h4 { color: #1b1b21 !important; }
+.page .metric-card .metric-label { color: #8f8f9c !important; }
