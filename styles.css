@@ -462,3 +462,26 @@ tbody tr:hover { background: #fafafb !important; }
     .nav-item::before { display: none !important; }
     .user-bar-wrap { display: none !important; }
 }
+
+
+/* ── HOME FINAL FIX — fill screen, no scroll ── */
+#page-inicio > div {
+    min-height: calc(100vh - 56px) !important;
+    justify-content: center !important;
+    padding: 0 28px !important;
+    overflow: hidden !important;
+    max-height: calc(100vh - 56px) !important;
+}
+#page-inicio .chat-messages {
+    height: 140px !important;
+    max-height: 140px !important;
+    overflow-y: auto !important;
+}
+#page-inicio > div > div:first-child {
+    margin-bottom: 12px !important;
+}
+/* Prevent any scroll on home */
+#page-inicio {
+    overflow: hidden !important;
+    max-height: calc(100vh - 56px) !important;
+}
