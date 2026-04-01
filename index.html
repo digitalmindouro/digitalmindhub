@@ -183,91 +183,69 @@
             </div>
             <!-- INÍCIO -->
             <div class="page" id="page-inicio">
-              <div style="min-height:calc(100vh - 60px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center">
-
-                <!-- Logo + Missão -->
-                <div style="margin-bottom:52px">
-                  <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:42px;letter-spacing:-1px;color:#fff;margin-bottom:10px">
-                    Digital<span style="color:var(--accent)">Mind</span>
-                  </div>
-                  <div style="font-size:14px;color:var(--muted);letter-spacing:.3px;max-width:400px;margin:0 auto;line-height:1.6">
-                    Nossa missão é tornar sua empresa mais<br>
-                    <span style="color:var(--accent2);font-weight:500">digital</span> e <span style="color:var(--accent2);font-weight:500">inteligente</span>.
+              <div style="min-height:calc(100vh - 56px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 28px;text-align:center">
+                <div style="margin-bottom:10px">
+                  <img src="data:image/png;base64,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" alt="DigitalMind" style="width:36px;height:auto;margin:0 auto 6px;display:block">
+                  <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:24px;letter-spacing:-1.2px;color:#1b1b21;margin-bottom:4px">DigitalMind</div>
+                  <div style="font-size:11px;color:#8f8f9c;line-height:1.6;max-width:320px;margin:0 auto">
+                    Nossa missão é tornar sua empresa mais <span style="color:#1b1b21;font-weight:500">digital</span> e <span style="color:#1b1b21;font-weight:500">inteligente</span>.
                   </div>
                 </div>
-
-                <!-- 3 Pilares -->
-                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:720px;width:100%;margin-bottom:40px">
-
-                  <div onclick="nav('adm',document.querySelectorAll('.nav-item')[1])" style="cursor:pointer;padding:24px 20px;border:1px solid var(--border2);border-radius:var(--radius);background:var(--surface);transition:all .2s;text-align:left;position:relative;overflow:hidden"
-                    onmouseover="this.style.borderColor='var(--accent)';this.style.background='#0d1225'"
-                    onmouseout="this.style.borderColor='var(--border2)';this.style.background='var(--surface)'">
-                    <div style="font-size:22px;margin-bottom:14px">🏛️</div>
-                    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:#fff;margin-bottom:6px">Administrativo</div>
-                    <div style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:16px">Estrutura · 6Ps · Processos</div>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:660px;width:100%;margin-bottom:10px">
+                  <div onclick="nav('adm',document.querySelectorAll('.nav-item')[1])" style="cursor:pointer;padding:14px;border-radius:12px;background:#fff;text-align:left;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:all .2s" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,.08)';this.style.transform='translateY(-1px)'" onmouseout="this.style.boxShadow='0 1px 3px rgba(0,0,0,.04)';this.style.transform=''">
+                    <div style="width:28px;height:28px;border-radius:8px;background:#f4f4f5;display:flex;align-items:center;justify-content:center;font-size:11px;margin-bottom:8px;color:#1b1b21;font-weight:700;font-family:'Outfit',sans-serif">Ad</div>
+                    <div style="font-family:'Outfit',sans-serif;font-weight:600;font-size:13px;color:#1b1b21;margin-bottom:2px">Administrativo</div>
+                    <div style="font-size:10px;color:#8f8f9c;margin-bottom:12px">Estrutura · 6Ps · Processos</div>
                     <div style="display:flex;align-items:center;justify-content:space-between">
-                      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--accent)" id="sc-adm">0</div>
-                      <div style="font-size:11px;color:var(--accent);opacity:.7">Acessar →</div>
+                      <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:16px;color:#1b1b21" id="sc-adm">0</div>
+                      <div style="font-size:10px;color:#2563eb;font-weight:500">Acessar ›</div>
                     </div>
                   </div>
-
-                  <div onclick="nav('mkt',document.querySelectorAll('.nav-item')[2])" style="cursor:pointer;padding:24px 20px;border:1px solid var(--border2);border-radius:var(--radius);background:var(--surface);transition:all .2s;text-align:left;position:relative;overflow:hidden"
-                    onmouseover="this.style.borderColor='var(--accent)';this.style.background='#0d1225'"
-                    onmouseout="this.style.borderColor='var(--border2)';this.style.background='var(--surface)'">
-                    <div style="font-size:22px;margin-bottom:14px">📡</div>
-                    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:#fff;margin-bottom:6px">Marketing</div>
-                    <div style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:16px" id="era-desc">META Ads · CRM · Conteúdo</div>
+                  <div onclick="nav('mkt',document.querySelectorAll('.nav-item')[2])" style="cursor:pointer;padding:14px;border-radius:12px;background:#fff;text-align:left;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:all .2s" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,.08)';this.style.transform='translateY(-1px)'" onmouseout="this.style.boxShadow='0 1px 3px rgba(0,0,0,.04)';this.style.transform=''">
+                    <div style="width:28px;height:28px;border-radius:8px;background:#f4f4f5;display:flex;align-items:center;justify-content:center;font-size:11px;margin-bottom:8px;color:#1b1b21;font-weight:700;font-family:'Outfit',sans-serif">Mk</div>
+                    <div style="font-family:'Outfit',sans-serif;font-weight:600;font-size:13px;color:#1b1b21;margin-bottom:2px">Marketing</div>
+                    <div style="font-size:10px;color:#8f8f9c;margin-bottom:12px" id="era-desc">Ads · CRM · Conteúdo</div>
                     <div style="display:flex;align-items:center;justify-content:space-between">
-                      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--accent)" id="sc-mkt">0</div>
-                      <div style="font-size:11px;color:var(--accent);opacity:.7">Acessar →</div>
+                      <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:16px;color:#1b1b21" id="sc-mkt">0</div>
+                      <div style="font-size:10px;color:#2563eb;font-weight:500">Acessar ›</div>
                     </div>
                   </div>
-
-                  <div onclick="nav('financeiro',document.querySelectorAll('.nav-item')[3])" style="cursor:pointer;padding:24px 20px;border:1px solid var(--border2);border-radius:var(--radius);background:var(--surface);transition:all .2s;text-align:left;position:relative;overflow:hidden"
-                    onmouseover="this.style.borderColor='var(--accent)';this.style.background='#0d1225'"
-                    onmouseout="this.style.borderColor='var(--border2)';this.style.background='var(--surface)'">
-                    <div style="font-size:22px;margin-bottom:14px">💰</div>
-                    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:#fff;margin-bottom:6px">Financeiro</div>
-                    <div style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:16px">Caixa · Metas · Estoque</div>
+                  <div onclick="nav('financeiro',document.querySelectorAll('.nav-item')[3])" style="cursor:pointer;padding:14px;border-radius:12px;background:#fff;text-align:left;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:all .2s" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,.08)';this.style.transform='translateY(-1px)'" onmouseout="this.style.boxShadow='0 1px 3px rgba(0,0,0,.04)';this.style.transform=''">
+                    <div style="width:28px;height:28px;border-radius:8px;background:#f4f4f5;display:flex;align-items:center;justify-content:center;font-size:11px;margin-bottom:8px;color:#1b1b21;font-weight:700;font-family:'Outfit',sans-serif">Fi</div>
+                    <div style="font-family:'Outfit',sans-serif;font-weight:600;font-size:13px;color:#1b1b21;margin-bottom:2px">Financeiro</div>
+                    <div style="font-size:10px;color:#8f8f9c;margin-bottom:12px">Caixa · Metas · Estoque</div>
                     <div style="display:flex;align-items:center;justify-content:space-between">
-                      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--accent)" id="sc-fin">0</div>
-                      <div style="font-size:11px;color:var(--accent);opacity:.7">Acessar →</div>
+                      <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:16px;color:#1b1b21" id="sc-fin">0</div>
+                      <div style="font-size:10px;color:#2563eb;font-weight:500">Acessar ›</div>
                     </div>
                   </div>
-
                 </div>
-
-                <!-- Agente DigitalMind — compacto -->
-                <div style="width:100%;max-width:720px;border:1px solid var(--border2);border-radius:var(--radius);background:var(--surface);overflow:hidden">
-                  <div style="padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
-                    <div style="width:24px;height:24px;border-radius:6px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:11px">🤖</div>
-                    <div style="font-size:12px;font-weight:600;color:#fff">Agente DigitalMind</div>
-                    <div style="font-size:10px;color:var(--success);display:flex;align-items:center;gap:3px;margin-left:2px">
-                      <span style="width:5px;height:5px;border-radius:50%;background:var(--success);display:inline-block"></span>online
-                    </div>
-                    <div style="margin-left:auto;font-size:10px;color:var(--muted)" id="mem-badge">—</div>
+                <div style="width:100%;max-width:660px;border-radius:12px;background:#fff;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04)">
+                  <div style="padding:6px 12px;border-bottom:1px solid #f4f4f5;display:flex;align-items:center;gap:8px">
+                    <div style="width:24px;height:24px;border-radius:6px;background:#1b1b21;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff">✈</div>
+                    <div style="font-size:12px;font-weight:500;color:#1b1b21">Agente DigitalMind</div>
+                    <div style="font-size:10px;color:#16a34a">● online</div>
+                    <div style="margin-left:auto;font-size:9px;color:#8f8f9c" id="mem-badge">—</div>
                   </div>
-                  <div class="chat-messages" id="chat-dash" style="height:200px"></div>
-                  <div style="display:flex;gap:4px;padding:8px 12px;border-top:1px solid var(--border);flex-wrap:wrap">
+                  <div class="chat-messages" id="chat-dash" style="height:100px"></div>
+                  <div style="display:flex;gap:3px;padding:3px 10px;border-top:1px solid #f4f4f5;flex-wrap:wrap">
                     <div class="qp" onclick="sendQ('Diagnóstico completo nos 3 pilares')">🔍 Diagnóstico</div>
                     <div class="qp" onclick="sendQ('Quais são minhas prioridades este mês?')">⚡ Prioridades</div>
-                    <div class="qp" onclick="sendQ('Como está minha saúde financeira?')">◈ Financeiro</div>
-                    <div class="qp" onclick="sendQ('Analise meu marketing e sugira melhorias')">◎ Marketing</div>
+                    <div class="qp" onclick="sendQ('Como está minha saúde financeira?')">💰 Financeiro</div>
+                    <div class="qp" onclick="sendQ('Analise meu marketing e sugira melhorias')">📡 Marketing</div>
                     <div class="qp" onclick="sendQ('Monte um plano de ação para os próximos 90 dias')">📋 Plano 90d</div>
                   </div>
-                  <div style="padding:8px 12px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:flex-end">
+                  <div style="padding:4px 10px;border-top:1px solid #f4f4f5;display:flex;gap:6px;align-items:flex-end">
                     <textarea class="chat-input" id="chat-input-dash" placeholder="Pergunte sobre gestão, marketing ou finanças..." rows="1"
                       onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg('dash')}"
                       oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"
-                      style="font-size:12px"></textarea>
+                      style="font-size:11px"></textarea>
                     <button class="send-btn" id="send-dash" onclick="sendMsg('dash')">↑</button>
                   </div>
                 </div>
-
               </div>
             </div>
 
-            <!-- DASHBOARD (mantido para compatibilidade, redireciona para início) -->
             <div class="page" id="page-dashboard" style="display:none"></div>
 
             <!-- AGENTE FULL (mantido) -->
