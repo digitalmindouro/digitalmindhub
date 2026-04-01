@@ -9,7 +9,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
     <script src="https://apis.google.com/js/api.js" async defer></script>
     <link rel="stylesheet" href="styles.css">
-    
 </head>
 <body>
 
@@ -34,20 +33,20 @@
         </div>
         <button class="auth-btn" id="auth-btn" onclick="handleAuth()">Entrar</button>
         <div id="auth-msg" style="display:none"></div>
-        <button onclick="document.getElementById('auth-screen').style.display='none';document.getElementById('admin-login-screen').style.display='flex'" style="width:100%;margin-top:14px;background:none;border:none;color:var(--muted);font-size:11px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;opacity:0.5">Acesso administrativo</button>
+        <button onclick="document.getElementById('auth-screen').style.display='none';document.getElementById('admin-login-screen').style.display='flex'" style="width:100%;margin-top:14px;background:none;border:none;color:var(--muted);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;opacity:0.5">Acesso administrativo</button>
     </div>
 </div>
 
 <!-- ADMIN LOGIN -->
 <div class="auth-screen" id="admin-login-screen" style="display:none">
-    <div class="auth-card" style="border-color:rgba(6,12,150,.15)">
-        <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:22px;background:var(--accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px">DigitalMind</div>
+    <div class="auth-card" style="border-color:rgba(247,183,49,.3)">
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:22px;background:linear-gradient(135deg,#f7b731,#ff6b6b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px">DigitalMind</div>
         <div style="font-size:11px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:28px">Painel Administrativo</div>
         <input type="text" class="auth-input" id="admin-user-input" placeholder="Usuário admin">
         <input type="password" class="auth-input" id="admin-pass-input" placeholder="Senha" onkeydown="if(event.key==='Enter')handleAdminLogin()">
-        <button class="auth-btn" style="background:var(--accent)" onclick="handleAdminLogin()">Entrar como Admin</button>
+        <button class="auth-btn" style="background:linear-gradient(135deg,#f7b731,#D85A30)" onclick="handleAdminLogin()">Entrar como Admin</button>
         <div id="admin-login-msg" style="display:none"></div>
-        <button onclick="document.getElementById('admin-login-screen').style.display='none';document.getElementById('auth-screen').style.display='flex'" style="width:100%;margin-top:12px;background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">← Voltar ao login de cliente</button>
+        <button onclick="document.getElementById('admin-login-screen').style.display='none';document.getElementById('auth-screen').style.display='flex'" style="width:100%;margin-top:12px;background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif">← Voltar ao login de cliente</button>
     </div>
 </div>
 
@@ -55,8 +54,8 @@
 <div class="app-screen" id="admin-screen" style="display:none;flex-direction:column;min-height:100vh">
     <div style="background:var(--surface);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100">
         <div style="display:flex;align-items:center;gap:12px">
-            <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:18px;background:var(--accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent">DigitalMind</div>
-            <span style="background:rgba(6,12,150,.15);color:var(--fin);padding:2px 10px;border-radius:10px;font-size:11px;font-weight:600;border:1px solid rgba(6,12,150,.3)">ADMIN</span>
+            <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:18px;background:linear-gradient(135deg,#f7b731,#D85A30);-webkit-background-clip:text;-webkit-text-fill-color:transparent">DigitalMind</div>
+            <span style="background:rgba(247,183,49,.15);color:var(--fin);padding:2px 10px;border-radius:10px;font-size:11px;font-weight:600;border:1px solid rgba(247,183,49,.3)">ADMIN</span>
         </div>
         <div style="display:flex;gap:10px;align-items:center">
             <span id="admin-cliente-ativo" style="font-size:12px;color:var(--muted)"></span>
@@ -184,51 +183,87 @@
             </div>
             <!-- INÍCIO -->
             <div class="page" id="page-inicio">
-              <div class="home-wrap">
-                <div class="home-hero">
-                  <img class="home-logo" src="data:image/png;base64,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" alt="DigitalMind">
-                  <div class="home-title">DigitalMind</div>
-                  <div class="home-sub">Nossa missão é tornar sua empresa mais <strong>digital</strong> e <strong>inteligente</strong>.</div>
-                </div>
-                <div class="home-pillars">
-                  <div class="home-pillar" onclick="nav('adm',document.querySelectorAll('.nav-item')[1])">
-                    <div class="home-pillar-icon">Ad</div>
-                    <h3>Administrativo</h3><p>Estrutura · 6Ps · Processos</p>
-                    <div class="home-pillar-footer"><span class="home-pillar-score" id="sc-adm">0</span><span class="home-pillar-link">Acessar ›</span></div>
+              <div style="min-height:calc(100vh - 60px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center">
+
+                <!-- Logo + Missão -->
+                <div style="margin-bottom:52px">
+                  <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:42px;letter-spacing:-1px;color:#fff;margin-bottom:10px">
+                    Digital<span style="color:var(--accent)">Mind</span>
                   </div>
-                  <div class="home-pillar" onclick="nav('mkt',document.querySelectorAll('.nav-item')[2])">
-                    <div class="home-pillar-icon">Mk</div>
-                    <h3>Marketing</h3><p id="era-desc">Ads · CRM · Conteúdo</p>
-                    <div class="home-pillar-footer"><span class="home-pillar-score" id="sc-mkt">0</span><span class="home-pillar-link">Acessar ›</span></div>
-                  </div>
-                  <div class="home-pillar" onclick="nav('financeiro',document.querySelectorAll('.nav-item')[3])">
-                    <div class="home-pillar-icon">Fi</div>
-                    <h3>Financeiro</h3><p>Caixa · Metas · Estoque</p>
-                    <div class="home-pillar-footer"><span class="home-pillar-score" id="sc-fin">0</span><span class="home-pillar-link">Acessar ›</span></div>
+                  <div style="font-size:14px;color:var(--muted);letter-spacing:.3px;max-width:400px;margin:0 auto;line-height:1.6">
+                    Nossa missão é tornar sua empresa mais<br>
+                    <span style="color:var(--accent2);font-weight:500">digital</span> e <span style="color:var(--accent2);font-weight:500">inteligente</span>.
                   </div>
                 </div>
-                <div class="home-agent">
-                  <div class="home-agent-header">
-                    <div class="home-agent-av">✈</div>
-                    <div class="home-agent-name">Agente DigitalMind</div>
-                    <div class="home-agent-status">online</div>
+
+                <!-- 3 Pilares -->
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:720px;width:100%;margin-bottom:40px">
+
+                  <div onclick="nav('adm',document.querySelectorAll('.nav-item')[1])" style="cursor:pointer;padding:24px 20px;border:1px solid var(--border2);border-radius:var(--radius);background:var(--surface);transition:all .2s;text-align:left;position:relative;overflow:hidden"
+                    onmouseover="this.style.borderColor='var(--accent)';this.style.background='#0d1225'"
+                    onmouseout="this.style.borderColor='var(--border2)';this.style.background='var(--surface)'">
+                    <div style="font-size:22px;margin-bottom:14px">🏛️</div>
+                    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:#fff;margin-bottom:6px">Administrativo</div>
+                    <div style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:16px">Estrutura · 6Ps · Processos</div>
+                    <div style="display:flex;align-items:center;justify-content:space-between">
+                      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--accent)" id="sc-adm">0</div>
+                      <div style="font-size:11px;color:var(--accent);opacity:.7">Acessar →</div>
+                    </div>
+                  </div>
+
+                  <div onclick="nav('mkt',document.querySelectorAll('.nav-item')[2])" style="cursor:pointer;padding:24px 20px;border:1px solid var(--border2);border-radius:var(--radius);background:var(--surface);transition:all .2s;text-align:left;position:relative;overflow:hidden"
+                    onmouseover="this.style.borderColor='var(--accent)';this.style.background='#0d1225'"
+                    onmouseout="this.style.borderColor='var(--border2)';this.style.background='var(--surface)'">
+                    <div style="font-size:22px;margin-bottom:14px">📡</div>
+                    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:#fff;margin-bottom:6px">Marketing</div>
+                    <div style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:16px" id="era-desc">META Ads · CRM · Conteúdo</div>
+                    <div style="display:flex;align-items:center;justify-content:space-between">
+                      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--accent)" id="sc-mkt">0</div>
+                      <div style="font-size:11px;color:var(--accent);opacity:.7">Acessar →</div>
+                    </div>
+                  </div>
+
+                  <div onclick="nav('financeiro',document.querySelectorAll('.nav-item')[3])" style="cursor:pointer;padding:24px 20px;border:1px solid var(--border2);border-radius:var(--radius);background:var(--surface);transition:all .2s;text-align:left;position:relative;overflow:hidden"
+                    onmouseover="this.style.borderColor='var(--accent)';this.style.background='#0d1225'"
+                    onmouseout="this.style.borderColor='var(--border2)';this.style.background='var(--surface)'">
+                    <div style="font-size:22px;margin-bottom:14px">💰</div>
+                    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:#fff;margin-bottom:6px">Financeiro</div>
+                    <div style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:16px">Caixa · Metas · Estoque</div>
+                    <div style="display:flex;align-items:center;justify-content:space-between">
+                      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--accent)" id="sc-fin">0</div>
+                      <div style="font-size:11px;color:var(--accent);opacity:.7">Acessar →</div>
+                    </div>
+                  </div>
+
+                </div>
+
+                <!-- Agente DigitalMind — compacto -->
+                <div style="width:100%;max-width:720px;border:1px solid var(--border2);border-radius:var(--radius);background:var(--surface);overflow:hidden">
+                  <div style="padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
+                    <div style="width:24px;height:24px;border-radius:6px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:11px">🤖</div>
+                    <div style="font-size:12px;font-weight:600;color:#fff">Agente DigitalMind</div>
+                    <div style="font-size:10px;color:var(--success);display:flex;align-items:center;gap:3px;margin-left:2px">
+                      <span style="width:5px;height:5px;border-radius:50%;background:var(--success);display:inline-block"></span>online
+                    </div>
                     <div style="margin-left:auto;font-size:10px;color:var(--muted)" id="mem-badge">—</div>
                   </div>
-                  <div class="chat-messages" id="chat-dash" style="height:180px"></div>
-                  <div class="home-agent-prompts">
+                  <div class="chat-messages" id="chat-dash" style="height:200px"></div>
+                  <div style="display:flex;gap:4px;padding:8px 12px;border-top:1px solid var(--border);flex-wrap:wrap">
                     <div class="qp" onclick="sendQ('Diagnóstico completo nos 3 pilares')">🔍 Diagnóstico</div>
                     <div class="qp" onclick="sendQ('Quais são minhas prioridades este mês?')">⚡ Prioridades</div>
-                    <div class="qp" onclick="sendQ('Como está minha saúde financeira?')">💰 Financeiro</div>
-                    <div class="qp" onclick="sendQ('Analise meu marketing e sugira melhorias')">📡 Marketing</div>
+                    <div class="qp" onclick="sendQ('Como está minha saúde financeira?')">◈ Financeiro</div>
+                    <div class="qp" onclick="sendQ('Analise meu marketing e sugira melhorias')">◎ Marketing</div>
                     <div class="qp" onclick="sendQ('Monte um plano de ação para os próximos 90 dias')">📋 Plano 90d</div>
                   </div>
-                  <div class="home-agent-input">
+                  <div style="padding:8px 12px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:flex-end">
                     <textarea class="chat-input" id="chat-input-dash" placeholder="Pergunte sobre gestão, marketing ou finanças..." rows="1"
                       onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg('dash')}"
-                      oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+                      oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"
+                      style="font-size:12px"></textarea>
                     <button class="send-btn" id="send-dash" onclick="sendMsg('dash')">↑</button>
                   </div>
                 </div>
+
               </div>
             </div>
 
@@ -294,31 +329,31 @@
                     <!-- DRE resumido clicável -->
                     <div class="card" style="cursor:pointer" onclick="showFinTab('dre',document.getElementById('ftab-dre'))">
                       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-                        <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:14px">📋 DRE — Resultado</div>
+                        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px">📋 DRE — Resultado</div>
                         <span style="font-size:10px;color:var(--muted)">clique para detalhar →</span>
                       </div>
                       <div style="display:flex;flex-direction:column;gap:8px" id="dash-dre-mini"></div>
                     </div>
                     <!-- Fluxo de caixa mini -->
                     <div class="card">
-                      <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;margin-bottom:14px">💧 Fluxo de Caixa — 6 meses</div>
+                      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px;margin-bottom:14px">💧 Fluxo de Caixa — 6 meses</div>
                       <div style="position:relative;height:160px"><canvas id="chart-dash-fluxo"></canvas></div>
                     </div>
                   </div>
                   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px">
                     <!-- Contas a pagar urgentes -->
                     <div class="card">
-                      <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;margin-bottom:10px">⏰ Próximos vencimentos</div>
+                      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:10px">⏰ Próximos vencimentos</div>
                       <div id="dash-vencimentos" style="font-size:12px;display:flex;flex-direction:column;gap:6px"></div>
                     </div>
                     <!-- A receber próximo -->
                     <div class="card">
-                      <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;margin-bottom:10px">💰 Entradas previstas</div>
+                      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:10px">💰 Entradas previstas</div>
                       <div id="dash-entradas-prev" style="font-size:12px;display:flex;flex-direction:column;gap:6px"></div>
                     </div>
                     <!-- Distribuição despesas -->
                     <div class="card">
-                      <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;margin-bottom:10px">🎯 Despesas por categoria</div>
+                      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:10px">🎯 Despesas por categoria</div>
                       <div style="position:relative;height:130px"><canvas id="chart-dash-cat"></canvas></div>
                     </div>
                   </div>
@@ -417,7 +452,7 @@
                 </div>
                 <div id="fin-dre" style="display:none">
                     <div class="card" style="max-width:500px">
-                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px"><div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:16px">DRE — Resultado do exercício</div><button class="btn btn-ghost btn-sm" onclick="exportDRE()">📄 Exportar</button></div>
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px"><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px">DRE — Resultado do exercício</div><button class="btn btn-ghost btn-sm" onclick="exportDRE()">📄 Exportar</button></div>
                         <div id="dre-content"></div>
                     </div>
                 </div>
@@ -580,41 +615,227 @@
                     <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:18px" id="sixps-grid"></div>
 
                     <!-- FLUXOGRAMA TECH — aparece após P1-P5 concluídos -->
-                    <div id="sixps-fluxograma" style="display:none;margin-bottom:24px">
-                      <div style="font-family:'Outfit',sans-serif;font-weight:600;font-size:10px;margin-bottom:12px;color:var(--muted);letter-spacing:3px;text-transform:uppercase">
-                        Mapa estratégico <span style="font-weight:400;text-transform:none;letter-spacing:0;font-family:'Plus Jakarta Sans',sans-serif">— clique em cada pilar para detalhes</span>
+                    <div id="sixps-fluxograma" style="display:none;margin-bottom:18px">
+                      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:11px;margin-bottom:10px;color:rgba(255,255,255,0.35);display:flex;align-items:center;gap:8px;letter-spacing:2px;text-transform:uppercase">
+                        ◈ MAPA ESTRATÉGICO
+                        <span style="font-size:9px;color:var(--muted);font-weight:400;font-family:'DM Sans',sans-serif;text-transform:none;letter-spacing:0">clique em cada pilar para ver detalhes</span>
                       </div>
-                      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;overflow-x:auto">
-                        <canvas id="neural-canvas" style="width:100%;height:300px;display:block;cursor:pointer"></canvas>
+                      <div style="background:#05050d;border:1px solid rgba(37,99,235,0.2);border-radius:var(--radius);padding:20px;overflow-x:auto;position:relative">
+                        <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(37,99,235,0.012) 2px,rgba(37,99,235,0.012) 4px);pointer-events:none;border-radius:var(--radius)"></div>
+                        <svg id="fluxograma-svg" viewBox="0 0 1060 520" width="100%" style="min-width:860px;font-family:'DM Sans',sans-serif">
+                          <defs>
+                            <!-- Gradientes vibrantes -->
+                            <linearGradient id="gP1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#1e3a8a"/><stop offset="100%" style="stop-color:#2563eb"/></linearGradient>
+                            <linearGradient id="gP2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#4c1d95"/><stop offset="100%" style="stop-color:#8b5cf6"/></linearGradient>
+                            <linearGradient id="gP3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#0c4a6e"/><stop offset="100%" style="stop-color:#06b6d4"/></linearGradient>
+                            <linearGradient id="gP4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#064e3b"/><stop offset="100%" style="stop-color:#10b981"/></linearGradient>
+                            <linearGradient id="gP5" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#78350f"/><stop offset="100%" style="stop-color:#f59e0b"/></linearGradient>
+                            <linearGradient id="gP6" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#7f1d1d"/><stop offset="100%" style="stop-color:#ef4444"/></linearGradient>
+                            <linearGradient id="gMZ" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#1e1b4b"/><stop offset="100%" style="stop-color:#312e81"/></linearGradient>
+                            <linearGradient id="gFin" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#172554"/><stop offset="100%" style="stop-color:#a08020"/></linearGradient>
+                            <linearGradient id="gCRM" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#052e16"/><stop offset="100%" style="stop-color:#16a34a"/></linearGradient>
+                            <linearGradient id="gMkt" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#2e1065"/><stop offset="100%" style="stop-color:#9333ea"/></linearGradient>
+                            <!-- Glows fortes -->
+                            <filter id="glP1" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                            <filter id="glP2" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                            <filter id="glP5" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                            <filter id="glMZ" x="-15%" y="-15%" width="130%" height="130%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                            <filter id="glP6" x="-15%" y="-15%" width="130%" height="130%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                            <!-- Markers brancos e coloridos -->
+                            <marker id="mW" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(255,255,255,0.9)"/></marker>
+                            <marker id="mB" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#2563eb"/></marker>
+                            <marker id="mP" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#8b5cf6"/></marker>
+                            <marker id="mG" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#f59e0b"/></marker>
+                            <marker id="mR" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#ef4444"/></marker>
+                          </defs>
+
+                          <!-- ══════════════════════════════════════════ -->
+                          <!-- LINHAS DE CONEXÃO — brancas e neon fortes -->
+                          <!-- ══════════════════════════════════════════ -->
+
+                          <!-- P1→P2→P3→P4→P5 linha principal branca -->
+                          <line x1="163" y1="68" x2="203" y2="68" stroke="rgba(255,255,255,0.85)" stroke-width="2" marker-end="url(#mW)"/>
+                          <line x1="333" y1="68" x2="373" y2="68" stroke="rgba(255,255,255,0.85)" stroke-width="2" marker-end="url(#mW)"/>
+                          <line x1="503" y1="68" x2="543" y2="68" stroke="rgba(255,255,255,0.85)" stroke-width="2" marker-end="url(#mW)"/>
+                          <line x1="673" y1="68" x2="713" y2="68" stroke="rgba(255,255,255,0.85)" stroke-width="2" marker-end="url(#mW)"/>
+
+                          <!-- P1-P5 → Matriz (linhas roxas brilhantes) -->
+                          <line x1="100" y1="112" x2="388" y2="200" stroke="#818cf8" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#mP)" opacity="0.8"/>
+                          <line x1="268" y1="112" x2="430" y2="196" stroke="#818cf8" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#mP)" opacity="0.8"/>
+                          <line x1="443" y1="112" x2="478" y2="196" stroke="#818cf8" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#mP)" opacity="0.8"/>
+                          <line x1="613" y1="112" x2="545" y2="196" stroke="#818cf8" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#mP)" opacity="0.8"/>
+                          <line x1="860" y1="112" x2="635" y2="196" stroke="#818cf8" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#mP)" opacity="0.8"/>
+
+                          <!-- Matriz → P6 (linha dourada brilhante) -->
+                          <line x1="530" y1="248" x2="530" y2="292" stroke="#fbbf24" stroke-width="2.5" marker-end="url(#mG)"/>
+
+                          <!-- P6 → Módulos (linhas coloridas fortes) -->
+                          <line x1="460" y1="358" x2="240" y2="400" stroke="rgba(255,255,255,0.7)" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#mW)"/>
+                          <line x1="530" y1="358" x2="530" y2="400" stroke="rgba(255,255,255,0.7)" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#mW)"/>
+                          <line x1="600" y1="358" x2="820" y2="400" stroke="rgba(255,255,255,0.7)" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#mW)"/>
+
+                          <!-- Feedback loop módulos→Matriz (arcos suaves coloridos) -->
+                          <path d="M 170 402 Q 60 310 360 222" stroke="#60a5fa" stroke-width="1.2" stroke-dasharray="3,5" fill="none" opacity="0.5"/>
+                          <path d="M 890 402 Q 1000 310 700 222" stroke="#c084fc" stroke-width="1.2" stroke-dasharray="3,5" fill="none" opacity="0.5"/>
+
+                          <!-- ══════════════════ -->
+                          <!-- CARDS P1-P5       -->
+                          <!-- ══════════════════ -->
+
+                          <!-- P1 -->
+                          <g onclick="abrirPopupP('p1')" style="cursor:pointer" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                            <rect x="10" y="14" width="153" height="98" rx="10" fill="url(#gP1)" stroke="#60a5fa" stroke-width="1.5" filter="url(#glP1)"/>
+                            <rect x="10" y="14" width="153" height="3" rx="2" fill="rgba(96,165,250,0.7)"/>
+                            <text x="86" y="40" text-anchor="middle" fill="white" font-size="18">🧭</text>
+                            <text x="86" y="60" text-anchor="middle" fill="white" font-size="10" font-weight="700" letter-spacing="1">P1 — PROPÓSITO</text>
+                            <text x="86" y="76" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="8">DNA · Missão · Visão</text>
+                            <text x="86" y="90" text-anchor="middle" fill="rgba(96,165,250,0.7)" font-size="7.5" id="fl-p1-val">Valores estratégicos</text>
+                            <rect x="10" y="100" width="153" height="12" rx="0" fill="rgba(0,0,0,0.4)"/>
+                            <text x="86" y="109" text-anchor="middle" fill="rgba(96,165,250,0.7)" font-size="7">↓ alimenta todos · clique para detalhes</text>
+                          </g>
+
+                          <!-- P2 -->
+                          <g onclick="abrirPopupP('p2')" style="cursor:pointer" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                            <rect x="203" y="14" width="153" height="98" rx="10" fill="url(#gP2)" stroke="#a78bfa" stroke-width="1.5" filter="url(#glP2)"/>
+                            <rect x="203" y="14" width="153" height="3" rx="2" fill="#c4b5fd"/>
+                            <text x="280" y="40" text-anchor="middle" fill="white" font-size="18">📦</text>
+                            <text x="280" y="60" text-anchor="middle" fill="white" font-size="10" font-weight="700" letter-spacing="1">P2 — PRODUTO</text>
+                            <text x="280" y="76" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="8">Catálogo · Preço · Margem</text>
+                            <text x="280" y="90" text-anchor="middle" fill="#c4b5fd" font-size="7.5" id="fl-p2-val">Modelo de receita</text>
+                            <rect x="203" y="100" width="153" height="12" rx="0" fill="rgba(0,0,0,0.4)"/>
+                            <text x="280" y="109" text-anchor="middle" fill="rgba(196,181,253,0.7)" font-size="7">↓ Estoque + Financeiro · clique</text>
+                          </g>
+
+                          <!-- P3 -->
+                          <g onclick="abrirPopupP('p3')" style="cursor:pointer" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                            <rect x="373" y="14" width="153" height="98" rx="10" fill="url(#gP3)" stroke="#22d3ee" stroke-width="1.5"/>
+                            <rect x="373" y="14" width="153" height="3" rx="2" fill="#67e8f9"/>
+                            <text x="450" y="40" text-anchor="middle" fill="white" font-size="18">👥</text>
+                            <text x="450" y="60" text-anchor="middle" fill="white" font-size="10" font-weight="700" letter-spacing="1">P3 — PESSOAS</text>
+                            <text x="450" y="76" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="8">Time · Custos · Restrições</text>
+                            <text x="450" y="90" text-anchor="middle" fill="#67e8f9" font-size="7.5" id="fl-p3-val">Estrutura operacional</text>
+                            <rect x="373" y="100" width="153" height="12" rx="0" fill="rgba(0,0,0,0.4)"/>
+                            <text x="450" y="109" text-anchor="middle" fill="rgba(103,232,249,0.7)" font-size="7">↓ Custo fixo Financeiro · clique</text>
+                          </g>
+
+                          <!-- P4 -->
+                          <g onclick="abrirPopupP('p4')" style="cursor:pointer" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                            <rect x="543" y="14" width="153" height="98" rx="10" fill="url(#gP4)" stroke="#34d399" stroke-width="1.5"/>
+                            <rect x="543" y="14" width="153" height="3" rx="2" fill="#6ee7b7"/>
+                            <text x="620" y="40" text-anchor="middle" fill="white" font-size="18">⚙️</text>
+                            <text x="620" y="60" text-anchor="middle" fill="white" font-size="10" font-weight="700" letter-spacing="1">P4 — PROCESSO</text>
+                            <text x="620" y="76" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="8">Funil · Operação · Gargalos</text>
+                            <text x="620" y="90" text-anchor="middle" fill="#6ee7b7" font-size="7.5" id="fl-p4-val">Mapa operacional</text>
+                            <rect x="543" y="100" width="153" height="12" rx="0" fill="rgba(0,0,0,0.4)"/>
+                            <text x="620" y="109" text-anchor="middle" fill="rgba(110,231,183,0.7)" font-size="7">↓ Funil CRM · clique</text>
+                          </g>
+
+                          <!-- P5 — maior, destaque dourado -->
+                          <g onclick="abrirPopupP('p5')" style="cursor:pointer" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                            <rect x="713" y="14" width="330" height="98" rx="10" fill="url(#gP5)" stroke="#fbbf24" stroke-width="2" filter="url(#glP5)"/>
+                            <rect x="713" y="14" width="330" height="3" rx="2" fill="#fde68a"/>
+                            <text x="878" y="40" text-anchor="middle" fill="white" font-size="18">🎯</text>
+                            <text x="878" y="60" text-anchor="middle" fill="white" font-size="11" font-weight="700" letter-spacing="1">P5 — POSICIONAMENTO</text>
+                            <text x="878" y="76" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="8.5">Persona · ICP · Proposta de Valor</text>
+                            <text x="878" y="90" text-anchor="middle" fill="#fde68a" font-size="7.5" id="fl-p5-val">Diferencial competitivo</text>
+                            <rect x="713" y="100" width="330" height="12" rx="0" fill="rgba(0,0,0,0.4)"/>
+                            <text x="878" y="109" text-anchor="middle" fill="rgba(253,230,138,0.7)" font-size="7">↓ CRM + Agente Marketing · clique para detalhes</text>
+                          </g>
+
+                          <!-- ══════════════════════ -->
+                          <!-- MATRIZ CENTRAL        -->
+                          <!-- ══════════════════════ -->
+                          <rect x="340" y="148" width="380" height="96" rx="14" fill="url(#gMZ)" stroke="#6366f1" stroke-width="2" filter="url(#glMZ)"/>
+                          <rect x="340" y="148" width="380" height="3" rx="2" fill="#818cf8"/>
+                          <!-- Pontos decorativos de grade -->
+                          <circle cx="362" cy="176" r="2" fill="#6366f1" opacity="0.6"/>
+                          <circle cx="378" cy="176" r="2" fill="#6366f1" opacity="0.6"/>
+                          <circle cx="394" cy="176" r="2" fill="#6366f1" opacity="0.6"/>
+                          <circle cx="698" cy="176" r="2" fill="#6366f1" opacity="0.6"/>
+                          <circle cx="682" cy="176" r="2" fill="#6366f1" opacity="0.6"/>
+                          <circle cx="666" cy="176" r="2" fill="#6366f1" opacity="0.6"/>
+                          <!-- Linhas de scan decorativas -->
+                          <line x1="340" y1="185" x2="720" y2="185" stroke="rgba(99,102,241,0.15)" stroke-width="0.5"/>
+                          <line x1="340" y1="210" x2="720" y2="210" stroke="rgba(99,102,241,0.15)" stroke-width="0.5"/>
+                          <text x="530" y="180" text-anchor="middle" fill="white" font-size="14" font-weight="700" letter-spacing="2">🧠  MATRIZ CENTRAL</text>
+                          <text x="530" y="200" text-anchor="middle" fill="rgba(199,210,254,0.7)" font-size="8.5">Fonte única de verdade — dados cruzados de todos os módulos</text>
+                          <text x="530" y="218" text-anchor="middle" fill="#818cf8" font-size="7.5" letter-spacing="0.8">P1 + P2 + P3 + P4 + P5 + P6 + FINANCEIRO + MARKETING + CRM</text>
+                          <rect x="340" y="232" width="380" height="12" rx="0" fill="rgba(99,102,241,0.15)"/>
+                          <text x="530" y="241" text-anchor="middle" fill="rgba(129,140,248,0.6)" font-size="7" letter-spacing="0.5">lida por todos os agentes antes de responder</text>
+
+                          <!-- ══════════════════ -->
+                          <!-- P6                -->
+                          <!-- ══════════════════ -->
+                          <g onclick="abrirPopupP('p6')" style="cursor:pointer" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                            <rect x="380" y="292" width="300" height="68" rx="10" fill="url(#gP6)" stroke="#f87171" stroke-width="2" filter="url(#glP6)"/>
+                            <rect x="380" y="292" width="300" height="3" rx="2" fill="#fca5a5"/>
+                            <text x="530" y="318" text-anchor="middle" fill="white" font-size="16">📈</text>
+                            <text x="530" y="338" text-anchor="middle" fill="white" font-size="11" font-weight="700" letter-spacing="1">P6 — PERFORMANCE</text>
+                            <text x="530" y="352" text-anchor="middle" fill="rgba(255,255,255,0.65)" font-size="8">OKRs · KPIs · Metas Financeiras</text>
+                            <rect x="380" y="348" width="300" height="12" rx="0" fill="rgba(0,0,0,0.4)"/>
+                            <text x="530" y="357" text-anchor="middle" fill="rgba(252,165,165,0.7)" font-size="7">↓ Dashboard + Metas Financeiras · clique</text>
+                          </g>
+
+                          <!-- ══════════════════ -->
+                          <!-- MÓDULOS           -->
+                          <!-- ══════════════════ -->
+                          <!-- Financeiro -->
+                          <g onclick="nav('financeiro',document.querySelectorAll('.nav-item')[3])" style="cursor:pointer" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                            <rect x="55" y="400" width="350" height="70" rx="10" fill="url(#gFin)" stroke="#2563eb" stroke-width="1.5"/>
+                            <rect x="55" y="400" width="350" height="3" rx="2" fill="#60a5fa"/>
+                            <text x="230" y="426" text-anchor="middle" fill="rgba(96,165,250,0.7)" font-size="16">💰</text>
+                            <text x="230" y="446" text-anchor="middle" fill="rgba(96,165,250,0.7)" font-size="10.5" font-weight="700" letter-spacing="1">FINANCEIRO</text>
+                            <text x="230" y="461" text-anchor="middle" fill="rgba(96,165,250,0.6)" font-size="8">DRE · Fluxo · Metas · Estoque · KPIs</text>
+                          </g>
+                          <!-- CRM -->
+                          <g onclick="nav('mkt',document.querySelectorAll('.nav-item')[2]);setTimeout(()=>mktTab('crm',document.getElementById('mktab-crm')),200)" style="cursor:pointer" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                            <rect x="430" y="400" width="200" height="70" rx="10" fill="url(#gCRM)" stroke="#22c55e" stroke-width="1.5"/>
+                            <rect x="430" y="400" width="200" height="3" rx="2" fill="#4ade80"/>
+                            <text x="530" y="426" text-anchor="middle" fill="#86efac" font-size="16">👥</text>
+                            <text x="530" y="446" text-anchor="middle" fill="#86efac" font-size="10.5" font-weight="700" letter-spacing="1">CRM</text>
+                            <text x="530" y="461" text-anchor="middle" fill="rgba(134,239,172,0.6)" font-size="8">Leads · Pipeline · Funil</text>
+                          </g>
+                          <!-- Marketing -->
+                          <g onclick="nav('mkt',document.querySelectorAll('.nav-item')[2])" style="cursor:pointer" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                            <rect x="655" y="400" width="350" height="70" rx="10" fill="url(#gMkt)" stroke="#a855f7" stroke-width="1.5"/>
+                            <rect x="655" y="400" width="350" height="3" rx="2" fill="#d8b4fe"/>
+                            <text x="830" y="426" text-anchor="middle" fill="#d8b4fe" font-size="16">📡</text>
+                            <text x="830" y="446" text-anchor="middle" fill="#d8b4fe" font-size="10.5" font-weight="700" letter-spacing="1">MARKETING</text>
+                            <text x="830" y="461" text-anchor="middle" fill="rgba(216,180,254,0.6)" font-size="8">Ads · Conteúdo · Meta · Analytics</text>
+                          </g>
+
+                          <!-- Label rodapé -->
+                          <text x="530" y="504" text-anchor="middle" fill="rgba(255,255,255,0.1)" font-size="8" letter-spacing="2">SISTEMA INTEGRADO — TODO O ECOSSISTEMA CONVERSA ATRAVÉS DA MATRIZ CENTRAL</text>
+                        </svg>
                       </div>
                     </div>
 
                     <!-- POPUP DETALHE DO P -->
-                    <div id="popup-p-overlay" style="display:none;position:fixed;inset:0;background:rgba(18,18,27,.45);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(6px)" onclick="if(event.target===this)fecharPopupP()">
-                      <div style="background:var(--surface);border:1px solid rgba(6,12,150,0.35);border-radius:14px;width:88%;max-width:920px;max-height:86vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.08)">
-                        <div id="popup-p-header" style="padding:16px 20px;border-bottom:1px solid rgba(18,18,27,0.04);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+                    <div id="popup-p-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(6px)" onclick="if(event.target===this)fecharPopupP()">
+                      <div style="background:#07070f;border:1px solid rgba(99,102,241,0.35);border-radius:14px;width:88%;max-width:920px;max-height:86vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 80px rgba(99,102,241,0.12)">
+                        <div id="popup-p-header" style="padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
                           <div style="display:flex;align-items:center;gap:12px">
                             <div id="popup-p-icon" style="font-size:22px">🧭</div>
                             <div>
-                              <div id="popup-p-titulo" style="font-family:'Outfit',sans-serif;font-weight:700;font-size:15px;color:white"></div>
+                              <div id="popup-p-titulo" style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:white"></div>
                               <div id="popup-p-sub" style="font-size:11px;color:var(--muted);margin-top:2px"></div>
                             </div>
                           </div>
                           <div style="display:flex;gap:8px;align-items:center">
-                            <button id="popup-p-abrir-btn" style="padding:6px 16px;background:rgba(6,12,150,0.15);border:1px solid rgba(6,12,150,0.35);border-radius:6px;color:var(--accent);font-size:11px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all .2s" onmouseover="this.style.background='rgba(6,12,150,0.3)'" onmouseout="this.style.background='rgba(6,12,150,0.15)'" onclick="abrirPDoPopup()">✏️ Editar / Continuar</button>
-                            <button onclick="fecharPopupP()" style="background:rgba(18,18,27,0.03);border:1px solid rgba(18,18,27,0.06);border-radius:6px;color:var(--muted);font-size:12px;cursor:pointer;width:30px;height:30px;transition:all .2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">✕</button>
+                            <button id="popup-p-abrir-btn" style="padding:6px 16px;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.35);border-radius:6px;color:#a5b4fc;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s" onmouseover="this.style.background='rgba(99,102,241,0.3)'" onmouseout="this.style.background='rgba(99,102,241,0.15)'" onclick="abrirPDoPopup()">✏️ Editar / Continuar</button>
+                            <button onclick="fecharPopupP()" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:var(--muted);font-size:12px;cursor:pointer;width:30px;height:30px;transition:all .2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--muted)'">✕</button>
                           </div>
                         </div>
                         <div style="display:grid;grid-template-columns:280px 1fr;gap:0;flex:1;overflow:hidden;min-height:0">
                           <!-- Mini fluxo da jornada do P -->
-                          <div style="padding:18px;border-right:1px solid rgba(18,18,27,0.03);overflow-y:auto;background:rgba(18,18,27,.03)">
-                            <div style="font-size:9px;color:rgba(6,12,150,0.6);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;font-weight:700">◈ JORNADA DO PILAR</div>
-                            <div id="popup-p-minifluxo" style="font-size:12px;color:rgba(18,18,27,0.55);line-height:1.9"></div>
+                          <div style="padding:18px;border-right:1px solid rgba(255,255,255,0.05);overflow-y:auto;background:rgba(0,0,0,0.2)">
+                            <div style="font-size:9px;color:rgba(99,102,241,0.6);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;font-weight:700">◈ JORNADA DO PILAR</div>
+                            <div id="popup-p-minifluxo" style="font-size:12px;color:rgba(255,255,255,0.65);line-height:1.9"></div>
                           </div>
                           <!-- Conclusão/dados do P -->
                           <div style="padding:18px;overflow-y:auto">
-                            <div style="font-size:9px;color:rgba(6,12,150,0.6);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;font-weight:700">◈ DADOS MAPEADOS</div>
-                            <div id="popup-p-conclusao" style="font-size:12px;color:rgba(18,18,27,0.6);line-height:1.8;white-space:pre-wrap"></div>
+                            <div style="font-size:9px;color:rgba(99,102,241,0.6);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;font-weight:700">◈ DADOS MAPEADOS</div>
+                            <div id="popup-p-conclusao" style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.8;white-space:pre-wrap"></div>
                           </div>
                         </div>
                       </div>
@@ -645,7 +866,7 @@
                         <button class="btn btn-ghost btn-sm" onclick="voltarSixps()">← Voltar</button>
                         <div><div class="section-title" id="sixps-modulo-titulo">P1 — Propósito</div><div style="font-size:12px;color:var(--muted)" id="sixps-modulo-sub">Defina a essência do seu negócio</div></div>
                         <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
-                          <button id="btn-concluir-manual" onclick="concluirPManual()" style="display:none;padding:5px 12px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);border-radius:6px;color:var(--success);font-size:11px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all .2s" onmouseover="this.style.background='rgba(16,185,129,0.3)'" onmouseout="this.style.background='rgba(16,185,129,0.15)'">✅ Marcar como concluído</button>
+                          <button id="btn-concluir-manual" onclick="concluirPManual()" style="display:none;padding:5px 12px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);border-radius:6px;color:#34d399;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s" onmouseover="this.style.background='rgba(16,185,129,0.3)'" onmouseout="this.style.background='rgba(16,185,129,0.15)'">✅ Marcar como concluído</button>
                           <div style="font-size:11px;color:var(--muted);padding:4px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:6px" id="sixps-status-label">Em andamento...</div>
                         </div>
                     </div>
@@ -697,15 +918,15 @@
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
                   <!-- Posicionamento da empresa -->
                   <div class="card">
-                    <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;margin-bottom:4px">🎯 Posicionamento</div>
+                    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px;margin-bottom:4px">🎯 Posicionamento</div>
                     <div style="font-size:11px;color:var(--muted);margin-bottom:14px">Baseado no P5 dos seus 6Ps</div>
-                    <div id="mkt-estrat-posicionamento" style="font-size:12px;color:rgba(18,18,27,0.6);line-height:1.8;background:var(--surface2);border-radius:8px;padding:12px;min-height:80px">Carregando...</div>
+                    <div id="mkt-estrat-posicionamento" style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.8;background:var(--surface2);border-radius:8px;padding:12px;min-height:80px">Carregando...</div>
                   </div>
                   <!-- 3 Personas -->
                   <div class="card">
                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-                      <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:14px">👤 Personas</div>
-                      <button onclick="gerarPersonasIA()" style="padding:3px 10px;background:rgba(6,12,150,0.15);border:1px solid rgba(6,12,150,0.3);border-radius:6px;color:#60a5fa;font-size:10px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">✨ Gerar com IA</button>
+                      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px">👤 Personas</div>
+                      <button onclick="gerarPersonasIA()" style="padding:3px 10px;background:rgba(37,99,235,0.15);border:1px solid rgba(37,99,235,0.3);border-radius:6px;color:#60a5fa;font-size:10px;cursor:pointer;font-family:'DM Sans',sans-serif">✨ Gerar com IA</button>
                     </div>
                     <div style="font-size:11px;color:var(--muted);margin-bottom:10px">3 perfis de cliente ideal baseados no P5</div>
                     <!-- Tabs das personas -->
@@ -714,25 +935,25 @@
                       <button id="ptab-2" onclick="showPersonaTab(2)" class="btn btn-ghost btn-sm" style="font-size:10px;padding:3px 10px;border-radius:6px">P2</button>
                       <button id="ptab-3" onclick="showPersonaTab(3)" class="btn btn-ghost btn-sm" style="font-size:10px;padding:3px 10px;border-radius:6px">P3</button>
                     </div>
-                    <div id="persona-tab-1" style="font-size:12px;color:rgba(18,18,27,0.6);line-height:1.8;background:var(--surface2);border-radius:8px;padding:12px;min-height:80px" id="mkt-estrat-persona">Carregando...</div>
-                    <div id="persona-tab-2" style="display:none;font-size:12px;color:rgba(18,18,27,0.6);line-height:1.8;background:var(--surface2);border-radius:8px;padding:12px;min-height:80px">Carregando...</div>
-                    <div id="persona-tab-3" style="display:none;font-size:12px;color:rgba(18,18,27,0.6);line-height:1.8;background:var(--surface2);border-radius:8px;padding:12px;min-height:80px">Carregando...</div>
+                    <div id="persona-tab-1" style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.8;background:var(--surface2);border-radius:8px;padding:12px;min-height:80px" id="mkt-estrat-persona">Carregando...</div>
+                    <div id="persona-tab-2" style="display:none;font-size:12px;color:rgba(255,255,255,0.7);line-height:1.8;background:var(--surface2);border-radius:8px;padding:12px;min-height:80px">Carregando...</div>
+                    <div id="persona-tab-3" style="display:none;font-size:12px;color:rgba(255,255,255,0.7);line-height:1.8;background:var(--surface2);border-radius:8px;padding:12px;min-height:80px">Carregando...</div>
                   </div>
                 </div>
 
                 <!-- Matriz de Conteúdo -->
                 <div class="card" style="margin-bottom:16px">
-                  <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;margin-bottom:4px">📋 Matriz de Conteúdo</div>
+                  <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px;margin-bottom:4px">📋 Matriz de Conteúdo</div>
                   <div style="font-size:11px;color:var(--muted);margin-bottom:14px">Pilares de conteúdo baseados no seu posicionamento e persona</div>
                   <div id="mkt-estrat-matriz" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
-                    <div style="background:rgba(6,12,150,0.1);border:1px solid rgba(6,12,150,0.3);border-radius:8px;padding:12px;text-align:center">
+                    <div style="background:rgba(37,99,235,0.1);border:1px solid rgba(37,99,235,0.3);border-radius:8px;padding:12px;text-align:center">
                       <div style="font-size:20px;margin-bottom:6px">🎓</div>
                       <div style="font-size:11px;font-weight:700;color:#60a5fa;margin-bottom:4px">EDUCATIVO</div>
                       <div style="font-size:10px;color:var(--muted)">Ensina, posiciona como autoridade</div>
                     </div>
                     <div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:8px;padding:12px;text-align:center">
                       <div style="font-size:20px;margin-bottom:6px">💡</div>
-                      <div style="font-size:11px;font-weight:700;color:var(--success);margin-bottom:4px">INSPIRACIONAL</div>
+                      <div style="font-size:11px;font-weight:700;color:#34d399;margin-bottom:4px">INSPIRACIONAL</div>
                       <div style="font-size:10px;color:var(--muted)">Cases, resultados, transformação</div>
                     </div>
                     <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:12px;text-align:center">
@@ -750,7 +971,7 @@
 
                 <!-- Agente Diretor de Marketing -->
                 <div id="mkt-agente-estrategia" style="display:block">
-                  <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;margin-bottom:10px">🤖 Diretor de Marketing IA</div>
+                  <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px;margin-bottom:10px">🤖 Diretor de Marketing IA</div>
                   <div class="fin-chat" style="height:380px">
                     <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px">
                       <div class="agent-avatar" style="background:linear-gradient(135deg,var(--mkt),#e1306c)">📡</div>
@@ -802,7 +1023,7 @@
                   <div class="dash-kpi-card" style="border-top:2px solid var(--fin)"><div class="dkc-label">Investido</div><div class="dkc-val" id="dk-invest" style="color:var(--fin)">—</div><div class="dkc-sub">período</div></div>
                   <div class="dash-kpi-card" style="border-top:2px solid #60a5fa"><div class="dkc-label">Alcance</div><div class="dkc-val" id="dk-alcance" style="color:#60a5fa">—</div><div class="dkc-sub">pessoas</div></div>
                   <div class="dash-kpi-card" style="border-top:2px solid #a78bfa"><div class="dkc-label">Impressões</div><div class="dkc-val" id="dk-impr" style="color:#a78bfa">—</div><div class="dkc-sub">total</div></div>
-                  <div class="dash-kpi-card" style="border-top:2px solid #34d399"><div class="dkc-label">Leads</div><div class="dkc-val" id="dk-leads" style="color:var(--success)">—</div><div class="dkc-sub">conversões</div></div>
+                  <div class="dash-kpi-card" style="border-top:2px solid #34d399"><div class="dkc-label">Leads</div><div class="dkc-val" id="dk-leads" style="color:#34d399">—</div><div class="dkc-sub">conversões</div></div>
                   <div class="dash-kpi-card" style="border-top:2px solid #fbbf24"><div class="dkc-label">CPM</div><div class="dkc-val" id="dk-cpm" style="color:#fbbf24">—</div><div class="dkc-sub">custo/mil</div></div>
                   <div class="dash-kpi-card" style="border-top:2px solid #f472b6"><div class="dkc-label">CPC</div><div class="dkc-val" id="dk-cpc" style="color:#f472b6">—</div><div class="dkc-sub">por clique</div></div>
                   <div class="dash-kpi-card" style="border-top:2px solid var(--accent2)"><div class="dkc-label">ROAS</div><div class="dkc-val" id="dk-roas" style="color:var(--accent2)">—</div><div class="dkc-sub">retorno</div></div>
@@ -810,14 +1031,14 @@
                 <!-- KPIs Orgânicos — FB + IG + WPP integrados -->
                 <div style="display:grid;grid-template-columns:repeat(3,1fr) 2px repeat(3,1fr) 2px repeat(2,1fr);gap:8px;margin-bottom:12px;align-items:center">
                   <!-- Facebook -->
-                  <div class="dash-kpi-card" style="border-top:2px solid var(--accent);position:relative">
-                    <div style="position:absolute;top:8px;right:8px;width:16px;height:16px;background:var(--accent);border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:9px;font-weight:900">f</div>
+                  <div class="dash-kpi-card" style="border-top:2px solid #2563eb;position:relative">
+                    <div style="position:absolute;top:8px;right:8px;width:16px;height:16px;background:#a08020;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:9px;font-weight:900">f</div>
                     <div class="dkc-label">FB Seguidores</div><div class="dkc-val" id="mk-fans" style="color:#60a5fa">—</div><div class="dkc-sub">página</div>
                   </div>
-                  <div class="dash-kpi-card" style="border-top:2px solid var(--accent)">
+                  <div class="dash-kpi-card" style="border-top:2px solid #2563eb">
                     <div class="dkc-label">FB Views</div><div class="dkc-val" id="mk-views" style="color:#60a5fa">—</div><div class="dkc-sub" id="mk-fb-status">7d</div>
                   </div>
-                  <div class="dash-kpi-card" style="border-top:2px solid var(--accent)">
+                  <div class="dash-kpi-card" style="border-top:2px solid #2563eb">
                     <div class="dkc-label">FB Engaj.</div><div class="dkc-val" id="mk-eng" style="color:#60a5fa">—</div>
                     <div class="dkc-sub" style="display:flex;gap:4px"><span id="mk-cta" style="color:var(--muted)">—</span><span style="color:var(--muted)">CTA</span></div>
                   </div>
@@ -842,11 +1063,11 @@
                   <!-- WhatsApp -->
                   <div class="dash-kpi-card" style="border-top:2px solid #059669;position:relative">
                     <div style="position:absolute;top:8px;right:8px;font-size:12px">💬</div>
-                    <div class="dkc-label">WPP Conv.</div><div class="dkc-val" id="mk-wpp-conv" style="color:var(--success)">—</div>
+                    <div class="dkc-label">WPP Conv.</div><div class="dkc-val" id="mk-wpp-conv" style="color:#34d399">—</div>
                     <div class="dkc-sub"><span id="mk-wpp-camps" style="color:var(--muted)">—</span> camp.</div>
                   </div>
                   <div class="dash-kpi-card" style="border-top:2px solid #059669">
-                    <div class="dkc-label">WPP Invest.</div><div class="dkc-val" id="mk-wpp-spend" style="color:var(--success)">—</div>
+                    <div class="dkc-label">WPP Invest.</div><div class="dkc-val" id="mk-wpp-spend" style="color:#34d399">—</div>
                     <div class="dkc-sub"><span id="mk-wpp-cpc" style="color:var(--muted)">—</span>/conv.</div>
                   </div>
                 </div>
@@ -871,7 +1092,7 @@
                   <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;flex-direction:column;align-items:center;justify-content:center">
                     <div style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Taxa Conv.</div>
                     <canvas id="gauge-taxa" width="90" height="52"></canvas>
-                    <div style="font-size:18px;font-weight:900;color:var(--success)" id="gauge-taxa-val">—</div>
+                    <div style="font-size:18px;font-weight:900;color:#34d399" id="gauge-taxa-val">—</div>
                     <div style="font-size:9px;color:var(--muted)">cliques→leads</div>
                   </div>
                   <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;flex-direction:column">
@@ -991,7 +1212,7 @@
                       <button class="dash-filt-btn" id="crono-view-lista" onclick="cronoSetView('lista',this)">Lista</button>
                     </div>
                     <button class="btn btn-ghost btn-sm" onclick="cronoNavMes(-1)">←</button>
-                    <span id="crono-titulo" style="font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;min-width:130px;text-align:center"></span>
+                    <span id="crono-titulo" style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;min-width:130px;text-align:center"></span>
                     <button class="btn btn-ghost btn-sm" onclick="cronoNavMes(1)">→</button>
                     <button class="btn btn-primary btn-sm" onclick="cronoAbrirModal()">+ Novo</button>
                   </div>
@@ -1078,11 +1299,11 @@
                     <div style="display:flex;align-items:center;gap:12px">
                       <div style="width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#25d366,#128c7e);display:flex;align-items:center;justify-content:center;font-size:20px">💬</div>
                       <div>
-                        <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:15px">WhatsApp Business API</div>
+                        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px">WhatsApp Business API</div>
                         <div style="font-size:12px;color:var(--muted)">Integração via Meta Business — mesma conta do Marketing</div>
                       </div>
                     </div>
-                    <div id="wa-conn-status" style="font-size:11px;padding:4px 12px;border-radius:20px;background:rgba(220,38,38,0.15);color:var(--danger);border:1px solid rgba(220,38,38,0.3)">● Não configurado</div>
+                    <div id="wa-conn-status" style="font-size:11px;padding:4px 12px;border-radius:20px;background:rgba(255,107,107,0.15);color:var(--danger);border:1px solid rgba(255,107,107,0.3)">● Não configurado</div>
                   </div>
                   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
                     <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px">
@@ -1101,7 +1322,7 @@
                 </div>
 
                 <!-- Conversas recentes -->
-                <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;margin-bottom:12px">Conversas recentes</div>
+                <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px;margin-bottom:12px">Conversas recentes</div>
                 <div id="wa-conversas-lista" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
                   <div style="padding:32px;text-align:center;color:var(--muted);font-size:13px">Configure a integração para ver conversas</div>
                 </div>
@@ -1113,7 +1334,7 @@
                   <!-- Config do agente -->
                   <div>
                     <div class="card" style="margin-bottom:14px">
-                      <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;margin-bottom:14px">🤖 Agente de Atendimento</div>
+                      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px;margin-bottom:14px">🤖 Agente de Atendimento</div>
                       <div style="font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:16px">O agente responde automaticamente usando o contexto dos seus 6Ps — ele conhece seu produto, sua persona e sua proposta de valor. Responde dúvidas, qualifica leads e encaminha para você quando necessário.</div>
 
                       <div class="form-group" style="margin-bottom:12px">
@@ -1143,7 +1364,7 @@
                         </div>
                         <label style="position:relative;display:inline-block;width:40px;height:22px">
                           <input type="checkbox" id="wa-agent-ativo" style="opacity:0;width:0;height:0" onchange="waAgenteToggle()">
-                          <span id="wa-toggle-span" style="position:absolute;cursor:pointer;inset:0;background:rgba(18,18,27,0.06);border-radius:22px;transition:.3s;border:1px solid var(--border)"></span>
+                          <span id="wa-toggle-span" style="position:absolute;cursor:pointer;inset:0;background:rgba(255,255,255,0.1);border-radius:22px;transition:.3s;border:1px solid var(--border)"></span>
                         </label>
                       </div>
                       <button class="btn btn-primary" style="width:100%" onclick="waSalvarAgente()">Salvar configurações do agente</button>
@@ -1153,13 +1374,13 @@
                   <!-- Preview do agente -->
                   <div>
                     <div class="card">
-                      <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;margin-bottom:4px">Preview — como o agente vai responder</div>
+                      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:4px">Preview — como o agente vai responder</div>
                       <div style="font-size:11px;color:var(--muted);margin-bottom:16px">Baseado nos seus 6Ps e configurações</div>
-                      <div style="background:var(--surface2);border-radius:10px;padding:14px;font-size:12px;line-height:1.7;color:rgba(18,18,27,0.65);min-height:200px" id="wa-agent-preview">
+                      <div style="background:#0a0a14;border-radius:10px;padding:14px;font-size:12px;line-height:1.7;color:rgba(255,255,255,0.75);min-height:200px" id="wa-agent-preview">
                         <div style="color:#25d366;font-weight:600;margin-bottom:8px">💬 Simulação de conversa:</div>
-                        <div style="color:rgba(18,18,27,0.4);margin-bottom:6px">👤 Cliente: "Oi, quanto custa o sistema?"</div>
+                        <div style="color:rgba(255,255,255,0.5);margin-bottom:6px">👤 Cliente: "Oi, quanto custa o sistema?"</div>
                         <div style="color:#25d366;margin-bottom:12px">🤖 Sofia: "Olá! Tudo bem? Na DigitalMind a gente trabalha diferente — você só paga se crescer. Nos primeiros 12 meses, o investimento é 50% do crescimento real que a gente gerar no seu negócio. Sem crescimento, sem cobrança. Quer saber como funciona na prática?"</div>
-                        <div style="color:rgba(18,18,27,0.4);margin-bottom:6px">👤 Cliente: "Sim, quero saber mais"</div>
+                        <div style="color:rgba(255,255,255,0.5);margin-bottom:6px">👤 Cliente: "Sim, quero saber mais"</div>
                         <div style="color:#25d366">🤖 Sofia: "Perfeito! Vou agendar uma conversa com o Maikel para fazer um diagnóstico gratuito do seu negócio. Qual o melhor horário para você essa semana?"</div>
                       </div>
                     </div>
@@ -1171,7 +1392,7 @@
               <div id="wa-panel-leads" style="display:none;padding-top:16px">
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
                   <div>
-                    <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:14px">Leads capturados via WhatsApp</div>
+                    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px">Leads capturados via WhatsApp</div>
                     <div style="font-size:12px;color:var(--muted)">Toda conversa nova vira um lead no CRM automaticamente</div>
                   </div>
                   <button class="btn btn-primary btn-sm" onclick="waSyncLeads()">🔄 Sincronizar com CRM</button>
@@ -1179,7 +1400,7 @@
 
                 <!-- Regras de qualificação -->
                 <div class="card" style="margin-bottom:16px">
-                  <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;margin-bottom:12px">🎯 Qualificação automática de leads</div>
+                  <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:12px">🎯 Qualificação automática de leads</div>
                   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
                     <div>
                       <label class="form-label">Pergunta de qualificação 1</label>
@@ -1219,7 +1440,7 @@
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
                   <div>
                     <div class="card" style="margin-bottom:14px">
-                      <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;margin-bottom:14px">📣 Nova campanha</div>
+                      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px;margin-bottom:14px">📣 Nova campanha</div>
                       <div class="form-group" style="margin-bottom:12px">
                         <label class="form-label">Nome da campanha</label>
                         <input type="text" class="form-input" id="wa-camp-nome" placeholder="Ex: Oferta Trial SaaS — Março">
@@ -1253,7 +1474,7 @@
                   </div>
                   <div>
                     <div class="card">
-                      <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;margin-bottom:12px">📋 Campanhas anteriores</div>
+                      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:12px">📋 Campanhas anteriores</div>
                       <div id="wa-camp-lista" style="font-size:12px;color:var(--muted)">Nenhuma campanha enviada ainda.</div>
                     </div>
                   </div>
@@ -1263,7 +1484,7 @@
               <!-- NOTIFICAÇÕES -->
               <div id="wa-panel-notif" style="display:none;padding-top:16px">
                 <div class="card" style="margin-bottom:16px">
-                  <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;margin-bottom:4px">🔔 Notificações automáticas no WhatsApp</div>
+                  <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px;margin-bottom:4px">🔔 Notificações automáticas no WhatsApp</div>
                   <div style="font-size:12px;color:var(--muted);margin-bottom:16px">O sistema te avisa no WhatsApp quando eventos importantes acontecem — sem precisar abrir o app.</div>
 
                   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
@@ -1271,16 +1492,16 @@
                     <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px">
                       <div style="font-size:12px;font-weight:700;color:#60a5fa;margin-bottom:12px;letter-spacing:.5px">💰 FINANCEIRO</div>
                       ${['Meta de receita atingida','Conta vencendo em 3 dias','Despesa acima do limite','Saldo negativo detectado'].map(t=>`
-                      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(18,18,27,0.03)">
+                      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05)">
                         <span style="font-size:12px">${t}</span>
                         <input type="checkbox" class="wa-notif-check" data-tipo="fin" checked style="accent-color:#25d366">
                       </div>`).join('')}
                     </div>
                     <!-- Gatilhos CRM -->
                     <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px">
-                      <div style="font-size:12px;font-weight:700;color:var(--success);margin-bottom:12px;letter-spacing:.5px">👥 CRM & LEADS</div>
+                      <div style="font-size:12px;font-weight:700;color:#34d399;margin-bottom:12px;letter-spacing:.5px">👥 CRM & LEADS</div>
                       ${['Novo lead capturado','Lead quente identificado','Lead sem contato há 7 dias','Reunião agendada'].map(t=>`
-                      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(18,18,27,0.03)">
+                      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05)">
                         <span style="font-size:12px">${t}</span>
                         <input type="checkbox" class="wa-notif-check" data-tipo="crm" checked style="accent-color:#25d366">
                       </div>`).join('')}
@@ -1289,7 +1510,7 @@
                     <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px">
                       <div style="font-size:12px;font-weight:700;color:#a78bfa;margin-bottom:12px;letter-spacing:.5px">📡 MARKETING</div>
                       ${['Campanha com alto CPA','Anúncio pausado automaticamente','Novo seguidor milestone','Post com engajamento acima da média'].map(t=>`
-                      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(18,18,27,0.03)">
+                      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05)">
                         <span style="font-size:12px">${t}</span>
                         <input type="checkbox" class="wa-notif-check" data-tipo="mkt" checked style="accent-color:#25d366">
                       </div>`).join('')}
@@ -1298,7 +1519,7 @@
                     <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px">
                       <div style="font-size:12px;font-weight:700;color:#fbbf24;margin-bottom:12px;letter-spacing:.5px">🧠 SISTEMA</div>
                       ${['Novo cliente cadastrado','6Ps concluídos','KPI semanal pronto','OKR com desvio identificado'].map(t=>`
-                      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(18,18,27,0.03)">
+                      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05)">
                         <span style="font-size:12px">${t}</span>
                         <input type="checkbox" class="wa-notif-check" data-tipo="sys" checked style="accent-color:#25d366">
                       </div>`).join('')}
@@ -1319,7 +1540,7 @@
               <div id="wa-panel-config" style="display:none;padding-top:16px">
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
                   <div class="card">
-                    <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;margin-bottom:4px">🔗 Conectar WhatsApp Business API</div>
+                    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px;margin-bottom:4px">🔗 Conectar WhatsApp Business API</div>
                     <div style="font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:16px">Use o mesmo acesso Meta já configurado no Marketing. Você precisa do Phone Number ID e do token de acesso da sua conta WhatsApp Business.</div>
 
                     <div class="form-group" style="margin-bottom:12px">
@@ -1347,8 +1568,8 @@
 
                   <div>
                     <div class="card" style="margin-bottom:14px">
-                      <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;margin-bottom:12px">📋 Como configurar</div>
-                      <div style="font-size:12px;color:rgba(18,18,27,0.55);line-height:1.9">
+                      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:12px">📋 Como configurar</div>
+                      <div style="font-size:12px;color:rgba(255,255,255,0.65);line-height:1.9">
                         <div style="display:flex;gap:8px;margin-bottom:8px"><span style="color:#25d366;font-weight:700">1.</span><span>Acesse <strong>developers.facebook.com</strong> e abra seu app</span></div>
                         <div style="display:flex;gap:8px;margin-bottom:8px"><span style="color:#25d366;font-weight:700">2.</span><span>Vá em <strong>WhatsApp → API Setup</strong></span></div>
                         <div style="display:flex;gap:8px;margin-bottom:8px"><span style="color:#25d366;font-weight:700">3.</span><span>Copie o <strong>Phone Number ID</strong> e o <strong>WABA ID</strong></span></div>
@@ -1357,7 +1578,7 @@
                       </div>
                     </div>
                     <div class="card">
-                      <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;margin-bottom:12px">🔗 Webhook URL</div>
+                      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:12px">🔗 Webhook URL</div>
                       <div style="font-size:11px;color:var(--muted);margin-bottom:8px">Configure essa URL no painel Meta para receber mensagens:</div>
                       <div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:10px;font-size:11px;font-family:monospace;color:#60a5fa;word-break:break-all" id="wa-webhook-url">https://sxofyazhqzjzpsvblulj.supabase.co/functions/v1/ask-agent</div>
                       <button class="btn btn-ghost btn-sm" style="margin-top:8px;width:100%" onclick="navigator.clipboard.writeText(document.getElementById('wa-webhook-url').textContent);this.textContent='✅ Copiado!'">📋 Copiar URL</button>
@@ -1391,8 +1612,8 @@
                     <button class="btn btn-ghost" onclick="mktTestMeta()">🔌 Testar</button>
                     <button class="btn btn-ghost" onclick="mktShowSQL()">📋 SQL</button>
                   </div>
-                  <div style="margin-top:18px;padding:14px;background:rgba(6,12,150,.06);border:1px solid rgba(6,12,150,.2);border-radius:10px">
-                    <div style="font-weight:700;font-size:12px;margin-bottom:8px;display:flex;align-items:center;gap:8px">🔄 Token Permanente <span style="font-size:10px;color:var(--success);background:rgba(22,163,74,.15);padding:2px 7px;border-radius:7px">Não expira</span></div>
+                  <div style="margin-top:18px;padding:14px;background:rgba(124,109,250,.06);border:1px solid rgba(124,109,250,.2);border-radius:10px">
+                    <div style="font-weight:700;font-size:12px;margin-bottom:8px;display:flex;align-items:center;gap:8px">🔄 Token Permanente <span style="font-size:10px;color:var(--success);background:rgba(46,204,113,.15);padding:2px 7px;border-radius:7px">Não expira</span></div>
                     <div class="form-group" style="margin-bottom:8px">
                       <label class="form-label">Token temporário do usuário</label>
                       <input class="form-input" id="mkt-temp-token" type="password" placeholder="Token do usuário — Graph API Explorer">
@@ -1435,7 +1656,7 @@
                     <button class="dash-period-btn" id="crono-view-lista" onclick="cronoSetView('lista',this)">Lista</button>
                   </div>
                   <button class="btn btn-ghost btn-sm" onclick="cronoNavMes(-1)">←</button>
-                  <span id="crono-titulo" style="font-family:'Outfit',sans-serif;font-weight:700;font-size:15px;min-width:160px;text-align:center"></span>
+                  <span id="crono-titulo" style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px;min-width:160px;text-align:center"></span>
                   <button class="btn btn-ghost btn-sm" onclick="cronoNavMes(1)">→</button>
                   <button class="btn btn-primary btn-sm" onclick="cronoAbrirModal()">+ Novo agendamento</button>
                 </div>
@@ -1487,10 +1708,10 @@
       </div>
       <!-- Dados -->
       <div style="padding:24px">
-        <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:16px;margin-bottom:18px;line-height:1.3" id="crit-nome">Anúncio</div>
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:16px;margin-bottom:18px;line-height:1.3" id="crit-nome">Anúncio</div>
         <!-- KPIs grade -->
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px">
-          <div style="background:rgba(6,12,150,.1);border:1px solid rgba(6,12,150,.2);border-radius:8px;padding:10px;text-align:center">
+          <div style="background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.2);border-radius:8px;padding:10px;text-align:center">
             <div style="font-size:16px;font-weight:800;color:#60a5fa" id="crit-impr">—</div>
             <div style="font-size:9px;color:var(--muted);margin-top:2px">Impressões</div>
           </div>
@@ -1519,11 +1740,11 @@
             <div style="font-size:9px;color:var(--muted);margin-top:2px">Investido</div>
           </div>
           <div style="background:rgba(5,150,105,.1);border:1px solid rgba(5,150,105,.2);border-radius:8px;padding:10px;text-align:center">
-            <div style="font-size:16px;font-weight:800;color:var(--success)" id="crit-leads">—</div>
+            <div style="font-size:16px;font-weight:800;color:#34d399" id="crit-leads">—</div>
             <div style="font-size:9px;color:var(--muted);margin-top:2px">Leads</div>
           </div>
           <div style="background:rgba(5,150,105,.1);border:1px solid rgba(5,150,105,.2);border-radius:8px;padding:10px;text-align:center">
-            <div style="font-size:16px;font-weight:800;color:var(--success)" id="crit-cpl">—</div>
+            <div style="font-size:16px;font-weight:800;color:#34d399" id="crit-cpl">—</div>
             <div style="font-size:9px;color:var(--muted);margin-top:2px">CPL</div>
           </div>
         </div>
@@ -1543,7 +1764,7 @@
     <div style="padding:28px;overflow-y:auto;border-right:1px solid var(--border)">
       <!-- Título editável -->
       <input type="text" id="crono-titulo-input"
-        style="font-family:'Outfit',sans-serif;font-weight:800;font-size:20px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--text);width:100%;outline:none;margin-bottom:20px;padding-bottom:6px;transition:border-color .2s"
+        style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--text);width:100%;outline:none;margin-bottom:20px;padding-bottom:6px;transition:border-color .2s"
         placeholder="Título da tarefa..."
         onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='transparent'">
 
@@ -1583,7 +1804,7 @@
       </div>
 
       <!-- Aviso colisão -->
-      <div id="crono-colisao-warn" style="display:none;background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.3);border-radius:var(--radius-sm);padding:10px 14px;font-size:12px;color:var(--danger);margin-bottom:14px">
+      <div id="crono-colisao-warn" style="display:none;background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.3);border-radius:var(--radius-sm);padding:10px 14px;font-size:12px;color:var(--danger);margin-bottom:14px">
         ⚠️ <span id="crono-colisao-msg"></span>
       </div>
 
