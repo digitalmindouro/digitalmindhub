@@ -198,7 +198,7 @@ async function callAgent(userMsg, chatId, btnId, extraCtx) {
   await sb.from('conversas').insert({user_id:S.user.id,role:'user',content:userMsg});
   S.conversas.push({role:'user',content:userMsg});
   const lid='l-'+Date.now();
-  document.getElementById(chatId)?.insertAdjacentHTML('beforeend',`<div class="msg agent" id="${lid}"><div class="msg-av">✈</div><div class="msg-bub"><div class="typing"><span></span><span></span><span></span></div></div></div>`);
+  document.getElementById(chatId)?.insertAdjacentHTML('beforeend',`<div class="msg agent" id="${lid}"><div class="msg-av">DM</div><div class="msg-bub"><div class="typing"><span></span><span></span><span></span></div></div></div>`);
   document.getElementById(chatId).scrollTop=99999;
   try {
     const messages=S.conversas.slice(-30).map(c=>({role:c.role==='assistant'?'assistant':'user',content:c.content}));
@@ -686,7 +686,7 @@ async function sendFinMsg(){
   const SYSTEM_FIN=`Você é o Assistente Financeiro da plataforma DigitalMind. Analise EXCLUSIVAMENTE dados financeiros. Os lançamentos já foram registrados automaticamente. Confirme e analise o impacto. Responda em português brasileiro. Máximo 5 linhas.`;
   const btn=document.getElementById('send-fin');btn.disabled=true;
   const lid='lf-'+Date.now();
-  document.getElementById('chat-fin').insertAdjacentHTML('beforeend',`<div class="msg agent" id="${lid}"><div class="msg-av">✈</div><div class="msg-bub"><div class="typing"><span></span><span></span><span></span></div></div></div>`);
+  document.getElementById('chat-fin').insertAdjacentHTML('beforeend',`<div class="msg agent" id="${lid}"><div class="msg-av">DM</div><div class="msg-bub"><div class="typing"><span></span><span></span><span></span></div></div></div>`);
   scrollFin();
   try {
     const ent=S.lancamentos.filter(l=>l.tipo==='entrada').reduce((s,l)=>s+parseFloat(l.valor||0),0);
@@ -721,7 +721,7 @@ async function callSpecialAgent(userMsg,chatId,btnId,systemPrompt,historyArr){
   const btn=document.getElementById(btnId);if(btn)btn.disabled=true;
   appendSpecialMsg('user',userMsg,chatId);historyArr.push({role:'user',content:userMsg});
   const lid='ls-'+Date.now();
-  document.getElementById(chatId)?.insertAdjacentHTML('beforeend',`<div class="msg agent" id="${lid}"><div class="msg-av">✈</div><div class="msg-bub"><div class="typing"><span></span><span></span><span></span></div></div></div>`);
+  document.getElementById(chatId)?.insertAdjacentHTML('beforeend',`<div class="msg agent" id="${lid}"><div class="msg-av">DM</div><div class="msg-bub"><div class="typing"><span></span><span></span><span></span></div></div></div>`);
   document.getElementById(chatId).scrollTop=99999;
   try {
     const ctx=S.empresa?`Empresa: ${S.empresa.nome} | Setor: ${S.empresa.setor}`:'';
@@ -2053,7 +2053,7 @@ async function renderComparativo(camps) {
       const pctColor = up === null ? 'var(--muted)' : up ? 'var(--success)' : 'var(--danger)';
       return `<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center">
         <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px">${m.label}</div>
-        <div style="font-size:18px;font-weight:900;font-family:'Outfit',sans-serif">${m.fmt(m.cur)}</div>
+        <div style="font-size:18px;font-weight:900;font-family:'Syne',sans-serif">${m.fmt(m.cur)}</div>
         <div style="font-size:11px;color:var(--muted);margin-top:2px">${m.fmt(m.prev)} ant.</div>
         ${pct !== null ? `<div style="font-size:12px;font-weight:700;color:${pctColor};margin-top:4px">${arrow} ${Math.abs(pct).toFixed(1)}%</div>` : ''}
       </div>`;
@@ -2735,7 +2735,7 @@ async function renderAgenda(){
   const {data}=await sb.from('agendamentos').select('*').eq('user_id',S.user.id).order('data_producao',{ascending:true});
   const g=document.getElementById('agenda-grid');if(!g)return;
   if(!data?.length){g.innerHTML='<p style="color:var(--muted);font-size:14px;grid-column:1/-1">Nenhum agendamento.</p>';return;}
-  g.innerHTML=data.map(a=>`<div class="agenda-card"><div style="font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;color:var(--mkt);margin-bottom:4px">${fmtD(a.data_producao)} ${a.horario||''}</div><div style="font-size:14px;font-weight:500;margin-bottom:4px">${a.titulo}</div><div style="font-size:12px;color:var(--muted)">${a.tipo_conteudo||''}</div><span class="status-badge status-${a.status}">${a.status}</span></div>`).join('');
+  g.innerHTML=data.map(a=>`<div class="agenda-card"><div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--mkt);margin-bottom:4px">${fmtD(a.data_producao)} ${a.horario||''}</div><div style="font-size:14px;font-weight:500;margin-bottom:4px">${a.titulo}</div><div style="font-size:12px;color:var(--muted)">${a.tipo_conteudo||''}</div><span class="status-badge status-${a.status}">${a.status}</span></div>`).join('');
 }
 
 async function salvarAgenda(){
@@ -2813,7 +2813,7 @@ async function carregarTodosClientes() {
 function renderAdminClientes(){
   const grid=document.getElementById('admin-clientes-grid');if(!grid)return;
   if(!AD.clientes.length){grid.innerHTML='<div style="color:var(--muted);font-size:14px;grid-column:1/-1">Nenhum cliente encontrado. Verifique a service key do Supabase.</div>';return;}
-  grid.innerHTML=AD.clientes.map(c=>`<div class="admin-client-card ${AD.clienteSelecionado?.id===c.id?'selected':''}" onclick="selecionarCliente('${c.id}')"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:14px">${c.nome||'—'}</div><div style="width:8px;height:8px;border-radius:50%;background:var(--success)"></div></div><div style="font-size:12px;color:var(--muted);margin-bottom:10px">${c.setor||'—'} · ${c.responsavel||'—'}</div><div style="display:flex;gap:4px;flex-wrap:wrap"><span style="font-size:10px;background:rgba(124,109,250,.15);color:var(--accent);padding:2px 6px;border-radius:4px">ADM ${c.score_adm||0}%</span><span style="font-size:10px;background:rgba(78,205,196,.15);color:var(--mkt);padding:2px 6px;border-radius:4px">MKT ${c.score_mkt||0}%</span><span style="font-size:10px;background:rgba(247,183,49,.15);color:var(--fin);padding:2px 6px;border-radius:4px">FIN ${c.score_fin||0}%</span></div></div>`).join('');
+  grid.innerHTML=AD.clientes.map(c=>`<div class="admin-client-card ${AD.clienteSelecionado?.id===c.id?'selected':''}" onclick="selecionarCliente('${c.id}')"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px">${c.nome||'—'}</div><div style="width:8px;height:8px;border-radius:50%;background:var(--success)"></div></div><div style="font-size:12px;color:var(--muted);margin-bottom:10px">${c.setor||'—'} · ${c.responsavel||'—'}</div><div style="display:flex;gap:4px;flex-wrap:wrap"><span style="font-size:10px;background:rgba(124,109,250,.15);color:var(--accent);padding:2px 6px;border-radius:4px">ADM ${c.score_adm||0}%</span><span style="font-size:10px;background:rgba(78,205,196,.15);color:var(--mkt);padding:2px 6px;border-radius:4px">MKT ${c.score_mkt||0}%</span><span style="font-size:10px;background:rgba(247,183,49,.15);color:var(--fin);padding:2px 6px;border-radius:4px">FIN ${c.score_fin||0}%</span></div></div>`).join('');
 }
 
 async function selecionarCliente(id){
@@ -2872,7 +2872,7 @@ async function carregarSixpsCliente(){
   if(!prog){el.innerHTML='<div style="color:var(--muted);font-size:14px;grid-column:1/-1">Cliente ainda não iniciou os 6Ps.</div>';return;}
   el.innerHTML=ps.map(p=>{
     const status=prog[p+'_status']||'bloqueado';
-    return`<div class="card"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><div style="font-family:'Outfit',sans-serif;font-weight:700">${icons[p]} ${labels[p]}</div><span class="p-badge ${status}">${status==='concluido'?'✓ Concluído':status==='em_andamento'?'Em andamento':'🔒 Bloqueado'}</span></div><div style="display:flex;gap:6px;margin-top:8px"><button class="btn btn-ghost btn-sm" onclick="adminVerConversas('${p}','${c.user_id}')">Ver conversa</button>${status==='em_andamento'?`<button class="btn btn-success btn-sm" onclick="adminAprovarP('${p}','${c.user_id}')">✓ Aprovar</button>`:''}</div></div>`;
+    return`<div class="card"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><div style="font-family:'Syne',sans-serif;font-weight:700">${icons[p]} ${labels[p]}</div><span class="p-badge ${status}">${status==='concluido'?'✓ Concluído':status==='em_andamento'?'Em andamento':'🔒 Bloqueado'}</span></div><div style="display:flex;gap:6px;margin-top:8px"><button class="btn btn-ghost btn-sm" onclick="adminVerConversas('${p}','${c.user_id}')">Ver conversa</button>${status==='em_andamento'?`<button class="btn btn-success btn-sm" onclick="adminAprovarP('${p}','${c.user_id}')">✓ Aprovar</button>`:''}</div></div>`;
   }).join('');
 }
 
@@ -2943,7 +2943,7 @@ async function renderAdminFinanceiro(){
   const cards=await Promise.all(AD.clientes.map(async c=>{
     try{const r=await fetch(`${SB_URL}/rest/v1/lancamentos?user_id=eq.${c.user_id}&select=tipo,valor`,{headers});const lancs=await r.json();const ent=Array.isArray(lancs)?lancs.filter(l=>l.tipo==='entrada').reduce((s,l)=>s+parseFloat(l.valor||0),0):0;const sai=Array.isArray(lancs)?lancs.filter(l=>l.tipo==='saida').reduce((s,l)=>s+parseFloat(l.valor||0),0):0;return{nome:c.nome,ent,sai,saldo:ent-sai};}catch(e){return{nome:c.nome,ent:0,sai:0,saldo:0};}
   }));
-  grid.innerHTML=cards.map(c=>`<div class="metric-card"><div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;margin-bottom:10px">${c.nome}</div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:11px;color:var(--muted)">Receitas</span><span style="font-size:13px;color:var(--success);font-weight:500">${fmt(c.ent)}</span></div><div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:11px;color:var(--muted)">Despesas</span><span style="font-size:13px;color:var(--danger);font-weight:500">${fmt(c.sai)}</span></div><div style="display:flex;justify-content:space-between;border-top:1px solid var(--border);padding-top:8px"><span style="font-size:11px;font-weight:600">Saldo</span><span style="font-size:14px;font-weight:700;color:${c.saldo>=0?'var(--success)':'var(--danger)'}">${fmt(c.saldo)}</span></div></div>`).join('');
+  grid.innerHTML=cards.map(c=>`<div class="metric-card"><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:10px">${c.nome}</div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:11px;color:var(--muted)">Receitas</span><span style="font-size:13px;color:var(--success);font-weight:500">${fmt(c.ent)}</span></div><div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:11px;color:var(--muted)">Despesas</span><span style="font-size:13px;color:var(--danger);font-weight:500">${fmt(c.sai)}</span></div><div style="display:flex;justify-content:space-between;border-top:1px solid var(--border);padding-top:8px"><span style="font-size:11px;font-weight:600">Saldo</span><span style="font-size:14px;font-weight:700;color:${c.saldo>=0?'var(--success)':'var(--danger)'}">${fmt(c.saldo)}</span></div></div>`).join('');
 }
 
 function adminAdicionarCliente(){alert('Para adicionar um cliente, crie uma conta para ele em digitalmind-roan.vercel.app e ele aparecerá aqui automaticamente.');}
@@ -3304,11 +3304,17 @@ function renderSixpsGrid(){
     const statusLabel=concluido?'✓ Concluído':status==='em_andamento'?'Em andamento':'🔒 Bloqueado';
     const statusBg=concluido?'rgba(16,185,129,.15)':status==='em_andamento'?'rgba(37,99,235,.15)':'rgba(128,128,160,.08)';
     const statusColor=concluido?'var(--success)':status==='em_andamento'?'var(--accent)':'var(--muted)';
-    return `<div class="card" style="cursor:${bloqueado?'not-allowed':'pointer'};opacity:${bloqueado?'.4':'1'};transition:all .25s;padding:20px;text-align:center"
-      ${!bloqueado?`onclick="abrirP('${p}')" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 4px 12px rgba(0,0,0,.08)'" onmouseout="this.style.transform='';this.style.boxShadow=''"`:''}> 
-      <div style="width:36px;height:36px;border-radius:9px;background:${concluido?'#1b1b21':'#f4f4f5'};display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:${concluido?'#fff':'#8f8f9c'};font-size:12px;font-weight:700;font-family:'Outfit',sans-serif">${p.toUpperCase()}</div>
-      <div style="font-family:'Outfit',sans-serif;font-weight:600;font-size:13px;margin-bottom:4px;color:#1b1b21">${cfg.titulo.replace(/P\d — /,'')}</div>
-      <div style="font-size:10px;color:${concluido?'#1b1b21':'#8f8f9c'};font-weight:500">${statusLabel}</div>
+    return `<div class="card" style="cursor:${bloqueado?'not-allowed':'pointer'};opacity:${bloqueado?'.45':'1'};border-color:${concluido?'var(--success)':status==='em_andamento'?'var(--accent)':'var(--border)'};transition:all .2s;position:relative;padding:12px"
+      ${!bloqueado?`onclick="abrirP('${p}')" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''"`:''}>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div style="font-size:16px">${cfg.icon}</div>
+        <span style="font-size:9px;font-weight:600;padding:1px 6px;border-radius:8px;background:${statusBg};color:${statusColor}">${statusLabel}</span>
+      </div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:11px;margin-bottom:2px;color:var(--text)">${cfg.titulo}</div>
+      <div style="font-size:10px;color:var(--muted);margin-bottom:8px;line-height:1.3">${cfg.sub}</div>
+      <div style="border-top:1px solid var(--border);padding-top:7px">
+        <div style="font-size:9px;font-weight:600;color:var(--accent);letter-spacing:.3px">${cfg.outputsLabel}</div>
+      </div>
     </div>`;
   }).join('');
 
@@ -3473,8 +3479,7 @@ function abrirPDoPopup() {
 }
 
 function atualizarFluxograma() {
-  setTimeout(initNeuralCanvas, 100);
-  // Injeta resumos reais dos Ps no fluxograma (legado)
+  // Injeta resumos reais dos Ps no fluxograma
   const extrair = (resumo, maxLen) => {
     if(!resumo) return '—';
     // Pega primeira linha com conteúdo real (ignora headers ##)
@@ -3560,7 +3565,7 @@ async function iniciarAgenteSixps(modulo){
   const cfg=SIXPS_CONFIG[modulo];
   const btn=document.getElementById('send-sixps');if(btn)btn.disabled=true;
   const lid='ls-'+Date.now();
-  document.getElementById('chat-sixps')?.insertAdjacentHTML('beforeend',`<div class="msg agent" id="${lid}"><div class="msg-av">✈</div><div class="msg-bub"><div class="typing"><span></span><span></span><span></span></div></div></div>`);
+  document.getElementById('chat-sixps')?.insertAdjacentHTML('beforeend',`<div class="msg agent" id="${lid}"><div class="msg-av">DM</div><div class="msg-bub"><div class="typing"><span></span><span></span><span></span></div></div></div>`);
   document.getElementById('chat-sixps').scrollTop=99999;
   try {
     let systemPrompt = buildSixpsContext(modulo);
@@ -3615,7 +3620,7 @@ async function sendSixpsMsg(){
 
   const btn=document.getElementById('send-sixps');if(btn)btn.disabled=true;
   const lid='ls-'+Date.now();
-  document.getElementById('chat-sixps')?.insertAdjacentHTML('beforeend',`<div class="msg agent" id="${lid}"><div class="msg-av">✈</div><div class="msg-bub"><div class="typing"><span></span><span></span><span></span></div></div></div>`);
+  document.getElementById('chat-sixps')?.insertAdjacentHTML('beforeend',`<div class="msg agent" id="${lid}"><div class="msg-av">DM</div><div class="msg-bub"><div class="typing"><span></span><span></span><span></span></div></div></div>`);
   document.getElementById('chat-sixps').scrollTop=99999;
   try {
     const systemPrompt = buildSixpsContext(modulo);
@@ -4080,7 +4085,7 @@ function buildFullContext() {
 function renderDiagramaP4(){
   const etapas=[{label:'Aquisição',cor:'#7c6dfa'},{label:'Venda',cor:'#378add'},{label:'Entrega',cor:'#1D9E75'},{label:'Suporte',cor:'#f7b731'},{label:'Retenção',cor:'#D85A30'}];
   const canvas=document.getElementById('diagrama-canvas');if(!canvas)return;
-  canvas.innerHTML=`<svg width="100%" viewBox="0 0 580 80" xmlns="http://www.w3.org/2000/svg">${etapas.map((e,i)=>`<g><rect x="${i*116+2}" y="10" width="108" height="60" rx="8" fill="${e.cor}22" stroke="${e.cor}" stroke-width="1.5"/><text x="${i*116+56}" y="45" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="11" font-weight="600" fill="${e.cor}">${e.label}</text>${i<4?`<path d="M${i*116+112} 40 L${i*116+118} 40" stroke="${e.cor}" stroke-width="1.5" fill="none"/>`:''}</g>`).join('')}</svg>`;
+  canvas.innerHTML=`<svg width="100%" viewBox="0 0 580 80" xmlns="http://www.w3.org/2000/svg">${etapas.map((e,i)=>`<g><rect x="${i*116+2}" y="10" width="108" height="60" rx="8" fill="${e.cor}22" stroke="${e.cor}" stroke-width="1.5"/><text x="${i*116+56}" y="45" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="600" fill="${e.cor}">${e.label}</text>${i<4?`<path d="M${i*116+112} 40 L${i*116+118} 40" stroke="${e.cor}" stroke-width="1.5" fill="none"/>`:''}</g>`).join('')}</svg>`;
 }
 
 // ══════════════════════════════════════════════
@@ -6145,9 +6150,5 @@ function waCarregarLeads() {
       </tr>`).join('');
   });
 }
-
-
-// ══ NEURAL NETWORK CANVAS ══
-function initNeuralCanvas(){var c=document.getElementById('neural-canvas');if(!c||c.dataset.ok)return;c.dataset.ok='1';var ctx=c.getContext('2d');var dpr=window.devicePixelRatio||1;c.width=c.offsetWidth*dpr;c.height=c.offsetHeight*dpr;ctx.scale(dpr,dpr);var W=c.offsetWidth,H=c.offsetHeight;var BLUE='#1b1b21',BLACK='#0c0c0e',GRAY='#dddde0',TEXT='#1b1b21',MUTED='#8f8f9c';var nodes=[{id:'p1',lb:'Propósito',x:W*.08,y:H*.26,r:24},{id:'p2',lb:'Produto',x:W*.27,y:H*.12,r:24},{id:'p3',lb:'Pessoas',x:W*.46,y:H*.26,r:24},{id:'p4',lb:'Processo',x:W*.65,y:H*.12,r:24},{id:'p5',lb:'Posicionamento',x:W*.84,y:H*.26,r:24},{id:'mc',lb:'Matriz Central',x:W*.46,y:H*.52,r:20,hub:1},{id:'p6',lb:'Performance',x:W*.46,y:H*.80,r:28,pf:1}];var edges=[['p1','p2'],['p2','p3'],['p3','p4'],['p4','p5'],['p1','mc'],['p2','mc'],['p3','mc'],['p4','mc'],['p5','mc'],['mc','p6']];var parts=[];edges.forEach(function(_,i){for(var j=0;j<2;j++)parts.push({e:i,p:Math.random(),s:.001+Math.random()*.002,sz:1.5+Math.random()*1});});c.addEventListener('click',function(evt){var rect=c.getBoundingClientRect();var mx=evt.clientX-rect.left,my=evt.clientY-rect.top;for(var i=0;i<nodes.length;i++){var n=nodes[i];if(n.hub)continue;var dx=mx-n.x,dy=my-n.y;if(dx*dx+dy*dy<(n.r+12)*(n.r+12)){abrirPopupP(n.id);return;}}});c.addEventListener('mousemove',function(evt){var rect=c.getBoundingClientRect();var mx=evt.clientX-rect.left,my=evt.clientY-rect.top;var hit=false;for(var i=0;i<nodes.length;i++){var n=nodes[i];if(n.hub)continue;var dx=mx-n.x,dy=my-n.y;if(dx*dx+dy*dy<(n.r+12)*(n.r+12)){hit=true;break;}}c.style.cursor=hit?'pointer':'default';});var t=0;function draw(){ctx.clearRect(0,0,W,H);t+=.006;edges.forEach(function(e){var a,b;for(var i=0;i<nodes.length;i++){if(nodes[i].id===e[0])a=nodes[i];if(nodes[i].id===e[1])b=nodes[i];}ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=GRAY;ctx.lineWidth=.5;ctx.stroke();});parts.forEach(function(p){p.p+=p.s;if(p.p>1)p.p=0;var e=edges[p.e];var a,b;for(var i=0;i<nodes.length;i++){if(nodes[i].id===e[0])a=nodes[i];if(nodes[i].id===e[1])b=nodes[i];}var px=a.x+(b.x-a.x)*p.p,py=a.y+(b.y-a.y)*p.p;ctx.beginPath();ctx.arc(px,py,p.sz,0,Math.PI*2);ctx.fillStyle=BLUE;ctx.globalAlpha=.4+Math.sin(t*3+p.p*6)*.3;ctx.fill();ctx.globalAlpha=1;});nodes.forEach(function(n,i){var pulse=n.hub?1+Math.sin(t*1.2)*.04:1+Math.sin(t*1.8+i)*.02;var r=n.r*pulse;ctx.beginPath();ctx.arc(n.x,n.y,r+8,0,Math.PI*2);ctx.fillStyle=BLUE;ctx.globalAlpha=.04+Math.sin(t*1.2+i)*.015;ctx.fill();ctx.globalAlpha=1;ctx.beginPath();ctx.arc(n.x,n.y,r,0,Math.PI*2);var st=SP.progresso?SP.progresso[n.id+'_status']:'';if(n.hub)ctx.fillStyle=BLACK;else if(st==='concluido')ctx.fillStyle=BLUE;else ctx.fillStyle='#dddde0';ctx.fill();if(n.hub){ctx.beginPath();ctx.arc(n.x,n.y,r+1,0,Math.PI*2);ctx.strokeStyle=BLUE;ctx.lineWidth=1;ctx.globalAlpha=.5;ctx.stroke();ctx.globalAlpha=1;}ctx.fillStyle='#fff';ctx.font='600 10px "Plus Jakarta Sans",system-ui';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(n.hub?'◆':n.id.toUpperCase(),n.x,n.y);ctx.fillStyle=TEXT;ctx.font='500 11px "Plus Jakarta Sans",system-ui';ctx.fillText(n.lb,n.x,n.y+r+18);if(!n.hub&&!n.pf&&st==='concluido'){ctx.fillStyle=BLUE;ctx.font='400 9px "Plus Jakarta Sans",system-ui';ctx.fillText('concluído',n.x,n.y+r+30);}if(n.pf){ctx.fillStyle=MUTED;ctx.font='400 9px "Plus Jakarta Sans",system-ui';ctx.fillText('OKRs · KPIs · Metas',n.x,n.y+r+30);}});requestAnimationFrame(draw);}draw();}
 
 init();
