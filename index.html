@@ -2427,7 +2427,6 @@
 // ══════════════════════════════════════════════
 const SB_URL  = 'https://sxofyazhqzjzpsvblulj.supabase.co';
 const SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN4b2Z5YXpocXpqenBzdmJsdWxqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwMzAwNzYsImV4cCI6MjA4OTYwNjA3Nn0.1CZ1-52kjF6C2bTdBimbE3MZR9IA3XPzTJ7X85u5ArM';
-const SB_SERVICE = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN4b2Z5YXpocXpqenBzdmJsdWxqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDAzMDA3NiwiZXhwIjoyMDg5NjA2MDc2fQ.Rg9RQvWzaIXdax3npNBDa3sGbENPmt_B5qovTiMt6PM';
 const EDGE = SB_URL + '/functions/v1/ask-agent';
 const sb = supabase.createClient(SB_URL, SB_ANON);
 
@@ -5216,7 +5215,7 @@ function adminNav(panel,btn){
 
 // FIX 5: carregarTodosClientes com service key correta
 async function carregarTodosClientes() {
-  const sk = SB_SERVICE && SB_SERVICE.length > 50 ? SB_SERVICE : SB_ANON;
+  const sk = (await sb.auth.getSession()).data.session?.access_token || SB_ANON;
   const headers = {
     'apikey': sk,
     'Authorization': `Bearer ${sk}`,
@@ -5227,7 +5226,7 @@ async function carregarTodosClientes() {
     const r = await fetch(`${SB_URL}/rest/v1/empresas?select=*&order=created_at.desc`, { headers });
     const data = await r.json();
     AD.clientes = Array.isArray(data) ? data : [];
-    console.log('Clientes carregados:', AD.clientes.length, sk === SB_SERVICE ? '(service key)' : '(anon key)');
+    console.log('Clientes carregados:', AD.clientes.length, '(user session)');
   } catch(e) {
     console.error('Erro ao carregar clientes:', e);
     AD.clientes = [];
@@ -5254,7 +5253,7 @@ async function carregarFichaCliente(){
   document.getElementById('af-setor').value=c.setor||'';
   document.getElementById('af-resp').value=c.responsavel||'';
   document.getElementById('af-desc').value=c.descricao||'';
-  const sk=SB_SERVICE&&SB_SERVICE.length>50?SB_SERVICE:SB_ANON;
+  const sk=(await sb.auth.getSession()).data.session?.access_token||SB_ANON;
   const headers={'apikey':sk,'Authorization':`Bearer ${sk}`};
   try {
     const r=await fetch(`${SB_URL}/rest/v1/lancamentos?user_id=eq.${c.user_id}&select=tipo,valor`,{headers});
@@ -5270,7 +5269,7 @@ async function carregarFichaCliente(){
 // FIX 6+7: adminSalvarFicha com service key + atualiza memória
 async function adminSalvarFicha(){
   const c=AD.clienteSelecionado;if(!c)return;
-  const sk=SB_SERVICE&&SB_SERVICE.length>50?SB_SERVICE:SB_ANON;
+  const sk=(await sb.auth.getSession()).data.session?.access_token||SB_ANON;
   const headers={'apikey':sk,'Authorization':`Bearer ${sk}`,'Content-Type':'application/json','Prefer':'return=representation'};
   const body=JSON.stringify({nome:document.getElementById('af-nome').value,setor:document.getElementById('af-setor').value,responsavel:document.getElementById('af-resp').value,descricao:document.getElementById('af-desc').value});
   await fetch(`${SB_URL}/rest/v1/empresas?id=eq.${c.id}`,{method:'PATCH',headers,body});
@@ -5285,7 +5284,7 @@ async function adminSalvarFicha(){
 
 async function carregarSixpsCliente(){
   const c=AD.clienteSelecionado;if(!c)return;
-  const sk=SB_SERVICE&&SB_SERVICE.length>50?SB_SERVICE:SB_ANON;
+  const sk=(await sb.auth.getSession()).data.session?.access_token||SB_ANON;
   const headers={'apikey':sk,'Authorization':`Bearer ${sk}`};
   const r=await fetch(`${SB_URL}/rest/v1/sixps_progresso?user_id=eq.${c.user_id}`,{headers});
   const data=await r.json();const prog=Array.isArray(data)?data[0]:null;
@@ -5301,7 +5300,7 @@ async function carregarSixpsCliente(){
 }
 
 async function adminAprovarP(modulo,userId){
-  const sk=SB_SERVICE&&SB_SERVICE.length>50?SB_SERVICE:SB_ANON;
+  const sk=(await sb.auth.getSession()).data.session?.access_token||SB_ANON;
   const headers={'apikey':sk,'Authorization':`Bearer ${sk}`,'Content-Type':'application/json'};
   const ps=['p1','p2','p3','p4','p5','p6'];const idx=ps.indexOf(modulo);
   const updates={[modulo+'_status']:'concluido'};
@@ -5311,7 +5310,7 @@ async function adminAprovarP(modulo,userId){
 }
 
 async function adminVerConversas(modulo,userId){
-  const sk=SB_SERVICE&&SB_SERVICE.length>50?SB_SERVICE:SB_ANON;
+  const sk=(await sb.auth.getSession()).data.session?.access_token||SB_ANON;
   const headers={'apikey':sk,'Authorization':`Bearer ${sk}`};
   const r=await fetch(`${SB_URL}/rest/v1/sixps_conversas?user_id=eq.${userId}&modulo=eq.${modulo}&order=created_at`,{headers});
   const convs=await r.json();
@@ -5322,7 +5321,7 @@ async function adminVerConversas(modulo,userId){
 
 async function carregarMatrizCliente(){
   const c=AD.clienteSelecionado;if(!c)return;
-  const sk=SB_SERVICE&&SB_SERVICE.length>50?SB_SERVICE:SB_ANON;
+  const sk=(await sb.auth.getSession()).data.session?.access_token||SB_ANON;
   const headers={'apikey':sk,'Authorization':`Bearer ${sk}`};
   const r=await fetch(`${SB_URL}/rest/v1/matriz_agente?user_id=eq.${c.user_id}`,{headers});
   const data=await r.json();const m=Array.isArray(data)?data[0]:null;
@@ -5331,7 +5330,7 @@ async function carregarMatrizCliente(){
 
 async function adminSalvarMatriz(){
   const c=AD.clienteSelecionado;if(!c)return;
-  const sk=SB_SERVICE&&SB_SERVICE.length>50?SB_SERVICE:SB_ANON;
+  const sk=(await sb.auth.getSession()).data.session?.access_token||SB_ANON;
   const headers={'apikey':sk,'Authorization':`Bearer ${sk}`,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=representation'};
   await fetch(`${SB_URL}/rest/v1/matriz_agente`,{method:'POST',headers,body:JSON.stringify({user_id:c.user_id,tom:document.getElementById('am-tom').value,foco_pilar:document.getElementById('am-foco').value,contexto_base:document.getElementById('am-contexto').value,objetivos_principais:document.getElementById('am-objetivos').value,restricoes:document.getElementById('am-restricoes').value,updated_at:new Date().toISOString()})});
   alert('Matriz do agente salva!');
@@ -5339,7 +5338,7 @@ async function adminSalvarMatriz(){
 
 async function carregarNotasCliente(){
   const c=AD.clienteSelecionado;if(!c)return;
-  const sk=SB_SERVICE&&SB_SERVICE.length>50?SB_SERVICE:SB_ANON;
+  const sk=(await sb.auth.getSession()).data.session?.access_token||SB_ANON;
   const headers={'apikey':sk,'Authorization':`Bearer ${sk}`};
   const r=await fetch(`${SB_URL}/rest/v1/admin_notas?user_id=eq.${c.user_id}&order=created_at.desc`,{headers});
   const notas=await r.json();const el=document.getElementById('admin-notas-list');if(!el)return;
@@ -5352,7 +5351,7 @@ function adminAdicionarNota(){document.getElementById('admin-nota-form').style.d
 
 async function adminSalvarNota(){
   const c=AD.clienteSelecionado;if(!c)return;
-  const sk=SB_SERVICE&&SB_SERVICE.length>50?SB_SERVICE:SB_ANON;
+  const sk=(await sb.auth.getSession()).data.session?.access_token||SB_ANON;
   const headers={'apikey':sk,'Authorization':`Bearer ${sk}`,'Content-Type':'application/json'};
   await fetch(`${SB_URL}/rest/v1/admin_notas`,{method:'POST',headers,body:JSON.stringify({user_id:c.user_id,titulo:document.getElementById('an-titulo').value,conteudo:document.getElementById('an-conteudo').value,tipo:document.getElementById('an-tipo').value})});
   document.getElementById('admin-nota-form').style.display='none';
@@ -5362,7 +5361,7 @@ async function adminSalvarNota(){
 async function renderAdminFinanceiro(){
   const grid=document.getElementById('admin-fin-grid');if(!grid)return;
   grid.innerHTML='<div style="color:var(--muted);font-size:14px;grid-column:1/-1">Carregando...</div>';
-  const sk=SB_SERVICE&&SB_SERVICE.length>50?SB_SERVICE:SB_ANON;
+  const sk=(await sb.auth.getSession()).data.session?.access_token||SB_ANON;
   const headers={'apikey':sk,'Authorization':`Bearer ${sk}`};
   const cards=await Promise.all(AD.clientes.map(async c=>{
     try{const r=await fetch(`${SB_URL}/rest/v1/lancamentos?user_id=eq.${c.user_id}&select=tipo,valor`,{headers});const lancs=await r.json();const ent=Array.isArray(lancs)?lancs.filter(l=>l.tipo==='entrada').reduce((s,l)=>s+parseFloat(l.valor||0),0):0;const sai=Array.isArray(lancs)?lancs.filter(l=>l.tipo==='saida').reduce((s,l)=>s+parseFloat(l.valor||0),0):0;return{nome:c.nome,ent,sai,saldo:ent-sai};}catch(e){return{nome:c.nome,ent:0,sai:0,saldo:0};}
