@@ -219,3 +219,8 @@ tbody tr:hover { background: #fafafb !important; }
     .user-bar-wrap { display: none !important; }
     #page-inicio > div { max-height: none !important; overflow: auto !important; }
 }
+
+/* FIX: 6Ps modulo - remove empty space when P is open */
+#page-adm { min-height: auto !important; }
+#sixps-modulo { padding-top: 0 !important; margin-top: 0 !important; }
+#page-adm .content { min-height: auto !important; }
