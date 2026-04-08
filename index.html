@@ -3322,7 +3322,7 @@ async function mktCarregarEstrategia() {
   const per = document.getElementById('mkt-estrat-persona');
 
   // Monta posicionamento com fallbacks
-  if(pos && pos.innerHTML.includes('Carregando')) {
+  if(pos) {
     const campos = [
       MZ.p5_proposta_valor && `<strong>Proposta de valor:</strong> ${MZ.p5_proposta_valor}`,
       MZ.p5_diferencial    && `<strong>Diferencial:</strong> ${MZ.p5_diferencial}`,
@@ -5753,6 +5753,13 @@ function renderSixpsGrid(){
   if(!SP.progresso) {
     SP.progresso={p1_status:'em_andamento',p2_status:'bloqueado',p3_status:'bloqueado',p4_status:'bloqueado',p5_status:'bloqueado',p6_status:'bloqueado'};
   }
+  // Helper: considera concluído se DB diz, ou se MZ tem dados, ou se há resumo
+  function isConcluidoP(p) {
+    if(SP.progresso[p+'_status']==='concluido') return true;
+    if(MZ && MZ[p+'_concluido']) return true;
+    if(SP.dados && SP.dados[p+'_resumo'] && SP.dados[p+'_resumo'].length > 100) return true;
+    return false;
+  }
   const ps=['p1','p2','p3','p4','p5','p6'];
   grid.innerHTML=ps.map(p=>{
     const cfg=SIXPS_CONFIG[p];
@@ -5777,13 +5784,6 @@ function renderSixpsGrid(){
   }).join('');
 
   // Mostra fluxograma quando pelo menos P1-P5 concluídos
-  // Fallback: se progresso DB mostra bloqueado mas a matriz tem os dados, considera concluído
-  const isConcluidoP = (p) => {
-    if(SP.progresso[p+'_status']==='concluido') return true;
-    if(MZ && MZ[p+'_concluido']) return true; // dados extraídos pela IA
-    if(SP.dados[p+'_resumo'] && SP.dados[p+'_resumo'].length > 100) return true; // resumo existe
-    return false;
-  };
   const p15Concluidos = ['p1','p2','p3','p4','p5'].every(p=>isConcluidoP(p));
   const todosConcluidos = ps.every(p=>SP.progresso[p+'_status']==='concluido');
   const fluxEl = document.getElementById('sixps-fluxograma');
