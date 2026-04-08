@@ -915,136 +915,183 @@
 
                     <!-- FLUXOGRAMA TECH — aparece após P1-P5 concluídos -->
                     <div id="sixps-fluxograma" style="display:none;margin-bottom:18px">
-                      <div style="font-size:10px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:#94a3b8;margin-bottom:20px;display:flex;align-items:center;gap:10px">
-                        <span>Mapa Estratégico</span>
-                        <span style="font-size:9px;font-weight:400;letter-spacing:0;color:#cbd5e1;text-transform:none">— clique em cada pilar</span>
+                      <style>
+                        /* ── Neural Network Animations ── */
+                        @keyframes dash-flow {
+                          from { stroke-dashoffset: 24; }
+                          to   { stroke-dashoffset: 0; }
+                        }
+                        @keyframes pulse-ring {
+                          0%   { r: 34; opacity: 1; }
+                          50%  { r: 38; opacity: .85; }
+                          100% { r: 34; opacity: 1; }
+                        }
+                        @keyframes signal-move {
+                          0%   { opacity: 0; }
+                          10%  { opacity: 1; }
+                          90%  { opacity: 1; }
+                          100% { opacity: 0; }
+                        }
+                        @keyframes glow-pulse {
+                          0%,100% { filter: drop-shadow(0 0 6px rgba(99,102,241,.25)); }
+                          50%     { filter: drop-shadow(0 0 18px rgba(99,102,241,.55)); }
+                        }
+                        .nn-line {
+                          stroke-dasharray: 6 6;
+                          animation: dash-flow 1.6s linear infinite;
+                        }
+                        .nn-line-slow {
+                          stroke-dasharray: 6 6;
+                          animation: dash-flow 2.4s linear infinite;
+                        }
+                        .nn-line-rev {
+                          stroke-dasharray: 6 6;
+                          animation: dash-flow 2s linear infinite reverse;
+                        }
+                        .nn-circle { transition: r .18s ease; }
+                        .nn-circle:hover { animation: pulse-ring .8s ease-in-out infinite; }
+                        .nn-mz { animation: glow-pulse 3s ease-in-out infinite; }
+                        #fluxograma-svg text { font-family: -apple-system, BlinkMacSystemFont, 'DM Sans', sans-serif; }
+                      </style>
+                      <div style="font-size:10px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:#94a3b8;margin-bottom:16px">
+                        Mapa Estratégico <span style="font-size:9px;font-weight:400;letter-spacing:0;color:#cbd5e1;text-transform:none;margin-left:8px">— clique em cada pilar</span>
                       </div>
-                      <div style="background:#ffffff;border:1px solid #f1f5f9;border-radius:20px;padding:36px 24px 24px;overflow-x:auto;box-shadow:0 1px 2px rgba(0,0,0,0.04),0 4px 24px rgba(0,0,0,0.06)">
-                        <svg id="fluxograma-svg" viewBox="0 0 820 460" width="100%" style="min-width:640px;font-family:-apple-system,BlinkMacSystemFont,'DM Sans',sans-serif;overflow:visible">
-                          <defs>
-                            <filter id="sf" x="-30%" y="-30%" width="160%" height="160%">
-                              <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="rgba(0,0,0,0.10)"/>
-                            </filter>
-                            <filter id="sf-mz" x="-30%" y="-30%" width="160%" height="160%">
-                              <feDropShadow dx="0" dy="4" stdDeviation="12" flood-color="rgba(15,23,42,0.14)"/>
-                            </filter>
-                          </defs>
+                      <!-- Container com fundo branco forçado, isolado do tema -->
+                      <div style="background:#ffffff !important;border:1px solid #e8ecf0;border-radius:20px;padding:32px 20px 24px;overflow-x:auto;box-shadow:0 2px 8px rgba(0,0,0,0.06),0 12px 40px rgba(0,0,0,0.07)">
+                        <svg id="fluxograma-svg" viewBox="0 0 820 470" width="100%" style="min-width:640px;overflow:visible;display:block">
 
-                          <!-- ── LINHAS P1-P5 → Matriz Central ── -->
-                          <line x1="124" y1="130" x2="362" y2="204" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="4,5"/>
-                          <line x1="260" y1="92" x2="376" y2="196" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="4,5"/>
-                          <line x1="410" y1="78" x2="410" y2="186" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="4,5"/>
-                          <line x1="560" y1="92" x2="448" y2="196" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="4,5"/>
-                          <line x1="694" y1="130" x2="464" y2="204" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="4,5"/>
+                          <!-- ── Fundo branco explícito ── -->
+                          <rect x="-20" y="-20" width="860" height="510" fill="#ffffff" rx="0"/>
 
-                          <!-- ── Arcos suaves P1↔P2↔P3↔P4↔P5 ── -->
-                          <path d="M148 104 Q204 60 236 80" fill="none" stroke="#f1f5f9" stroke-width="1.5" stroke-dasharray="3,7"/>
-                          <path d="M286 76 Q348 46 386 68" fill="none" stroke="#f1f5f9" stroke-width="1.5" stroke-dasharray="3,7"/>
-                          <path d="M436 68 Q472 46 534 76" fill="none" stroke="#f1f5f9" stroke-width="1.5" stroke-dasharray="3,7"/>
-                          <path d="M584 80 Q644 60 668 104" fill="none" stroke="#f1f5f9" stroke-width="1.5" stroke-dasharray="3,7"/>
-
-                          <!-- ── Matriz Central → P6 ── -->
-                          <line x1="410" y1="256" x2="410" y2="316" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,4"/>
-                          <circle cx="410" cy="316" r="3" fill="#94a3b8"/>
-
-                          <!-- ── P6 → Módulos ── -->
-                          <line x1="374" y1="380" x2="196" y2="408" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="4,5"/>
-                          <line x1="410" y1="384" x2="410" y2="408" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="4,5"/>
-                          <line x1="446" y1="380" x2="624" y2="408" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="4,5"/>
-
-                          <!-- ──────────────────── P1 — azul ──────────────────── -->
-                          <g onclick="abrirPopupP('p1')" style="cursor:pointer" onmouseover="this.querySelector('circle').setAttribute('r','38')" onmouseout="this.querySelector('circle').setAttribute('r','34')">
-                            <circle cx="100" cy="104" r="34" fill="#2563eb" filter="url(#sf)" style="transition:r .2s"/>
-                            <text x="100" y="99" text-anchor="middle" fill="white" font-size="16" font-weight="300">🧭</text>
-                            <text x="100" y="113" text-anchor="middle" fill="white" font-size="9" font-weight="600" letter-spacing=".3">P1</text>
-                            <text x="100" y="150" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600">Propósito</text>
-                            <text x="100" y="164" text-anchor="middle" fill="#10b981" font-size="10" font-weight="500" id="fl-p1-val">✓ concluído</text>
+                          <!-- ── Dots decorativos sutis ── -->
+                          <g fill="#e2e8f0">
+                            <circle cx="40" cy="20" r="1.5"/><circle cx="100" cy="20" r="1.5"/><circle cx="160" cy="20" r="1.5"/><circle cx="220" cy="20" r="1.5"/><circle cx="280" cy="20" r="1.5"/><circle cx="340" cy="20" r="1.5"/><circle cx="400" cy="20" r="1.5"/><circle cx="460" cy="20" r="1.5"/><circle cx="520" cy="20" r="1.5"/><circle cx="580" cy="20" r="1.5"/><circle cx="640" cy="20" r="1.5"/><circle cx="700" cy="20" r="1.5"/><circle cx="760" cy="20" r="1.5"/>
+                            <circle cx="40" cy="450" r="1.5"/><circle cx="100" cy="450" r="1.5"/><circle cx="160" cy="450" r="1.5"/><circle cx="220" cy="450" r="1.5"/><circle cx="280" cy="450" r="1.5"/><circle cx="340" cy="450" r="1.5"/><circle cx="400" cy="450" r="1.5"/><circle cx="460" cy="450" r="1.5"/><circle cx="520" cy="450" r="1.5"/><circle cx="580" cy="450" r="1.5"/><circle cx="640" cy="450" r="1.5"/><circle cx="700" cy="450" r="1.5"/><circle cx="760" cy="450" r="1.5"/>
+                            <circle cx="20" cy="80" r="1.5"/><circle cx="20" cy="160" r="1.5"/><circle cx="20" cy="240" r="1.5"/><circle cx="20" cy="320" r="1.5"/><circle cx="20" cy="400" r="1.5"/>
+                            <circle cx="800" cy="80" r="1.5"/><circle cx="800" cy="160" r="1.5"/><circle cx="800" cy="240" r="1.5"/><circle cx="800" cy="320" r="1.5"/><circle cx="800" cy="400" r="1.5"/>
                           </g>
 
-                          <!-- ──────────────────── P2 — violeta ──────────────────── -->
-                          <g onclick="abrirPopupP('p2')" style="cursor:pointer" onmouseover="this.querySelector('circle').setAttribute('r','38')" onmouseout="this.querySelector('circle').setAttribute('r','34')">
-                            <circle cx="260" cy="68" r="34" fill="#7c3aed" filter="url(#sf)" style="transition:r .2s"/>
-                            <text x="260" y="63" text-anchor="middle" fill="white" font-size="16" font-weight="300">📦</text>
-                            <text x="260" y="77" text-anchor="middle" fill="white" font-size="9" font-weight="600" letter-spacing=".3">P2</text>
-                            <text x="260" y="116" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600">Produto</text>
+                          <!-- ── CONEXÕES ANIMADAS P→Matriz ── -->
+                          <line x1="126" y1="130" x2="362" y2="206" stroke="#c7d2fe" stroke-width="1.8" class="nn-line" style="animation-delay:0s"/>
+                          <line x1="262" y1="90"  x2="378" y2="198" stroke="#ddd6fe" stroke-width="1.8" class="nn-line" style="animation-delay:.3s"/>
+                          <line x1="410" y1="76"  x2="410" y2="188" stroke="#bae6fd" stroke-width="1.8" class="nn-line" style="animation-delay:.6s"/>
+                          <line x1="558" y1="90"  x2="444" y2="198" stroke="#bbf7d0" stroke-width="1.8" class="nn-line" style="animation-delay:.9s"/>
+                          <line x1="694" y1="130" x2="462" y2="206" stroke="#fed7aa" stroke-width="1.8" class="nn-line" style="animation-delay:1.2s"/>
+
+                          <!-- ── Arcos horizontais entre Ps (muito suaves) ── -->
+                          <path d="M148 108 Q205 62 238 82" fill="none" stroke="#e2e8f0" stroke-width="1.2" class="nn-line-slow" style="animation-delay:0.5s"/>
+                          <path d="M286 76 Q348 44 384 70" fill="none" stroke="#e2e8f0" stroke-width="1.2" class="nn-line-slow" style="animation-delay:0.8s"/>
+                          <path d="M436 70 Q472 44 532 76" fill="none" stroke="#e2e8f0" stroke-width="1.2" class="nn-line-slow" style="animation-delay:1.1s"/>
+                          <path d="M582 82 Q642 62 668 108" fill="none" stroke="#e2e8f0" stroke-width="1.2" class="nn-line-slow" style="animation-delay:1.4s"/>
+
+                          <!-- ── Matriz → P6 ── -->
+                          <line x1="410" y1="258" x2="410" y2="318" stroke="#818cf8" stroke-width="2" class="nn-line" style="animation-delay:0s"/>
+
+                          <!-- ── Feedback loops (reversas, muito sutis) ── -->
+                          <path d="M174 422 Q80 320 370 244" fill="none" stroke="#e2e8f0" stroke-width="1" class="nn-line-rev" style="animation-delay:0s"/>
+                          <path d="M644 422 Q740 320 458 244" fill="none" stroke="#e2e8f0" stroke-width="1" class="nn-line-rev" style="animation-delay:.8s"/>
+
+                          <!-- ── P6 → Módulos ── -->
+                          <line x1="376" y1="382" x2="196" y2="412" stroke="#e2e8f0" stroke-width="1.5" class="nn-line-slow" style="animation-delay:.2s"/>
+                          <line x1="410" y1="386" x2="410" y2="412" stroke="#e2e8f0" stroke-width="1.5" class="nn-line-slow" style="animation-delay:.5s"/>
+                          <line x1="444" y1="382" x2="624" y2="412" stroke="#e2e8f0" stroke-width="1.5" class="nn-line-slow" style="animation-delay:.8s"/>
+
+                          <!-- ══════════════ NÓS ══════════════ -->
+
+                          <!-- P1 — PROPÓSITO · azul -->
+                          <g onclick="abrirPopupP('p1')" style="cursor:pointer">
+                            <circle cx="100" cy="104" r="6" fill="#93c5fd" opacity=".4"/>
+                            <circle cx="100" cy="104" r="34" fill="#2563eb" class="nn-circle" style="filter:drop-shadow(0 4px 14px rgba(37,99,235,.35))"/>
+                            <text x="100" y="99" text-anchor="middle" fill="white" font-size="16">🧭</text>
+                            <text x="100" y="114" text-anchor="middle" fill="white" font-size="9" font-weight="700" letter-spacing=".5">P1</text>
+                            <text x="100" y="150" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600">Propósito</text>
+                            <text x="100" y="165" text-anchor="middle" fill="#10b981" font-size="10" font-weight="500" id="fl-p1-val">✓ concluído</text>
+                          </g>
+
+                          <!-- P2 — PRODUTO · violeta -->
+                          <g onclick="abrirPopupP('p2')" style="cursor:pointer">
+                            <circle cx="260" cy="68" r="6" fill="#c4b5fd" opacity=".4"/>
+                            <circle cx="260" cy="68" r="34" fill="#7c3aed" class="nn-circle" style="filter:drop-shadow(0 4px 14px rgba(124,58,237,.35))"/>
+                            <text x="260" y="63" text-anchor="middle" fill="white" font-size="16">📦</text>
+                            <text x="260" y="78" text-anchor="middle" fill="white" font-size="9" font-weight="700" letter-spacing=".5">P2</text>
+                            <text x="260" y="115" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600">Produto</text>
                             <text x="260" y="130" text-anchor="middle" fill="#10b981" font-size="10" font-weight="500" id="fl-p2-val">✓ concluído</text>
                           </g>
 
-                          <!-- ──────────────────── P3 — ciano ──────────────────── -->
-                          <g onclick="abrirPopupP('p3')" style="cursor:pointer" onmouseover="this.querySelector('circle').setAttribute('r','38')" onmouseout="this.querySelector('circle').setAttribute('r','34')">
-                            <circle cx="410" cy="54" r="34" fill="#0891b2" filter="url(#sf)" style="transition:r .2s"/>
-                            <text x="410" y="49" text-anchor="middle" fill="white" font-size="16" font-weight="300">👥</text>
-                            <text x="410" y="63" text-anchor="middle" fill="white" font-size="9" font-weight="600" letter-spacing=".3">P3</text>
-                            <text x="410" y="102" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600">Pessoas</text>
-                            <text x="410" y="116" text-anchor="middle" fill="#10b981" font-size="10" font-weight="500" id="fl-p3-val">✓ concluído</text>
+                          <!-- P3 — PESSOAS · ciano -->
+                          <g onclick="abrirPopupP('p3')" style="cursor:pointer">
+                            <circle cx="410" cy="52" r="6" fill="#67e8f9" opacity=".4"/>
+                            <circle cx="410" cy="52" r="34" fill="#0891b2" class="nn-circle" style="filter:drop-shadow(0 4px 14px rgba(8,145,178,.35))"/>
+                            <text x="410" y="47" text-anchor="middle" fill="white" font-size="16">👥</text>
+                            <text x="410" y="62" text-anchor="middle" fill="white" font-size="9" font-weight="700" letter-spacing=".5">P3</text>
+                            <text x="410" y="99" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600">Pessoas</text>
+                            <text x="410" y="114" text-anchor="middle" fill="#10b981" font-size="10" font-weight="500" id="fl-p3-val">✓ concluído</text>
                           </g>
 
-                          <!-- ──────────────────── P4 — verde ──────────────────── -->
-                          <g onclick="abrirPopupP('p4')" style="cursor:pointer" onmouseover="this.querySelector('circle').setAttribute('r','38')" onmouseout="this.querySelector('circle').setAttribute('r','34')">
-                            <circle cx="560" cy="68" r="34" fill="#059669" filter="url(#sf)" style="transition:r .2s"/>
-                            <text x="560" y="63" text-anchor="middle" fill="white" font-size="16" font-weight="300">⚙️</text>
-                            <text x="560" y="77" text-anchor="middle" fill="white" font-size="9" font-weight="600" letter-spacing=".3">P4</text>
-                            <text x="560" y="116" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600">Processo</text>
+                          <!-- P4 — PROCESSO · verde -->
+                          <g onclick="abrirPopupP('p4')" style="cursor:pointer">
+                            <circle cx="560" cy="68" r="6" fill="#6ee7b7" opacity=".4"/>
+                            <circle cx="560" cy="68" r="34" fill="#059669" class="nn-circle" style="filter:drop-shadow(0 4px 14px rgba(5,150,105,.35))"/>
+                            <text x="560" y="63" text-anchor="middle" fill="white" font-size="16">⚙️</text>
+                            <text x="560" y="78" text-anchor="middle" fill="white" font-size="9" font-weight="700" letter-spacing=".5">P4</text>
+                            <text x="560" y="115" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600">Processo</text>
                             <text x="560" y="130" text-anchor="middle" fill="#10b981" font-size="10" font-weight="500" id="fl-p4-val">✓ concluído</text>
                           </g>
 
-                          <!-- ──────────────────── P5 — âmbar ──────────────────── -->
-                          <g onclick="abrirPopupP('p5')" style="cursor:pointer" onmouseover="this.querySelector('circle').setAttribute('r','38')" onmouseout="this.querySelector('circle').setAttribute('r','34')">
-                            <circle cx="720" cy="104" r="34" fill="#d97706" filter="url(#sf)" style="transition:r .2s"/>
-                            <text x="720" y="99" text-anchor="middle" fill="white" font-size="16" font-weight="300">🎯</text>
-                            <text x="720" y="113" text-anchor="middle" fill="white" font-size="9" font-weight="600" letter-spacing=".3">P5</text>
+                          <!-- P5 — POSICIONAMENTO · âmbar -->
+                          <g onclick="abrirPopupP('p5')" style="cursor:pointer">
+                            <circle cx="720" cy="104" r="6" fill="#fcd34d" opacity=".4"/>
+                            <circle cx="720" cy="104" r="34" fill="#d97706" class="nn-circle" style="filter:drop-shadow(0 4px 14px rgba(217,119,6,.35))"/>
+                            <text x="720" y="99" text-anchor="middle" fill="white" font-size="16">🎯</text>
+                            <text x="720" y="114" text-anchor="middle" fill="white" font-size="9" font-weight="700" letter-spacing=".5">P5</text>
                             <text x="720" y="150" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600">Posicionamento</text>
-                            <text x="720" y="164" text-anchor="middle" fill="#10b981" font-size="10" font-weight="500" id="fl-p5-val">✓ concluído</text>
+                            <text x="720" y="165" text-anchor="middle" fill="#10b981" font-size="10" font-weight="500" id="fl-p5-val">✓ concluído</text>
                           </g>
 
-                          <!-- ──────────────────── MATRIZ CENTRAL ──────────────────── -->
-                          <g>
-                            <rect x="270" y="186" width="280" height="70" rx="14" fill="#0f172a" filter="url(#sf-mz)"/>
-                            <!-- 3 pontos minimalistas -->
-                            <circle cx="292" cy="200" r="2" fill="rgba(255,255,255,0.25)"/>
-                            <circle cx="300" cy="200" r="2" fill="rgba(255,255,255,0.25)"/>
-                            <circle cx="308" cy="200" r="2" fill="rgba(255,255,255,0.25)"/>
-                            <circle cx="524" cy="200" r="2" fill="rgba(255,255,255,0.25)"/>
-                            <circle cx="516" cy="200" r="2" fill="rgba(255,255,255,0.25)"/>
-                            <circle cx="508" cy="200" r="2" fill="rgba(255,255,255,0.25)"/>
-                            <text x="410" y="217" text-anchor="middle" fill="white" font-size="11.5" font-weight="700" letter-spacing="2">🧠  MATRIZ CENTRAL</text>
-                            <text x="410" y="234" text-anchor="middle" fill="rgba(148,163,184,0.85)" font-size="8.5">fonte única de verdade — dados cruzados de todos os módulos</text>
-                            <text x="410" y="248" text-anchor="middle" fill="rgba(100,116,139,0.6)" font-size="7.5" letter-spacing=".5">P1 · P2 · P3 · P4 · P5 · P6 + FINANCEIRO + MARKETING + CRM</text>
+                          <!-- ── MATRIZ CENTRAL ── -->
+                          <g class="nn-mz">
+                            <rect x="270" y="188" width="280" height="70" rx="14" fill="#0f172a" style="filter:drop-shadow(0 6px 20px rgba(15,23,42,.22))"/>
+                            <circle cx="292" cy="202" r="2" fill="rgba(255,255,255,.2)"/>
+                            <circle cx="300" cy="202" r="2" fill="rgba(255,255,255,.2)"/>
+                            <circle cx="308" cy="202" r="2" fill="rgba(255,255,255,.2)"/>
+                            <circle cx="520" cy="202" r="2" fill="rgba(255,255,255,.2)"/>
+                            <circle cx="512" cy="202" r="2" fill="rgba(255,255,255,.2)"/>
+                            <circle cx="504" cy="202" r="2" fill="rgba(255,255,255,.2)"/>
+                            <text x="410" y="218" text-anchor="middle" fill="white" font-size="12" font-weight="700" letter-spacing="2">🧠  MATRIZ CENTRAL</text>
+                            <text x="410" y="235" text-anchor="middle" fill="rgba(148,163,184,.85)" font-size="8.5">fonte única de verdade — dados cruzados de todos os módulos</text>
+                            <text x="410" y="249" text-anchor="middle" fill="rgba(100,116,139,.6)" font-size="7.5" letter-spacing=".5">P1 · P2 · P3 · P4 · P5 · P6 + FINANCEIRO + MARKETING + CRM</text>
                           </g>
 
-                          <!-- ──────────────────── P6 — vermelho ──────────────────── -->
-                          <g onclick="abrirPopupP('p6')" style="cursor:pointer" onmouseover="this.querySelector('circle').setAttribute('r','38')" onmouseout="this.querySelector('circle').setAttribute('r','34')">
-                            <circle cx="410" cy="352" r="34" fill="#dc2626" filter="url(#sf)" style="transition:r .2s"/>
-                            <text x="410" y="347" text-anchor="middle" fill="white" font-size="16" font-weight="300">📈</text>
-                            <text x="410" y="361" text-anchor="middle" fill="white" font-size="9" font-weight="600" letter-spacing=".3">P6</text>
-                            <text x="410" y="398" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600">Performance</text>
+                          <!-- P6 — PERFORMANCE · vermelho -->
+                          <g onclick="abrirPopupP('p6')" style="cursor:pointer">
+                            <circle cx="410" cy="354" r="6" fill="#fca5a5" opacity=".4"/>
+                            <circle cx="410" cy="354" r="34" fill="#dc2626" class="nn-circle" style="filter:drop-shadow(0 4px 14px rgba(220,38,38,.35))"/>
+                            <text x="410" y="349" text-anchor="middle" fill="white" font-size="16">📈</text>
+                            <text x="410" y="364" text-anchor="middle" fill="white" font-size="9" font-weight="700" letter-spacing=".5">P6</text>
+                            <text x="410" y="400" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600">Performance</text>
                           </g>
 
-                          <!-- ──────────────────── MÓDULOS ──────────────────── -->
-                          <!-- Financeiro -->
-                          <g onclick="nav('financeiro',document.querySelectorAll('.nav-item')[3])" style="cursor:pointer" onmouseover="this.querySelector('rect').setAttribute('stroke','#d97706')" onmouseout="this.querySelector('rect').setAttribute('stroke','#e2e8f0')">
-                            <rect x="84" y="410" width="164" height="44" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
-                            <rect x="84" y="410" width="164" height="3" rx="2" fill="#d97706"/>
-                            <text x="166" y="432" text-anchor="middle" fill="#92400e" font-size="12">💰</text>
-                            <text x="166" y="445" text-anchor="middle" fill="#1e293b" font-size="9.5" font-weight="600">Financeiro</text>
+                          <!-- ── MÓDULOS ── -->
+                          <g onclick="nav('financeiro',document.querySelectorAll('.nav-item')[3])" style="cursor:pointer">
+                            <rect x="82" y="412" width="168" height="42" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1.5" style="filter:drop-shadow(0 2px 8px rgba(0,0,0,.05))"/>
+                            <rect x="82" y="412" width="168" height="3" rx="2" fill="#d97706"/>
+                            <text x="166" y="433" text-anchor="middle" fill="#92400e" font-size="11">💰</text>
+                            <text x="166" y="447" text-anchor="middle" fill="#1e293b" font-size="9.5" font-weight="600">Financeiro</text>
                           </g>
-                          <!-- CRM -->
-                          <g onclick="nav('mkt',document.querySelectorAll('.nav-item')[2]);setTimeout(()=>mktTab('crm',document.getElementById('mktab-crm')),200)" style="cursor:pointer" onmouseover="this.querySelector('rect').setAttribute('stroke','#059669')" onmouseout="this.querySelector('rect').setAttribute('stroke','#e2e8f0')">
-                            <rect x="328" y="410" width="164" height="44" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
-                            <rect x="328" y="410" width="164" height="3" rx="2" fill="#059669"/>
-                            <text x="410" y="432" text-anchor="middle" fill="#064e3b" font-size="12">👥</text>
-                            <text x="410" y="445" text-anchor="middle" fill="#1e293b" font-size="9.5" font-weight="600">CRM</text>
+                          <g onclick="nav('mkt',document.querySelectorAll('.nav-item')[2]);setTimeout(()=>mktTab('crm',document.getElementById('mktab-crm')),200)" style="cursor:pointer">
+                            <rect x="326" y="412" width="168" height="42" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1.5" style="filter:drop-shadow(0 2px 8px rgba(0,0,0,.05))"/>
+                            <rect x="326" y="412" width="168" height="3" rx="2" fill="#059669"/>
+                            <text x="410" y="433" text-anchor="middle" fill="#064e3b" font-size="11">👥</text>
+                            <text x="410" y="447" text-anchor="middle" fill="#1e293b" font-size="9.5" font-weight="600">CRM</text>
                           </g>
-                          <!-- Marketing -->
-                          <g onclick="nav('mkt',document.querySelectorAll('.nav-item')[2])" style="cursor:pointer" onmouseover="this.querySelector('rect').setAttribute('stroke','#7c3aed')" onmouseout="this.querySelector('rect').setAttribute('stroke','#e2e8f0')">
-                            <rect x="572" y="410" width="164" height="44" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
-                            <rect x="572" y="410" width="164" height="3" rx="2" fill="#7c3aed"/>
-                            <text x="654" y="432" text-anchor="middle" fill="#3b0764" font-size="12">📡</text>
-                            <text x="654" y="445" text-anchor="middle" fill="#1e293b" font-size="9.5" font-weight="600">Marketing</text>
+                          <g onclick="nav('mkt',document.querySelectorAll('.nav-item')[2])" style="cursor:pointer">
+                            <rect x="570" y="412" width="168" height="42" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1.5" style="filter:drop-shadow(0 2px 8px rgba(0,0,0,.05))"/>
+                            <rect x="570" y="412" width="168" height="3" rx="2" fill="#7c3aed"/>
+                            <text x="654" y="433" text-anchor="middle" fill="#3b0764" font-size="11">📡</text>
+                            <text x="654" y="447" text-anchor="middle" fill="#1e293b" font-size="9.5" font-weight="600">Marketing</text>
                           </g>
 
-                          <!-- Rodapé sutil -->
-                          <text x="410" y="462" text-anchor="middle" fill="#e2e8f0" font-size="7.5" letter-spacing="2" font-weight="400">SISTEMA INTEGRADO</text>
+                          <text x="410" y="466" text-anchor="middle" fill="#e2e8f0" font-size="7.5" letter-spacing="2" font-weight="400">SISTEMA INTEGRADO</text>
                         </svg>
                       </div>
                     </div>

@@ -140,7 +140,7 @@ tbody tr:hover { background: #fafafb !important; }
 
 /* 6Ps */
 #sixps-grid .card { border: none !important; box-shadow: 0 1px 3px rgba(0,0,0,.04) !important; }
-#sixps-fluxograma > div:nth-child(2) { background: #0f0f14 !important; border: 1px solid rgba(255,255,255,.06) !important; border-radius: 12px !important; }
+#sixps-fluxograma > div:nth-child(2) { background: #ffffff !important; border: 1px solid #e8ecf0 !important; border-radius: 20px !important; box-shadow: 0 2px 8px rgba(0,0,0,0.06),0 12px 40px rgba(0,0,0,0.07) !important; }
 #sixps-fluxograma > div:first-child { color: #8f8f9c !important; }
 #sixps-modulo { color: #1b1b21 !important; }
 #sixps-modulo-titulo { color: #1b1b21 !important; }
@@ -233,3 +233,4 @@ tbody tr:hover { background: #fafafb !important; }
 
 /* FIX: Painel Dados dos 6Ps — texto invisível */
 #sixps-dados-content { color: var(--text) !important; }
+
