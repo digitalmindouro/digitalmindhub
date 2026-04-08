@@ -503,7 +503,7 @@
                     onmouseout="this.style.borderColor='var(--border2)';this.style.background='var(--surface)'">
                     <div style="width:44px;height:44px;background:#1e3a8a;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:16px"><span style="font-family:'Syne',sans-serif;font-weight:800;font-size:14px;color:white;letter-spacing:-.3px">Ad</span></div>
                     <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:#fff;margin-bottom:6px">Administrativo</div>
-                    <div style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:16px">Estrutura · 6Ps · Processos</div>
+                    <div style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:16px">Estrutura, 6Ps e processos</div>
                     <div style="display:flex;align-items:center;justify-content:space-between">
                       <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--accent)" id="sc-adm">0</div>
                       <div style="font-size:11px;color:var(--accent);opacity:.7">Acessar →</div>
@@ -515,7 +515,7 @@
                     onmouseout="this.style.borderColor='var(--border2)';this.style.background='var(--surface)'">
                     <div style="width:44px;height:44px;background:#1e3a8a;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:16px"><span style="font-family:'Syne',sans-serif;font-weight:800;font-size:14px;color:white;letter-spacing:-.3px">Mk</span></div>
                     <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:#fff;margin-bottom:6px">Marketing</div>
-                    <div style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:16px" id="era-desc">META Ads · CRM · Conteúdo</div>
+                    <div style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:16px">Ads, CRM e conteúdo</div>
                     <div style="display:flex;align-items:center;justify-content:space-between">
                       <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--accent)" id="sc-mkt">0</div>
                       <div style="font-size:11px;color:var(--accent);opacity:.7">Acessar →</div>
@@ -527,7 +527,7 @@
                     onmouseout="this.style.borderColor='var(--border2)';this.style.background='var(--surface)'">
                     <div style="width:44px;height:44px;background:#1e3a8a;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:16px"><span style="font-family:'Syne',sans-serif;font-weight:800;font-size:14px;color:white;letter-spacing:-.3px">Fi</span></div>
                     <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:#fff;margin-bottom:6px">Financeiro</div>
-                    <div style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:16px">Caixa · Metas · Estoque</div>
+                    <div style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:16px">Caixa, metas e estoque</div>
                     <div style="display:flex;align-items:center;justify-content:space-between">
                       <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--accent)" id="sc-fin">0</div>
                       <div style="font-size:11px;color:var(--accent);opacity:.7">Acessar →</div>
@@ -2552,7 +2552,7 @@ function updateUI() {
   document.getElementById('sc-adm').textContent=S.empresa.score_adm||0;
   document.getElementById('sc-mkt').textContent=S.empresa.score_mkt||0;
   document.getElementById('sc-fin').textContent=S.empresa.score_fin||0;
-  document.getElementById('era-desc').textContent='Era '+(S.empresa.era_marketing||'1.0')+' de marketing';
+  // era-desc removed from home card (static text)
   // Atualiza tela inicial
   const nomeEl=document.getElementById('inicio-nome');
   if(nomeEl)nomeEl.textContent=S.empresa.nome||'empresa';
@@ -3215,7 +3215,7 @@ function initAdmChat(){
 
   const el=document.getElementById('chat-adm');
   if(!el||el.innerHTML!=='')return;
-  appendSpecialMsg('agent',`Olá! Sou o Assistente Administrativo do DigitalMind.\n\nVou guiar **${S.empresa?.nome||'sua empresa'}** pela **Metodologia 6Ps** — do propósito à performance.\n\nClique em um card abaixo para começar!`,'chat-adm');
+  appendSpecialMsg('agent',`Olá! Sou o Agente Administrativo do DigitalMind.\n\nVou guiar **${S.empresa?.nome||'sua empresa'}** pela **Metodologia 6Ps** — do propósito à performance.\n\nClique em um card abaixo para começar!`,'chat-adm');
 }
 
 // ══════════════════════════════════════════════
@@ -3312,7 +3312,8 @@ async function gerarPersonasIA() {
 }
 
 async function mktCarregarEstrategia() {
-  // Garante que a matriz está carregada
+  // Garante que usuário está autenticado e matriz carregada
+  if(!S.user) { setTimeout(mktCarregarEstrategia, 500); return; }
   if(!MZ || Object.keys(MZ).length === 0) {
     await matrizCarregar();
   }
@@ -3321,7 +3322,7 @@ async function mktCarregarEstrategia() {
   const per = document.getElementById('mkt-estrat-persona');
 
   // Monta posicionamento com fallbacks
-  if(pos) {
+  if(pos && pos.innerHTML.includes('Carregando')) {
     const campos = [
       MZ.p5_proposta_valor && `<strong>Proposta de valor:</strong> ${MZ.p5_proposta_valor}`,
       MZ.p5_diferencial    && `<strong>Diferencial:</strong> ${MZ.p5_diferencial}`,
@@ -3366,7 +3367,7 @@ async function mktCarregarEstrategia() {
       // Gera as outras 2 personas automaticamente se ainda não foram geradas
       const el2 = document.getElementById('persona-tab-2');
       const el3 = document.getElementById('persona-tab-3');
-      if(el2 && el2.innerHTML === 'Carregando...') {
+      if(el2 && (el2.innerHTML.includes('Carregando') || el2.innerHTML.trim() === '')) {
         setTimeout(gerarPersonasIA, 1000);
       }
     } else {
@@ -5756,7 +5757,7 @@ function renderSixpsGrid(){
   grid.innerHTML=ps.map(p=>{
     const cfg=SIXPS_CONFIG[p];
     const status=SP.progresso[p+'_status']||'bloqueado';
-    const bloqueado=status==='bloqueado';
+    const bloqueado=status==='bloqueado' && !isConcluidoP(p); // desbloqueado se MZ tem dados
     const concluido=status==='concluido';
     const statusLabel=concluido?'✓ Concluído':status==='em_andamento'?'Em andamento':'🔒 Bloqueado';
     const statusBg=concluido?'rgba(16,185,129,.15)':status==='em_andamento'?'rgba(37,99,235,.15)':'rgba(128,128,160,.08)';
@@ -5776,7 +5777,14 @@ function renderSixpsGrid(){
   }).join('');
 
   // Mostra fluxograma quando pelo menos P1-P5 concluídos
-  const p15Concluidos = ['p1','p2','p3','p4','p5'].every(p=>SP.progresso[p+'_status']==='concluido');
+  // Fallback: se progresso DB mostra bloqueado mas a matriz tem os dados, considera concluído
+  const isConcluidoP = (p) => {
+    if(SP.progresso[p+'_status']==='concluido') return true;
+    if(MZ && MZ[p+'_concluido']) return true; // dados extraídos pela IA
+    if(SP.dados[p+'_resumo'] && SP.dados[p+'_resumo'].length > 100) return true; // resumo existe
+    return false;
+  };
+  const p15Concluidos = ['p1','p2','p3','p4','p5'].every(p=>isConcluidoP(p));
   const todosConcluidos = ps.every(p=>SP.progresso[p+'_status']==='concluido');
   const fluxEl = document.getElementById('sixps-fluxograma');
   if(fluxEl) {
@@ -6151,7 +6159,7 @@ async function concluirP(moduloForce){
   const ps=['p1','p2','p3','p4','p5','p6'];const idx=ps.indexOf(modulo);
   const updates={[modulo+'_status']:'concluido'};
   if(idx<ps.length-1)updates[ps[idx+1]+'_status']='em_andamento';
-  await sb.from('sixps_progresso').update(updates).eq('user_id',S.user.id).eq('id',SP.progresso.id||0).then(r=>r).catch(()=>sb.from('sixps_progresso').update(updates).eq('user_id',S.user.id));
+  await sb.from('sixps_progresso').update(updates).eq('user_id',S.user.id);
   SP.progresso={...SP.progresso,...updates};
 
   // ── INTEGRAÇÃO ENTRE PILARES ──
