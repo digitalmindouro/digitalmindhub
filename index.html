@@ -916,182 +916,229 @@
                     <!-- FLUXOGRAMA TECH — aparece após P1-P5 concluídos -->
                     <div id="sixps-fluxograma" style="display:none;margin-bottom:18px">
                       <style>
-                        /* ── Neural Network Animations ── */
-                        @keyframes dash-flow {
-                          from { stroke-dashoffset: 24; }
+                        /* ── Neural Flow Animations ── */
+                        @keyframes flow-dash {
+                          from { stroke-dashoffset: 20; }
                           to   { stroke-dashoffset: 0; }
                         }
-                        @keyframes pulse-ring {
-                          0%   { r: 34; opacity: 1; }
-                          50%  { r: 38; opacity: .85; }
-                          100% { r: 34; opacity: 1; }
+                        @keyframes neon-pulse {
+                          0%,100% { opacity:.7; filter:drop-shadow(0 0 6px #6366f1) drop-shadow(0 0 14px #6366f1); }
+                          50%     { opacity:1;  filter:drop-shadow(0 0 12px #818cf8) drop-shadow(0 0 28px #6366f1) drop-shadow(0 0 48px #4f46e5); }
                         }
-                        @keyframes signal-move {
-                          0%   { opacity: 0; }
-                          10%  { opacity: 1; }
-                          90%  { opacity: 1; }
-                          100% { opacity: 0; }
+                        @keyframes orbit-pulse {
+                          0%,100% { r:48; }
+                          50%     { r:52; }
                         }
-                        @keyframes glow-pulse {
-                          0%,100% { filter: drop-shadow(0 0 6px rgba(99,102,241,.25)); }
-                          50%     { filter: drop-shadow(0 0 18px rgba(99,102,241,.55)); }
+                        @keyframes dot-blink {
+                          0%,100% { opacity:0; } 10%,90% { opacity:1; }
                         }
-                        .nn-line {
-                          stroke-dasharray: 6 6;
-                          animation: dash-flow 1.6s linear infinite;
-                        }
-                        .nn-line-slow {
-                          stroke-dasharray: 6 6;
-                          animation: dash-flow 2.4s linear infinite;
-                        }
-                        .nn-line-rev {
-                          stroke-dasharray: 6 6;
-                          animation: dash-flow 2s linear infinite reverse;
-                        }
-                        .nn-circle { transition: r .18s ease; }
-                        .nn-circle:hover { animation: pulse-ring .8s ease-in-out infinite; }
-                        .nn-mz { animation: glow-pulse 3s ease-in-out infinite; }
-                        #fluxograma-svg text { font-family: -apple-system, BlinkMacSystemFont, 'DM Sans', sans-serif; }
+                        .nn-solid { stroke-dasharray: none; }
+                        .nn-node-circle { transition: filter .2s; }
+                        .nn-node-circle:hover { filter: brightness(1.15) !important; }
+                        #fluxograma-svg { font-family: -apple-system, BlinkMacSystemFont, 'DM Sans', sans-serif; }
                       </style>
                       <div style="font-size:10px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:#94a3b8;margin-bottom:16px">
                         Mapa Estratégico <span style="font-size:9px;font-weight:400;letter-spacing:0;color:#cbd5e1;text-transform:none;margin-left:8px">— clique em cada pilar</span>
                       </div>
-                      <!-- Container com fundo branco forçado, isolado do tema -->
-                      <div style="background:#ffffff !important;border:1px solid #e8ecf0;border-radius:20px;padding:32px 20px 24px;overflow-x:auto;box-shadow:0 2px 8px rgba(0,0,0,0.06),0 12px 40px rgba(0,0,0,0.07)">
-                        <svg id="fluxograma-svg" viewBox="0 0 820 470" width="50%" style="min-width:420px;overflow:visible;display:block;margin:0 auto">
+                      <div style="background:#ffffff !important;border:1px solid #e8ecf0;border-radius:20px;padding:28px 16px 20px;overflow-x:auto;box-shadow:0 2px 8px rgba(0,0,0,0.06),0 12px 40px rgba(0,0,0,0.07)">
+                        <svg id="fluxograma-svg" viewBox="0 0 960 490" width="100%" style="min-width:640px;overflow:visible;display:block">
 
-                          <!-- ── Fundo branco explícito ── -->
-                          <rect x="-20" y="-20" width="860" height="510" fill="#ffffff" rx="0"/>
+                          <!-- ── Fundo branco garantido ── -->
+                          <rect x="-20" y="-20" width="1000" height="530" fill="#ffffff"/>
 
-                          <!-- ── Dots decorativos sutis ── -->
-                          <g fill="#e2e8f0">
-                            <circle cx="40" cy="20" r="1.5"/><circle cx="100" cy="20" r="1.5"/><circle cx="160" cy="20" r="1.5"/><circle cx="220" cy="20" r="1.5"/><circle cx="280" cy="20" r="1.5"/><circle cx="340" cy="20" r="1.5"/><circle cx="400" cy="20" r="1.5"/><circle cx="460" cy="20" r="1.5"/><circle cx="520" cy="20" r="1.5"/><circle cx="580" cy="20" r="1.5"/><circle cx="640" cy="20" r="1.5"/><circle cx="700" cy="20" r="1.5"/><circle cx="760" cy="20" r="1.5"/>
-                            <circle cx="40" cy="450" r="1.5"/><circle cx="100" cy="450" r="1.5"/><circle cx="160" cy="450" r="1.5"/><circle cx="220" cy="450" r="1.5"/><circle cx="280" cy="450" r="1.5"/><circle cx="340" cy="450" r="1.5"/><circle cx="400" cy="450" r="1.5"/><circle cx="460" cy="450" r="1.5"/><circle cx="520" cy="450" r="1.5"/><circle cx="580" cy="450" r="1.5"/><circle cx="640" cy="450" r="1.5"/><circle cx="700" cy="450" r="1.5"/><circle cx="760" cy="450" r="1.5"/>
-                            <circle cx="20" cy="80" r="1.5"/><circle cx="20" cy="160" r="1.5"/><circle cx="20" cy="240" r="1.5"/><circle cx="20" cy="320" r="1.5"/><circle cx="20" cy="400" r="1.5"/>
-                            <circle cx="800" cy="80" r="1.5"/><circle cx="800" cy="160" r="1.5"/><circle cx="800" cy="240" r="1.5"/><circle cx="800" cy="320" r="1.5"/><circle cx="800" cy="400" r="1.5"/>
+                          <!-- ── Dots de grid decorativos ── -->
+                          <g fill="#e8ecf0">
+                            <circle cx="60" cy="18" r="1.5"/><circle cx="200" cy="18" r="1.5"/><circle cx="340" cy="18" r="1.5"/><circle cx="480" cy="18" r="1.5"/><circle cx="620" cy="18" r="1.5"/><circle cx="760" cy="18" r="1.5"/><circle cx="900" cy="18" r="1.5"/>
+                            <circle cx="60" cy="472" r="1.5"/><circle cx="200" cy="472" r="1.5"/><circle cx="340" cy="472" r="1.5"/><circle cx="480" cy="472" r="1.5"/><circle cx="620" cy="472" r="1.5"/><circle cx="760" cy="472" r="1.5"/><circle cx="900" cy="472" r="1.5"/>
+                            <circle cx="18" cy="100" r="1.5"/><circle cx="18" cy="220" r="1.5"/><circle cx="18" cy="340" r="1.5"/><circle cx="18" cy="420" r="1.5"/>
+                            <circle cx="942" cy="100" r="1.5"/><circle cx="942" cy="220" r="1.5"/><circle cx="942" cy="340" r="1.5"/><circle cx="942" cy="420" r="1.5"/>
                           </g>
 
-                          <!-- ── CONEXÕES ANIMADAS P→Matriz ── -->
-                          <line x1="126" y1="130" x2="362" y2="206" stroke="#c7d2fe" stroke-width="1.8" class="nn-line" style="animation-delay:0s"/>
-                          <line x1="262" y1="90"  x2="378" y2="198" stroke="#ddd6fe" stroke-width="1.8" class="nn-line" style="animation-delay:.3s"/>
-                          <line x1="410" y1="76"  x2="410" y2="188" stroke="#bae6fd" stroke-width="1.8" class="nn-line" style="animation-delay:.6s"/>
-                          <line x1="558" y1="90"  x2="444" y2="198" stroke="#bbf7d0" stroke-width="1.8" class="nn-line" style="animation-delay:.9s"/>
-                          <line x1="694" y1="130" x2="462" y2="206" stroke="#fed7aa" stroke-width="1.8" class="nn-line" style="animation-delay:1.2s"/>
+                          <!-- ════════════════════════════════════════════════ -->
+                          <!--  PATHS nomeados para animateMotion               -->
+                          <!-- ════════════════════════════════════════════════ -->
+                          <defs>
+                            <!-- Paths P→Matriz -->
+                            <path id="pth-p1-mz" d="M 82 148 L 410 272"/>
+                            <path id="pth-p2-mz" d="M 264 96 L 420 260"/>
+                            <path id="pth-p3-mz" d="M 480 72 L 480 248"/>
+                            <path id="pth-p4-mz" d="M 696 96 L 544 260"/>
+                            <path id="pth-p5-mz" d="M 878 148 L 554 272"/>
+                            <!-- Path Matriz→P6 -->
+                            <path id="pth-mz-p6" d="M 480 330 L 480 366"/>
+                            <!-- Paths P6→Módulos -->
+                            <path id="pth-p6-fin" d="M 454 400 L 190 428"/>
+                            <path id="pth-p6-crm" d="M 480 402 L 480 428"/>
+                            <path id="pth-p6-mkt" d="M 506 400 L 770 428"/>
+                            <!-- Feedback loops -->
+                            <path id="pth-fin-mz" d="M 140 428 Q 60 330 390 280"/>
+                            <path id="pth-mkt-mz" d="M 820 428 Q 900 330 576 280"/>
+                            <!-- Neon filter -->
+                            <filter id="neon" x="-50%" y="-50%" width="200%" height="200%">
+                              <feGaussianBlur stdDeviation="3" result="b1"/>
+                              <feGaussianBlur stdDeviation="9" result="b2"/>
+                              <feGaussianBlur stdDeviation="20" result="b3"/>
+                              <feMerge><feMergeNode in="b3"/><feMergeNode in="b2"/><feMergeNode in="b1"/><feMergeNode in="SourceGraphic"/></feMerge>
+                            </filter>
+                            <filter id="drop" x="-30%" y="-30%" width="160%" height="160%">
+                              <feDropShadow dx="0" dy="3" stdDeviation="8" flood-color="rgba(0,0,0,0.12)"/>
+                            </filter>
+                          </defs>
 
-                          <!-- ── Arcos horizontais entre Ps (muito suaves) ── -->
-                          <path d="M148 108 Q205 62 238 82" fill="none" stroke="#e2e8f0" stroke-width="1.2" class="nn-line-slow" style="animation-delay:0.5s"/>
-                          <path d="M286 76 Q348 44 384 70" fill="none" stroke="#e2e8f0" stroke-width="1.2" class="nn-line-slow" style="animation-delay:0.8s"/>
-                          <path d="M436 70 Q472 44 532 76" fill="none" stroke="#e2e8f0" stroke-width="1.2" class="nn-line-slow" style="animation-delay:1.1s"/>
-                          <path d="M582 82 Q642 62 668 108" fill="none" stroke="#e2e8f0" stroke-width="1.2" class="nn-line-slow" style="animation-delay:1.4s"/>
+                          <!-- ════════════ LINHAS SÓLIDAS ════════════ -->
+                          <!-- P1-P5 → Matriz Central -->
+                          <use href="#pth-p1-mz" fill="none" stroke="#c7d2fe" stroke-width="1.8"/>
+                          <use href="#pth-p2-mz" fill="none" stroke="#ddd6fe" stroke-width="1.8"/>
+                          <use href="#pth-p3-mz" fill="none" stroke="#bae6fd" stroke-width="1.8"/>
+                          <use href="#pth-p4-mz" fill="none" stroke="#bbf7d0" stroke-width="1.8"/>
+                          <use href="#pth-p5-mz" fill="none" stroke="#fed7aa" stroke-width="1.8"/>
+                          <!-- Arcos P↔P (suaves, muito finos) -->
+                          <path d="M 110 120 Q 190 60 240 84" fill="none" stroke="#e8ecf0" stroke-width="1.2"/>
+                          <path d="M 290 78  Q 386 34 454 64" fill="none" stroke="#e8ecf0" stroke-width="1.2"/>
+                          <path d="M 508 64  Q 576 34 670 78" fill="none" stroke="#e8ecf0" stroke-width="1.2"/>
+                          <path d="M 722 84  Q 770 60 848 120" fill="none" stroke="#e8ecf0" stroke-width="1.2"/>
+                          <!-- Matriz → P6 -->
+                          <use href="#pth-mz-p6" fill="none" stroke="#818cf8" stroke-width="2.2"/>
+                          <!-- P6 → Módulos -->
+                          <use href="#pth-p6-fin" fill="none" stroke="#e2e8f0" stroke-width="1.5"/>
+                          <use href="#pth-p6-crm" fill="none" stroke="#e2e8f0" stroke-width="1.5"/>
+                          <use href="#pth-p6-mkt" fill="none" stroke="#e2e8f0" stroke-width="1.5"/>
+                          <!-- Feedback loops -->
+                          <use href="#pth-fin-mz" fill="none" stroke="#e8ecf0" stroke-width="1"/>
+                          <use href="#pth-mkt-mz" fill="none" stroke="#e8ecf0" stroke-width="1"/>
 
-                          <!-- ── Matriz → P6 ── -->
-                          <line x1="410" y1="258" x2="410" y2="318" stroke="#818cf8" stroke-width="2" class="nn-line" style="animation-delay:0s"/>
+                          <!-- ════════════ MINI DOTS ANIMADOS ════════════ -->
+                          <!-- P1 → Matriz -->
+                          <circle r="4" fill="#818cf8" opacity="0.9"><animateMotion dur="2.2s" repeatCount="indefinite" keyPoints="0;1" keyTimes="0;1" calcMode="linear"><mpath href="#pth-p1-mz"/></animateMotion></circle>
+                          <!-- P2 → Matriz -->
+                          <circle r="4" fill="#a78bfa" opacity="0.9"><animateMotion dur="1.9s" begin="0.4s" repeatCount="indefinite" keyPoints="0;1" keyTimes="0;1" calcMode="linear"><mpath href="#pth-p2-mz"/></animateMotion></circle>
+                          <!-- P3 → Matriz -->
+                          <circle r="4" fill="#38bdf8" opacity="0.9"><animateMotion dur="1.6s" begin="0.8s" repeatCount="indefinite" keyPoints="0;1" keyTimes="0;1" calcMode="linear"><mpath href="#pth-p3-mz"/></animateMotion></circle>
+                          <!-- P4 → Matriz -->
+                          <circle r="4" fill="#34d399" opacity="0.9"><animateMotion dur="1.9s" begin="1.1s" repeatCount="indefinite" keyPoints="0;1" keyTimes="0;1" calcMode="linear"><mpath href="#pth-p4-mz"/></animateMotion></circle>
+                          <!-- P5 → Matriz -->
+                          <circle r="4" fill="#fbbf24" opacity="0.9"><animateMotion dur="2.2s" begin="1.4s" repeatCount="indefinite" keyPoints="0;1" keyTimes="0;1" calcMode="linear"><mpath href="#pth-p5-mz"/></animateMotion></circle>
+                          <!-- Matriz → P6 -->
+                          <circle r="5" fill="#6366f1" opacity="1"><animateMotion dur="1.2s" repeatCount="indefinite" keyPoints="0;1" keyTimes="0;1" calcMode="linear"><mpath href="#pth-mz-p6"/></animateMotion></circle>
+                          <!-- P6 → Módulos -->
+                          <circle r="3.5" fill="#94a3b8"><animateMotion dur="2s" begin="0.2s" repeatCount="indefinite"><mpath href="#pth-p6-fin"/></animateMotion></circle>
+                          <circle r="3.5" fill="#94a3b8"><animateMotion dur="1.5s" begin="0.6s" repeatCount="indefinite"><mpath href="#pth-p6-crm"/></animateMotion></circle>
+                          <circle r="3.5" fill="#94a3b8"><animateMotion dur="2s" begin="1s" repeatCount="indefinite"><mpath href="#pth-p6-mkt"/></animateMotion></circle>
+                          <!-- Feedback loops (lentos, sutis) -->
+                          <circle r="3" fill="#c7d2fe" opacity="0.6"><animateMotion dur="4s" repeatCount="indefinite"><mpath href="#pth-fin-mz"/></animateMotion></circle>
+                          <circle r="3" fill="#c7d2fe" opacity="0.6"><animateMotion dur="4s" begin="2s" repeatCount="indefinite"><mpath href="#pth-mkt-mz"/></animateMotion></circle>
 
-                          <!-- ── Feedback loops (reversas, muito sutis) ── -->
-                          <path d="M174 422 Q80 320 370 244" fill="none" stroke="#e2e8f0" stroke-width="1" class="nn-line-rev" style="animation-delay:0s"/>
-                          <path d="M644 422 Q740 320 458 244" fill="none" stroke="#e2e8f0" stroke-width="1" class="nn-line-rev" style="animation-delay:.8s"/>
+                          <!-- ════════════ NÓS P1–P5 ════════════ -->
 
-                          <!-- ── P6 → Módulos ── -->
-                          <line x1="376" y1="382" x2="196" y2="412" stroke="#e2e8f0" stroke-width="1.5" class="nn-line-slow" style="animation-delay:.2s"/>
-                          <line x1="410" y1="386" x2="410" y2="412" stroke="#e2e8f0" stroke-width="1.5" class="nn-line-slow" style="animation-delay:.5s"/>
-                          <line x1="444" y1="382" x2="624" y2="412" stroke="#e2e8f0" stroke-width="1.5" class="nn-line-slow" style="animation-delay:.8s"/>
-
-                          <!-- ══════════════ NÓS ══════════════ -->
-
-                          <!-- P1 — PROPÓSITO · azul -->
+                          <!-- P1 Propósito — azul -->
                           <g onclick="abrirPopupP('p1')" style="cursor:pointer">
-                            <circle cx="100" cy="104" r="6" fill="#93c5fd" opacity=".4"/>
-                            <circle cx="100" cy="104" r="34" fill="#2563eb" class="nn-circle" style="filter:drop-shadow(0 4px 14px rgba(37,99,235,.35))"/>
-                            <text x="100" y="99" text-anchor="middle" fill="white" font-size="16">🧭</text>
-                            <text x="100" y="114" text-anchor="middle" fill="white" font-size="9" font-weight="700" letter-spacing=".5">P1</text>
-                            <text x="100" y="150" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600">Propósito</text>
-                            <text x="100" y="165" text-anchor="middle" fill="#10b981" font-size="10" font-weight="500" id="fl-p1-val">✓ concluído</text>
+                            <circle cx="80" cy="128" r="5" fill="#93c5fd" opacity=".35"/>
+                            <circle cx="80" cy="128" r="42" fill="#2563eb" class="nn-node-circle" style="filter:drop-shadow(0 4px 16px rgba(37,99,235,.4))"/>
+                            <text x="80" y="122" text-anchor="middle" fill="white" font-size="18">🧭</text>
+                            <text x="80" y="137" text-anchor="middle" fill="white" font-size="9.5" font-weight="700" letter-spacing=".5">P1</text>
+                            <text x="80" y="182" text-anchor="middle" fill="#1e293b" font-size="11.5" font-weight="600">Propósito</text>
+                            <text x="80" y="197" text-anchor="middle" fill="#10b981" font-size="10" font-weight="500" id="fl-p1-val">✓ concluído</text>
                           </g>
 
-                          <!-- P2 — PRODUTO · violeta -->
+                          <!-- P2 Produto — violeta -->
                           <g onclick="abrirPopupP('p2')" style="cursor:pointer">
-                            <circle cx="260" cy="68" r="6" fill="#c4b5fd" opacity=".4"/>
-                            <circle cx="260" cy="68" r="34" fill="#7c3aed" class="nn-circle" style="filter:drop-shadow(0 4px 14px rgba(124,58,237,.35))"/>
-                            <text x="260" y="63" text-anchor="middle" fill="white" font-size="16">📦</text>
-                            <text x="260" y="78" text-anchor="middle" fill="white" font-size="9" font-weight="700" letter-spacing=".5">P2</text>
-                            <text x="260" y="115" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600">Produto</text>
-                            <text x="260" y="130" text-anchor="middle" fill="#10b981" font-size="10" font-weight="500" id="fl-p2-val">✓ concluído</text>
+                            <circle cx="264" cy="82" r="5" fill="#c4b5fd" opacity=".35"/>
+                            <circle cx="264" cy="82" r="42" fill="#7c3aed" class="nn-node-circle" style="filter:drop-shadow(0 4px 16px rgba(124,58,237,.4))"/>
+                            <text x="264" y="76" text-anchor="middle" fill="white" font-size="18">📦</text>
+                            <text x="264" y="91" text-anchor="middle" fill="white" font-size="9.5" font-weight="700" letter-spacing=".5">P2</text>
+                            <text x="264" y="136" text-anchor="middle" fill="#1e293b" font-size="11.5" font-weight="600">Produto</text>
+                            <text x="264" y="151" text-anchor="middle" fill="#10b981" font-size="10" font-weight="500" id="fl-p2-val">✓ concluído</text>
                           </g>
 
-                          <!-- P3 — PESSOAS · ciano -->
+                          <!-- P3 Pessoas — ciano -->
                           <g onclick="abrirPopupP('p3')" style="cursor:pointer">
-                            <circle cx="410" cy="52" r="6" fill="#67e8f9" opacity=".4"/>
-                            <circle cx="410" cy="52" r="34" fill="#0891b2" class="nn-circle" style="filter:drop-shadow(0 4px 14px rgba(8,145,178,.35))"/>
-                            <text x="410" y="47" text-anchor="middle" fill="white" font-size="16">👥</text>
-                            <text x="410" y="62" text-anchor="middle" fill="white" font-size="9" font-weight="700" letter-spacing=".5">P3</text>
-                            <text x="410" y="99" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600">Pessoas</text>
-                            <text x="410" y="114" text-anchor="middle" fill="#10b981" font-size="10" font-weight="500" id="fl-p3-val">✓ concluído</text>
+                            <circle cx="480" cy="60" r="5" fill="#67e8f9" opacity=".35"/>
+                            <circle cx="480" cy="60" r="42" fill="#0891b2" class="nn-node-circle" style="filter:drop-shadow(0 4px 16px rgba(8,145,178,.4))"/>
+                            <text x="480" y="54" text-anchor="middle" fill="white" font-size="18">👥</text>
+                            <text x="480" y="69" text-anchor="middle" fill="white" font-size="9.5" font-weight="700" letter-spacing=".5">P3</text>
+                            <text x="480" y="114" text-anchor="middle" fill="#1e293b" font-size="11.5" font-weight="600">Pessoas</text>
+                            <text x="480" y="129" text-anchor="middle" fill="#10b981" font-size="10" font-weight="500" id="fl-p3-val">✓ concluído</text>
                           </g>
 
-                          <!-- P4 — PROCESSO · verde -->
+                          <!-- P4 Processo — verde -->
                           <g onclick="abrirPopupP('p4')" style="cursor:pointer">
-                            <circle cx="560" cy="68" r="6" fill="#6ee7b7" opacity=".4"/>
-                            <circle cx="560" cy="68" r="34" fill="#059669" class="nn-circle" style="filter:drop-shadow(0 4px 14px rgba(5,150,105,.35))"/>
-                            <text x="560" y="63" text-anchor="middle" fill="white" font-size="16">⚙️</text>
-                            <text x="560" y="78" text-anchor="middle" fill="white" font-size="9" font-weight="700" letter-spacing=".5">P4</text>
-                            <text x="560" y="115" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600">Processo</text>
-                            <text x="560" y="130" text-anchor="middle" fill="#10b981" font-size="10" font-weight="500" id="fl-p4-val">✓ concluído</text>
+                            <circle cx="696" cy="82" r="5" fill="#6ee7b7" opacity=".35"/>
+                            <circle cx="696" cy="82" r="42" fill="#059669" class="nn-node-circle" style="filter:drop-shadow(0 4px 16px rgba(5,150,105,.4))"/>
+                            <text x="696" y="76" text-anchor="middle" fill="white" font-size="18">⚙️</text>
+                            <text x="696" y="91" text-anchor="middle" fill="white" font-size="9.5" font-weight="700" letter-spacing=".5">P4</text>
+                            <text x="696" y="136" text-anchor="middle" fill="#1e293b" font-size="11.5" font-weight="600">Processo</text>
+                            <text x="696" y="151" text-anchor="middle" fill="#10b981" font-size="10" font-weight="500" id="fl-p4-val">✓ concluído</text>
                           </g>
 
-                          <!-- P5 — POSICIONAMENTO · âmbar -->
+                          <!-- P5 Posicionamento — âmbar -->
                           <g onclick="abrirPopupP('p5')" style="cursor:pointer">
-                            <circle cx="720" cy="104" r="6" fill="#fcd34d" opacity=".4"/>
-                            <circle cx="720" cy="104" r="34" fill="#d97706" class="nn-circle" style="filter:drop-shadow(0 4px 14px rgba(217,119,6,.35))"/>
-                            <text x="720" y="99" text-anchor="middle" fill="white" font-size="16">🎯</text>
-                            <text x="720" y="114" text-anchor="middle" fill="white" font-size="9" font-weight="700" letter-spacing=".5">P5</text>
-                            <text x="720" y="150" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600">Posicionamento</text>
-                            <text x="720" y="165" text-anchor="middle" fill="#10b981" font-size="10" font-weight="500" id="fl-p5-val">✓ concluído</text>
+                            <circle cx="880" cy="128" r="5" fill="#fcd34d" opacity=".35"/>
+                            <circle cx="880" cy="128" r="42" fill="#d97706" class="nn-node-circle" style="filter:drop-shadow(0 4px 16px rgba(217,119,6,.4))"/>
+                            <text x="880" y="122" text-anchor="middle" fill="white" font-size="18">🎯</text>
+                            <text x="880" y="137" text-anchor="middle" fill="white" font-size="9.5" font-weight="700" letter-spacing=".5">P5</text>
+                            <text x="880" y="182" text-anchor="middle" fill="#1e293b" font-size="11.5" font-weight="600">Posicionamento</text>
+                            <text x="880" y="197" text-anchor="middle" fill="#10b981" font-size="10" font-weight="500" id="fl-p5-val">✓ concluído</text>
                           </g>
 
-                          <!-- ── MATRIZ CENTRAL ── -->
-                          <g class="nn-mz">
-                            <rect x="270" y="188" width="280" height="70" rx="14" fill="#0f172a" style="filter:drop-shadow(0 6px 20px rgba(15,23,42,.22))"/>
-                            <circle cx="292" cy="202" r="2" fill="rgba(255,255,255,.2)"/>
-                            <circle cx="300" cy="202" r="2" fill="rgba(255,255,255,.2)"/>
-                            <circle cx="308" cy="202" r="2" fill="rgba(255,255,255,.2)"/>
-                            <circle cx="520" cy="202" r="2" fill="rgba(255,255,255,.2)"/>
-                            <circle cx="512" cy="202" r="2" fill="rgba(255,255,255,.2)"/>
-                            <circle cx="504" cy="202" r="2" fill="rgba(255,255,255,.2)"/>
-                            <text x="410" y="218" text-anchor="middle" fill="white" font-size="12" font-weight="700" letter-spacing="2">🧠  MATRIZ CENTRAL</text>
-                            <text x="410" y="235" text-anchor="middle" fill="rgba(148,163,184,.85)" font-size="8.5">fonte única de verdade — dados cruzados de todos os módulos</text>
-                            <text x="410" y="249" text-anchor="middle" fill="rgba(100,116,139,.6)" font-size="7.5" letter-spacing=".5">P1 · P2 · P3 · P4 · P5 · P6 + FINANCEIRO + MARKETING + CRM</text>
+                          <!-- ════════════ MATRIZ CENTRAL — círculo neon ════════════ -->
+                          <g>
+                            <!-- Halo externo pulsante -->
+                            <circle cx="440" cy="283" r="62" fill="none" stroke="#6366f1" stroke-width=".6" opacity=".3">
+                              <animate attributeName="r" values="60;68;60" dur="3s" repeatCount="indefinite"/>
+                              <animate attributeName="opacity" values=".3;.08;.3" dur="3s" repeatCount="indefinite"/>
+                            </circle>
+                            <!-- Anel neon médio -->
+                            <circle cx="440" cy="283" r="54" fill="none" stroke="#818cf8" stroke-width="1.2" opacity=".5">
+                              <animate attributeName="opacity" values=".5;.2;.5" dur="2.5s" repeatCount="indefinite"/>
+                            </circle>
+                            <!-- Círculo principal com neon -->
+                            <circle cx="440" cy="283" r="48" fill="#0f172a" stroke="#6366f1" stroke-width="2.5" style="animation:neon-pulse 2.5s ease-in-out infinite" filter="url(#neon)"/>
+                            <!-- Anel interno decorativo -->
+                            <circle cx="440" cy="283" r="44" fill="none" stroke="rgba(129,140,248,.3)" stroke-width=".8"/>
+                            <!-- Ícone e texto dentro do círculo -->
+                            <text x="440" y="275" text-anchor="middle" fill="white" font-size="20">🧠</text>
+                            <text x="440" y="293" text-anchor="middle" fill="#e0e7ff" font-size="8" font-weight="800" letter-spacing="2">MATRIZ</text>
+                            <text x="440" y="304" text-anchor="middle" fill="#c7d2fe" font-size="7" letter-spacing="1.5">CENTRAL</text>
+                            <!-- Texto descritivo ao lado direito do círculo -->
+                            <text x="500" y="270" fill="#334155" font-size="10" font-weight="700" letter-spacing=".3">Fonte única de verdade</text>
+                            <text x="500" y="284" fill="#64748b" font-size="8.5">dados cruzados de todos os módulos</text>
+                            <text x="500" y="297" fill="#94a3b8" font-size="7.5" letter-spacing=".3">P1 · P2 · P3 · P4 · P5 · P6</text>
+                            <text x="500" y="308" fill="#94a3b8" font-size="7.5" letter-spacing=".3">FINANCEIRO · MARKETING · CRM</text>
                           </g>
 
-                          <!-- P6 — PERFORMANCE · vermelho -->
+                          <!-- ════════════ P6 Performance — vermelho ════════════ -->
                           <g onclick="abrirPopupP('p6')" style="cursor:pointer">
-                            <circle cx="410" cy="354" r="6" fill="#fca5a5" opacity=".4"/>
-                            <circle cx="410" cy="354" r="34" fill="#dc2626" class="nn-circle" style="filter:drop-shadow(0 4px 14px rgba(220,38,38,.35))"/>
-                            <text x="410" y="349" text-anchor="middle" fill="white" font-size="16">📈</text>
-                            <text x="410" y="364" text-anchor="middle" fill="white" font-size="9" font-weight="700" letter-spacing=".5">P6</text>
-                            <text x="410" y="400" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600">Performance</text>
+                            <circle cx="480" cy="384" r="5" fill="#fca5a5" opacity=".35"/>
+                            <circle cx="480" cy="384" r="38" fill="#dc2626" class="nn-node-circle" style="filter:drop-shadow(0 4px 16px rgba(220,38,38,.4))"/>
+                            <text x="480" y="379" text-anchor="middle" fill="white" font-size="16">📈</text>
+                            <text x="480" y="393" text-anchor="middle" fill="white" font-size="9" font-weight="700" letter-spacing=".5">P6</text>
+                            <text x="480" y="432" text-anchor="middle" fill="#1e293b" font-size="11.5" font-weight="600">Performance</text>
                           </g>
 
-                          <!-- ── MÓDULOS ── -->
+                          <!-- ════════════ MÓDULOS ════════════ -->
+                          <!-- Financeiro -->
                           <g onclick="nav('financeiro',document.querySelectorAll('.nav-item')[3])" style="cursor:pointer">
-                            <rect x="82" y="412" width="168" height="42" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1.5" style="filter:drop-shadow(0 2px 8px rgba(0,0,0,.05))"/>
-                            <rect x="82" y="412" width="168" height="3" rx="2" fill="#d97706"/>
-                            <text x="166" y="433" text-anchor="middle" fill="#92400e" font-size="11">💰</text>
-                            <text x="166" y="447" text-anchor="middle" fill="#1e293b" font-size="9.5" font-weight="600">Financeiro</text>
+                            <rect x="44" y="440" width="184" height="42" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1.5" style="filter:drop-shadow(0 2px 8px rgba(0,0,0,.05))"/>
+                            <rect x="44" y="440" width="184" height="3" rx="2" fill="#d97706"/>
+                            <text x="136" y="461" text-anchor="middle" fill="#92400e" font-size="11">💰</text>
+                            <text x="136" y="474" text-anchor="middle" fill="#1e293b" font-size="9.5" font-weight="600">Financeiro</text>
                           </g>
+                          <!-- CRM -->
                           <g onclick="nav('mkt',document.querySelectorAll('.nav-item')[2]);setTimeout(()=>mktTab('crm',document.getElementById('mktab-crm')),200)" style="cursor:pointer">
-                            <rect x="326" y="412" width="168" height="42" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1.5" style="filter:drop-shadow(0 2px 8px rgba(0,0,0,.05))"/>
-                            <rect x="326" y="412" width="168" height="3" rx="2" fill="#059669"/>
-                            <text x="410" y="433" text-anchor="middle" fill="#064e3b" font-size="11">👥</text>
-                            <text x="410" y="447" text-anchor="middle" fill="#1e293b" font-size="9.5" font-weight="600">CRM</text>
+                            <rect x="388" y="440" width="184" height="42" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1.5" style="filter:drop-shadow(0 2px 8px rgba(0,0,0,.05))"/>
+                            <rect x="388" y="440" width="184" height="3" rx="2" fill="#059669"/>
+                            <text x="480" y="461" text-anchor="middle" fill="#064e3b" font-size="11">👥</text>
+                            <text x="480" y="474" text-anchor="middle" fill="#1e293b" font-size="9.5" font-weight="600">CRM</text>
                           </g>
+                          <!-- Marketing -->
                           <g onclick="nav('mkt',document.querySelectorAll('.nav-item')[2])" style="cursor:pointer">
-                            <rect x="570" y="412" width="168" height="42" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1.5" style="filter:drop-shadow(0 2px 8px rgba(0,0,0,.05))"/>
-                            <rect x="570" y="412" width="168" height="3" rx="2" fill="#7c3aed"/>
-                            <text x="654" y="433" text-anchor="middle" fill="#3b0764" font-size="11">📡</text>
-                            <text x="654" y="447" text-anchor="middle" fill="#1e293b" font-size="9.5" font-weight="600">Marketing</text>
+                            <rect x="732" y="440" width="184" height="42" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1.5" style="filter:drop-shadow(0 2px 8px rgba(0,0,0,.05))"/>
+                            <rect x="732" y="440" width="184" height="3" rx="2" fill="#7c3aed"/>
+                            <text x="824" y="461" text-anchor="middle" fill="#3b0764" font-size="11">📡</text>
+                            <text x="824" y="474" text-anchor="middle" fill="#1e293b" font-size="9.5" font-weight="600">Marketing</text>
                           </g>
 
-                          <text x="410" y="466" text-anchor="middle" fill="#e2e8f0" font-size="7.5" letter-spacing="2" font-weight="400">SISTEMA INTEGRADO</text>
+                          <text x="480" y="490" text-anchor="middle" fill="#e2e8f0" font-size="7" letter-spacing="2.5">SISTEMA INTEGRADO</text>
                         </svg>
                       </div>
                     </div>
