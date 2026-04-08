@@ -152,14 +152,45 @@ tbody tr:hover { background: #fafafb !important; }
 #sixps-modulo .card { background: #fff !important; }
 #sixps-dados { background: #fff !important; border-color: #ebebed !important; color: #1b1b21 !important; }
 #chat-sixps { background: #fff !important; }
-#popup-p-overlay > div { background: #fff !important; border: 1px solid #ebebed !important; box-shadow: 0 16px 48px rgba(0,0,0,.1) !important; border-radius: 14px !important; }
-#popup-p-header { border-color: #ebebed !important; background: #fff !important; }
-#popup-p-titulo { color: #1b1b21 !important; }
-#popup-p-sub { color: #8f8f9c !important; }
-#popup-p-conclusao { color: #1b1b21 !important; background: #fafafb !important; border-color: #ebebed !important; }
-#popup-p-minifluxo { color: #1b1b21 !important; }
-#popup-p-minifluxo [style*="color:"] { color: #1b1b21 !important; }
-#popup-p-abrir-btn { background: #1b1b21 !important; color: #fff !important; border-radius: 8px !important; }
+/* ── Popup dos Ps — tema claro com texto escuro total ── */
+#popup-p-overlay > div { background: #ffffff !important; border: 1px solid #e2e8f0 !important; box-shadow: 0 20px 60px rgba(0,0,0,.14) !important; border-radius: 16px !important; }
+#popup-p-header { border-color: #e2e8f0 !important; background: #ffffff !important; }
+#popup-p-titulo { color: #0f172a !important; font-weight: 700 !important; }
+#popup-p-sub { color: #64748b !important; }
+
+/* Jornada esquerda */
+#popup-p-minifluxo { color: #1e293b !important; background: #f8fafc !important; }
+#popup-p-minifluxo * { color: #1e293b !important; }
+#popup-p-minifluxo [style] { color: #1e293b !important; }
+#popup-p-minifluxo strong { color: #0f172a !important; font-weight: 700 !important; }
+#popup-p-minifluxo span { color: #475569 !important; }
+/* Label numerado da jornada */
+#popup-p-minifluxo > div > div:first-child { background: #eff6ff !important; border-color: #bfdbfe !important; color: #1d4ed8 !important; }
+
+/* Dados mapeados — direita */
+#popup-p-conclusao { color: #1e293b !important; background: #ffffff !important; }
+#popup-p-conclusao * { color: #334155 !important; }
+#popup-p-conclusao [style] { color: #334155 !important; }
+#popup-p-conclusao strong { color: #0f172a !important; font-weight: 700 !important; }
+#popup-p-conclusao br + * { color: #334155 !important; }
+/* Headers gerados pelo JS (##) */
+#popup-p-conclusao div[style*="uppercase"] { color: #1e40af !important; font-weight: 800 !important; }
+#popup-p-conclusao span[style*="italic"] { color: #94a3b8 !important; }
+
+/* Labels da matriz buildMatrizResumoP */
+#popup-p-conclusao span[style*="letter-spacing"] { color: #6366f1 !important; font-weight: 700 !important; }
+#popup-p-conclusao span[style*="font-size:12px"] { color: #1e293b !important; font-weight: 500 !important; }
+
+/* Painel esquerdo (jornada) fundo levemente cinza */
+#popup-p-overlay > div > div > div:first-child { background: #f8fafc !important; border-color: #e2e8f0 !important; }
+/* Label "JORNADA DO PILAR" */
+#popup-p-overlay > div > div > div:first-child > div:first-child { color: #6366f1 !important; }
+
+/* Botão Editar/Continuar */
+#popup-p-abrir-btn { background: #1e293b !important; color: #ffffff !important; border: none !important; border-radius: 8px !important; }
+#popup-p-abrir-btn:hover { background: #334155 !important; }
+/* Botão fechar X */
+#popup-p-overlay button:last-of-type { background: #f1f5f9 !important; border-color: #e2e8f0 !important; color: #475569 !important; }
 
 /* FINANCEIRO */
 .fin-tab.active { background: #1b1b21 !important; color: #fff !important; }
