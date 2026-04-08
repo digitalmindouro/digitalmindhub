@@ -5758,6 +5758,18 @@ async function abrirP(modulo){
   document.getElementById('sixps-agent-name').textContent=cfg.agentName;document.getElementById('sixps-dados-titulo').textContent='Dados — '+cfg.titulo;
   document.getElementById('sixps-diagrama').style.display=modulo==='p4'?'block':'none';
   await loadConversasSixps(modulo);
+  // Renderiza resumo salvo no painel Dados (fix: painel vazio ao reabrir um P)
+  const dadosEl=document.getElementById('sixps-dados-content');
+  if(dadosEl){
+    const resumo=SP.dados[modulo+'_resumo']||'';
+    if(resumo.length>50){
+      dadosEl.innerHTML=resumo.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+    } else {
+      // Fallback: última mensagem do assistente na conversa atual
+      const ultMsg=(SP.conversas[modulo]||[]).filter(c=>c.role==='assistant').slice(-1)[0]?.content||'';
+      if(ultMsg.length>50) dadosEl.innerHTML=ultMsg.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+    }
+  }
 }
 
 function mostrarBotaoConcluir(modulo) {
