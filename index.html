@@ -915,196 +915,152 @@
 
                     <!-- FLUXOGRAMA TECH — aparece após P1-P5 concluídos -->
                     <div id="sixps-fluxograma" style="display:none;margin-bottom:18px">
-                      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:11px;margin-bottom:10px;color:rgba(255,255,255,0.35);display:flex;align-items:center;gap:8px;letter-spacing:2px;text-transform:uppercase">
+                      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:11px;margin-bottom:12px;color:var(--muted);display:flex;align-items:center;gap:8px;letter-spacing:2px;text-transform:uppercase">
                         ◈ MAPA ESTRATÉGICO
                         <span style="font-size:9px;color:var(--muted);font-weight:400;font-family:'DM Sans',sans-serif;text-transform:none;letter-spacing:0">clique em cada pilar para ver detalhes</span>
                       </div>
-                      <div style="background:#05050d;border:1px solid rgba(37,99,235,0.2);border-radius:var(--radius);padding:20px;overflow-x:auto;position:relative">
-                        <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(37,99,235,0.012) 2px,rgba(37,99,235,0.012) 4px);pointer-events:none;border-radius:var(--radius)"></div>
-                        <svg id="fluxograma-svg" viewBox="0 0 1060 520" width="100%" style="min-width:860px;font-family:'DM Sans',sans-serif">
+                      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px 20px 20px;overflow-x:auto">
+                        <svg id="fluxograma-svg" viewBox="0 0 920 500" width="100%" style="min-width:720px;font-family:'DM Sans',sans-serif;overflow:visible">
                           <defs>
-                            <!-- Gradientes vibrantes -->
-                            <linearGradient id="gP1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#1e3a8a"/><stop offset="100%" style="stop-color:#2563eb"/></linearGradient>
-                            <linearGradient id="gP2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#4c1d95"/><stop offset="100%" style="stop-color:#8b5cf6"/></linearGradient>
-                            <linearGradient id="gP3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#0c4a6e"/><stop offset="100%" style="stop-color:#06b6d4"/></linearGradient>
-                            <linearGradient id="gP4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#064e3b"/><stop offset="100%" style="stop-color:#10b981"/></linearGradient>
-                            <linearGradient id="gP5" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#78350f"/><stop offset="100%" style="stop-color:#f59e0b"/></linearGradient>
-                            <linearGradient id="gP6" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#7f1d1d"/><stop offset="100%" style="stop-color:#ef4444"/></linearGradient>
-                            <linearGradient id="gMZ" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#1e1b4b"/><stop offset="100%" style="stop-color:#312e81"/></linearGradient>
-                            <linearGradient id="gFin" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#172554"/><stop offset="100%" style="stop-color:#a08020"/></linearGradient>
-                            <linearGradient id="gCRM" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#052e16"/><stop offset="100%" style="stop-color:#16a34a"/></linearGradient>
-                            <linearGradient id="gMkt" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#2e1065"/><stop offset="100%" style="stop-color:#9333ea"/></linearGradient>
-                            <!-- Glows fortes -->
-                            <filter id="glP1" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-                            <filter id="glP2" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-                            <filter id="glP5" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-                            <filter id="glMZ" x="-15%" y="-15%" width="130%" height="130%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-                            <filter id="glP6" x="-15%" y="-15%" width="130%" height="130%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-                            <!-- Markers brancos e coloridos -->
-                            <marker id="mW" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(255,255,255,0.9)"/></marker>
-                            <marker id="mB" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#2563eb"/></marker>
-                            <marker id="mP" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#8b5cf6"/></marker>
-                            <marker id="mG" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#f59e0b"/></marker>
-                            <marker id="mR" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#ef4444"/></marker>
+                            <filter id="nn-sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="2" stdDeviation="5" flood-color="rgba(0,0,0,0.13)"/></filter>
+                            <filter id="nn-sh-mz" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="10" flood-color="rgba(30,58,138,0.22)"/></filter>
+                            <marker id="arr-gold" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#d97706"/></marker>
+                            <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#94a3b8"/></marker>
                           </defs>
 
-                          <!-- ══════════════════════════════════════════ -->
-                          <!-- LINHAS DE CONEXÃO — brancas e neon fortes -->
-                          <!-- ══════════════════════════════════════════ -->
-
-                          <!-- P1→P2→P3→P4→P5 linha principal branca -->
-                          <line x1="163" y1="68" x2="203" y2="68" stroke="rgba(255,255,255,0.85)" stroke-width="2" marker-end="url(#mW)"/>
-                          <line x1="333" y1="68" x2="373" y2="68" stroke="rgba(255,255,255,0.85)" stroke-width="2" marker-end="url(#mW)"/>
-                          <line x1="503" y1="68" x2="543" y2="68" stroke="rgba(255,255,255,0.85)" stroke-width="2" marker-end="url(#mW)"/>
-                          <line x1="673" y1="68" x2="713" y2="68" stroke="rgba(255,255,255,0.85)" stroke-width="2" marker-end="url(#mW)"/>
-
-                          <!-- P1-P5 → Matriz (linhas roxas brilhantes) -->
-                          <line x1="100" y1="112" x2="388" y2="200" stroke="#818cf8" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#mP)" opacity="0.8"/>
-                          <line x1="268" y1="112" x2="430" y2="196" stroke="#818cf8" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#mP)" opacity="0.8"/>
-                          <line x1="443" y1="112" x2="478" y2="196" stroke="#818cf8" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#mP)" opacity="0.8"/>
-                          <line x1="613" y1="112" x2="545" y2="196" stroke="#818cf8" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#mP)" opacity="0.8"/>
-                          <line x1="860" y1="112" x2="635" y2="196" stroke="#818cf8" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#mP)" opacity="0.8"/>
-
-                          <!-- Matriz → P6 (linha dourada brilhante) -->
-                          <line x1="530" y1="248" x2="530" y2="292" stroke="#fbbf24" stroke-width="2.5" marker-end="url(#mG)"/>
-
-                          <!-- P6 → Módulos (linhas coloridas fortes) -->
-                          <line x1="460" y1="358" x2="240" y2="400" stroke="rgba(255,255,255,0.7)" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#mW)"/>
-                          <line x1="530" y1="358" x2="530" y2="400" stroke="rgba(255,255,255,0.7)" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#mW)"/>
-                          <line x1="600" y1="358" x2="820" y2="400" stroke="rgba(255,255,255,0.7)" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#mW)"/>
-
-                          <!-- Feedback loop módulos→Matriz (arcos suaves coloridos) -->
-                          <path d="M 170 402 Q 60 310 360 222" stroke="#60a5fa" stroke-width="1.2" stroke-dasharray="3,5" fill="none" opacity="0.5"/>
-                          <path d="M 890 402 Q 1000 310 700 222" stroke="#c084fc" stroke-width="1.2" stroke-dasharray="3,5" fill="none" opacity="0.5"/>
-
-                          <!-- ══════════════════ -->
-                          <!-- CARDS P1-P5       -->
-                          <!-- ══════════════════ -->
-
-                          <!-- P1 -->
-                          <g onclick="abrirPopupP('p1')" style="cursor:pointer" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
-                            <rect x="10" y="14" width="153" height="98" rx="10" fill="url(#gP1)" stroke="#60a5fa" stroke-width="1.5" filter="url(#glP1)"/>
-                            <rect x="10" y="14" width="153" height="3" rx="2" fill="rgba(96,165,250,0.7)"/>
-                            <text x="86" y="40" text-anchor="middle" fill="white" font-size="18">🧭</text>
-                            <text x="86" y="60" text-anchor="middle" fill="white" font-size="10" font-weight="700" letter-spacing="1">P1 — PROPÓSITO</text>
-                            <text x="86" y="76" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="8">DNA · Missão · Visão</text>
-                            <text x="86" y="90" text-anchor="middle" fill="rgba(96,165,250,0.7)" font-size="7.5" id="fl-p1-val">Valores estratégicos</text>
-                            <rect x="10" y="100" width="153" height="12" rx="0" fill="rgba(0,0,0,0.4)"/>
-                            <text x="86" y="109" text-anchor="middle" fill="rgba(96,165,250,0.7)" font-size="7">↓ alimenta todos · clique para detalhes</text>
+                          <!-- ░░ FUNDO PONTILHADO DECORATIVO ░░ -->
+                          <rect x="0" y="0" width="920" height="500" fill="transparent"/>
+                          <!-- Dots grid sutil -->
+                          <g fill="#e2e8f0" opacity="0.7">
+                            <circle cx="40" cy="40" r="1.5"/><circle cx="120" cy="40" r="1.5"/><circle cx="200" cy="40" r="1.5"/><circle cx="280" cy="40" r="1.5"/><circle cx="360" cy="40" r="1.5"/><circle cx="440" cy="40" r="1.5"/><circle cx="520" cy="40" r="1.5"/><circle cx="600" cy="40" r="1.5"/><circle cx="680" cy="40" r="1.5"/><circle cx="760" cy="40" r="1.5"/><circle cx="840" cy="40" r="1.5"/><circle cx="880" cy="40" r="1.5"/>
+                            <circle cx="40" cy="490" r="1.5"/><circle cx="120" cy="490" r="1.5"/><circle cx="200" cy="490" r="1.5"/><circle cx="280" cy="490" r="1.5"/><circle cx="360" cy="490" r="1.5"/><circle cx="440" cy="490" r="1.5"/><circle cx="520" cy="490" r="1.5"/><circle cx="600" cy="490" r="1.5"/><circle cx="680" cy="490" r="1.5"/><circle cx="760" cy="490" r="1.5"/><circle cx="840" cy="490" r="1.5"/><circle cx="880" cy="490" r="1.5"/>
                           </g>
 
-                          <!-- P2 -->
-                          <g onclick="abrirPopupP('p2')" style="cursor:pointer" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
-                            <rect x="203" y="14" width="153" height="98" rx="10" fill="url(#gP2)" stroke="#a78bfa" stroke-width="1.5" filter="url(#glP2)"/>
-                            <rect x="203" y="14" width="153" height="3" rx="2" fill="#c4b5fd"/>
-                            <text x="280" y="40" text-anchor="middle" fill="white" font-size="18">📦</text>
-                            <text x="280" y="60" text-anchor="middle" fill="white" font-size="10" font-weight="700" letter-spacing="1">P2 — PRODUTO</text>
-                            <text x="280" y="76" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="8">Catálogo · Preço · Margem</text>
-                            <text x="280" y="90" text-anchor="middle" fill="#c4b5fd" font-size="7.5" id="fl-p2-val">Modelo de receita</text>
-                            <rect x="203" y="100" width="153" height="12" rx="0" fill="rgba(0,0,0,0.4)"/>
-                            <text x="280" y="109" text-anchor="middle" fill="rgba(196,181,253,0.7)" font-size="7">↓ Estoque + Financeiro · clique</text>
+                          <!-- ░░ LINHAS DE CONEXÃO ░░ -->
+                          <!-- P1-P5 → Matriz Central -->
+                          <line x1="138" y1="147" x2="390" y2="222" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="5,4"/>
+                          <line x1="298" y1="112" x2="406" y2="210" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="5,4"/>
+                          <line x1="460" y1="100" x2="460" y2="196" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="5,4"/>
+                          <line x1="622" y1="112" x2="516" y2="210" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="5,4"/>
+                          <line x1="780" y1="147" x2="534" y2="222" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="5,4"/>
+                          <!-- Linha sequencial P1→P2→P3→P4→P5 (arco suave, bem fraca) -->
+                          <path d="M 158 102 Q 228 58 262 82" stroke="#e2e8f0" stroke-width="1.2" fill="none" stroke-dasharray="3,6"/>
+                          <path d="M 336 82 Q 398 52 424 82" stroke="#e2e8f0" stroke-width="1.2" fill="none" stroke-dasharray="3,6"/>
+                          <path d="M 496 82 Q 558 52 586 82" stroke="#e2e8f0" stroke-width="1.2" fill="none" stroke-dasharray="3,6"/>
+                          <path d="M 660 82 Q 720 58 756 102" stroke="#e2e8f0" stroke-width="1.2" fill="none" stroke-dasharray="3,6"/>
+                          <!-- Matriz → P6 -->
+                          <line x1="460" y1="276" x2="460" y2="322" stroke="#d97706" stroke-width="2.5" marker-end="url(#arr-gold)"/>
+                          <!-- P6 → Módulos -->
+                          <line x1="408" y1="398" x2="240" y2="430" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arr-gray)"/>
+                          <line x1="460" y1="400" x2="460" y2="430" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arr-gray)"/>
+                          <line x1="512" y1="398" x2="680" y2="430" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arr-gray)"/>
+                          <!-- Feedback loops módulos → Matriz (arcos bem sutis) -->
+                          <path d="M 180 425 Q 80 310 370 240" stroke="#94a3b8" stroke-width="1" stroke-dasharray="2,7" fill="none" opacity="0.45"/>
+                          <path d="M 740 425 Q 840 310 560 240" stroke="#94a3b8" stroke-width="1" stroke-dasharray="2,7" fill="none" opacity="0.45"/>
+
+                          <!-- ░░ NÓ P1 — PROPÓSITO (azul) ░░ -->
+                          <g onclick="abrirPopupP('p1')" style="cursor:pointer" class="nn-node">
+                            <circle cx="100" cy="112" r="52" fill="white" stroke="#2563eb" stroke-width="2.5" filter="url(#nn-sh)" style="transition:all .2s"/>
+                            <circle cx="100" cy="112" r="44" fill="#eff6ff"/>
+                            <text x="100" y="102" text-anchor="middle" font-size="18">🧭</text>
+                            <text x="100" y="118" text-anchor="middle" fill="#1e3a8a" font-size="9.5" font-weight="800" letter-spacing=".5">P1</text>
+                            <text x="100" y="130" text-anchor="middle" fill="#2563eb" font-size="7.5" font-weight="600">PROPÓSITO</text>
+                            <text x="100" y="171" text-anchor="middle" fill="#64748b" font-size="8" id="fl-p1-val">DNA · Missão · Visão</text>
+                            <text x="100" y="184" text-anchor="middle" fill="#10b981" font-size="8" font-weight="600">✓ concluído</text>
                           </g>
 
-                          <!-- P3 -->
-                          <g onclick="abrirPopupP('p3')" style="cursor:pointer" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
-                            <rect x="373" y="14" width="153" height="98" rx="10" fill="url(#gP3)" stroke="#22d3ee" stroke-width="1.5"/>
-                            <rect x="373" y="14" width="153" height="3" rx="2" fill="#67e8f9"/>
-                            <text x="450" y="40" text-anchor="middle" fill="white" font-size="18">👥</text>
-                            <text x="450" y="60" text-anchor="middle" fill="white" font-size="10" font-weight="700" letter-spacing="1">P3 — PESSOAS</text>
-                            <text x="450" y="76" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="8">Time · Custos · Restrições</text>
-                            <text x="450" y="90" text-anchor="middle" fill="#67e8f9" font-size="7.5" id="fl-p3-val">Estrutura operacional</text>
-                            <rect x="373" y="100" width="153" height="12" rx="0" fill="rgba(0,0,0,0.4)"/>
-                            <text x="450" y="109" text-anchor="middle" fill="rgba(103,232,249,0.7)" font-size="7">↓ Custo fixo Financeiro · clique</text>
+                          <!-- ░░ NÓ P2 — PRODUTO (roxo) ░░ -->
+                          <g onclick="abrirPopupP('p2')" style="cursor:pointer" class="nn-node">
+                            <circle cx="280" cy="78" r="52" fill="white" stroke="#8b5cf6" stroke-width="2.5" filter="url(#nn-sh)" style="transition:all .2s"/>
+                            <circle cx="280" cy="78" r="44" fill="#f5f3ff"/>
+                            <text x="280" y="68" text-anchor="middle" font-size="18">📦</text>
+                            <text x="280" y="84" text-anchor="middle" fill="#4c1d95" font-size="9.5" font-weight="800" letter-spacing=".5">P2</text>
+                            <text x="280" y="96" text-anchor="middle" fill="#8b5cf6" font-size="7.5" font-weight="600">PRODUTO</text>
+                            <text x="280" y="137" text-anchor="middle" fill="#64748b" font-size="8" id="fl-p2-val">Catálogo · Preço</text>
+                            <text x="280" y="150" text-anchor="middle" fill="#10b981" font-size="8" font-weight="600">✓ concluído</text>
                           </g>
 
-                          <!-- P4 -->
-                          <g onclick="abrirPopupP('p4')" style="cursor:pointer" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
-                            <rect x="543" y="14" width="153" height="98" rx="10" fill="url(#gP4)" stroke="#34d399" stroke-width="1.5"/>
-                            <rect x="543" y="14" width="153" height="3" rx="2" fill="#6ee7b7"/>
-                            <text x="620" y="40" text-anchor="middle" fill="white" font-size="18">⚙️</text>
-                            <text x="620" y="60" text-anchor="middle" fill="white" font-size="10" font-weight="700" letter-spacing="1">P4 — PROCESSO</text>
-                            <text x="620" y="76" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="8">Funil · Operação · Gargalos</text>
-                            <text x="620" y="90" text-anchor="middle" fill="#6ee7b7" font-size="7.5" id="fl-p4-val">Mapa operacional</text>
-                            <rect x="543" y="100" width="153" height="12" rx="0" fill="rgba(0,0,0,0.4)"/>
-                            <text x="620" y="109" text-anchor="middle" fill="rgba(110,231,183,0.7)" font-size="7">↓ Funil CRM · clique</text>
+                          <!-- ░░ NÓ P3 — PESSOAS (ciano) ░░ -->
+                          <g onclick="abrirPopupP('p3')" style="cursor:pointer" class="nn-node">
+                            <circle cx="460" cy="58" r="52" fill="white" stroke="#0891b2" stroke-width="2.5" filter="url(#nn-sh)" style="transition:all .2s"/>
+                            <circle cx="460" cy="58" r="44" fill="#ecfeff"/>
+                            <text x="460" y="48" text-anchor="middle" font-size="18">👥</text>
+                            <text x="460" y="64" text-anchor="middle" fill="#164e63" font-size="9.5" font-weight="800" letter-spacing=".5">P3</text>
+                            <text x="460" y="76" text-anchor="middle" fill="#0891b2" font-size="7.5" font-weight="600">PESSOAS</text>
+                            <text x="460" y="117" text-anchor="middle" fill="#64748b" font-size="8" id="fl-p3-val">Time · Custos</text>
+                            <text x="460" y="130" text-anchor="middle" fill="#10b981" font-size="8" font-weight="600">✓ concluído</text>
                           </g>
 
-                          <!-- P5 — maior, destaque dourado -->
-                          <g onclick="abrirPopupP('p5')" style="cursor:pointer" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
-                            <rect x="713" y="14" width="330" height="98" rx="10" fill="url(#gP5)" stroke="#fbbf24" stroke-width="2" filter="url(#glP5)"/>
-                            <rect x="713" y="14" width="330" height="3" rx="2" fill="#fde68a"/>
-                            <text x="878" y="40" text-anchor="middle" fill="white" font-size="18">🎯</text>
-                            <text x="878" y="60" text-anchor="middle" fill="white" font-size="11" font-weight="700" letter-spacing="1">P5 — POSICIONAMENTO</text>
-                            <text x="878" y="76" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="8.5">Persona · ICP · Proposta de Valor</text>
-                            <text x="878" y="90" text-anchor="middle" fill="#fde68a" font-size="7.5" id="fl-p5-val">Diferencial competitivo</text>
-                            <rect x="713" y="100" width="330" height="12" rx="0" fill="rgba(0,0,0,0.4)"/>
-                            <text x="878" y="109" text-anchor="middle" fill="rgba(253,230,138,0.7)" font-size="7">↓ CRM + Agente Marketing · clique para detalhes</text>
+                          <!-- ░░ NÓ P4 — PROCESSO (verde) ░░ -->
+                          <g onclick="abrirPopupP('p4')" style="cursor:pointer" class="nn-node">
+                            <circle cx="640" cy="78" r="52" fill="white" stroke="#059669" stroke-width="2.5" filter="url(#nn-sh)" style="transition:all .2s"/>
+                            <circle cx="640" cy="78" r="44" fill="#f0fdf4"/>
+                            <text x="640" y="68" text-anchor="middle" font-size="18">⚙️</text>
+                            <text x="640" y="84" text-anchor="middle" fill="#064e3b" font-size="9.5" font-weight="800" letter-spacing=".5">P4</text>
+                            <text x="640" y="96" text-anchor="middle" fill="#059669" font-size="7.5" font-weight="600">PROCESSO</text>
+                            <text x="640" y="137" text-anchor="middle" fill="#64748b" font-size="8" id="fl-p4-val">Funil · Operação</text>
+                            <text x="640" y="150" text-anchor="middle" fill="#10b981" font-size="8" font-weight="600">✓ concluído</text>
                           </g>
 
-                          <!-- ══════════════════════ -->
-                          <!-- MATRIZ CENTRAL        -->
-                          <!-- ══════════════════════ -->
-                          <rect x="340" y="148" width="380" height="96" rx="14" fill="url(#gMZ)" stroke="#6366f1" stroke-width="2" filter="url(#glMZ)"/>
-                          <rect x="340" y="148" width="380" height="3" rx="2" fill="#818cf8"/>
-                          <!-- Pontos decorativos de grade -->
-                          <circle cx="362" cy="176" r="2" fill="#6366f1" opacity="0.6"/>
-                          <circle cx="378" cy="176" r="2" fill="#6366f1" opacity="0.6"/>
-                          <circle cx="394" cy="176" r="2" fill="#6366f1" opacity="0.6"/>
-                          <circle cx="698" cy="176" r="2" fill="#6366f1" opacity="0.6"/>
-                          <circle cx="682" cy="176" r="2" fill="#6366f1" opacity="0.6"/>
-                          <circle cx="666" cy="176" r="2" fill="#6366f1" opacity="0.6"/>
-                          <!-- Linhas de scan decorativas -->
-                          <line x1="340" y1="185" x2="720" y2="185" stroke="rgba(99,102,241,0.15)" stroke-width="0.5"/>
-                          <line x1="340" y1="210" x2="720" y2="210" stroke="rgba(99,102,241,0.15)" stroke-width="0.5"/>
-                          <text x="530" y="180" text-anchor="middle" fill="white" font-size="14" font-weight="700" letter-spacing="2">🧠  MATRIZ CENTRAL</text>
-                          <text x="530" y="200" text-anchor="middle" fill="rgba(199,210,254,0.7)" font-size="8.5">Fonte única de verdade — dados cruzados de todos os módulos</text>
-                          <text x="530" y="218" text-anchor="middle" fill="#818cf8" font-size="7.5" letter-spacing="0.8">P1 + P2 + P3 + P4 + P5 + P6 + FINANCEIRO + MARKETING + CRM</text>
-                          <rect x="340" y="232" width="380" height="12" rx="0" fill="rgba(99,102,241,0.15)"/>
-                          <text x="530" y="241" text-anchor="middle" fill="rgba(129,140,248,0.6)" font-size="7" letter-spacing="0.5">lida por todos os agentes antes de responder</text>
-
-                          <!-- ══════════════════ -->
-                          <!-- P6                -->
-                          <!-- ══════════════════ -->
-                          <g onclick="abrirPopupP('p6')" style="cursor:pointer" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
-                            <rect x="380" y="292" width="300" height="68" rx="10" fill="url(#gP6)" stroke="#f87171" stroke-width="2" filter="url(#glP6)"/>
-                            <rect x="380" y="292" width="300" height="3" rx="2" fill="#fca5a5"/>
-                            <text x="530" y="318" text-anchor="middle" fill="white" font-size="16">📈</text>
-                            <text x="530" y="338" text-anchor="middle" fill="white" font-size="11" font-weight="700" letter-spacing="1">P6 — PERFORMANCE</text>
-                            <text x="530" y="352" text-anchor="middle" fill="rgba(255,255,255,0.65)" font-size="8">OKRs · KPIs · Metas Financeiras</text>
-                            <rect x="380" y="348" width="300" height="12" rx="0" fill="rgba(0,0,0,0.4)"/>
-                            <text x="530" y="357" text-anchor="middle" fill="rgba(252,165,165,0.7)" font-size="7">↓ Dashboard + Metas Financeiras · clique</text>
+                          <!-- ░░ NÓ P5 — POSICIONAMENTO (âmbar) ░░ -->
+                          <g onclick="abrirPopupP('p5')" style="cursor:pointer" class="nn-node">
+                            <circle cx="820" cy="112" r="52" fill="white" stroke="#d97706" stroke-width="2.5" filter="url(#nn-sh)" style="transition:all .2s"/>
+                            <circle cx="820" cy="112" r="44" fill="#fffbeb"/>
+                            <text x="820" y="102" text-anchor="middle" font-size="18">🎯</text>
+                            <text x="820" y="118" text-anchor="middle" fill="#78350f" font-size="9.5" font-weight="800" letter-spacing=".5">P5</text>
+                            <text x="820" y="130" text-anchor="middle" fill="#d97706" font-size="7.5" font-weight="600">POSICIONAMENTO</text>
+                            <text x="820" y="171" text-anchor="middle" fill="#64748b" font-size="8" id="fl-p5-val">Persona · ICP</text>
+                            <text x="820" y="184" text-anchor="middle" fill="#10b981" font-size="8" font-weight="600">✓ concluído</text>
                           </g>
 
-                          <!-- ══════════════════ -->
-                          <!-- MÓDULOS           -->
-                          <!-- ══════════════════ -->
+                          <!-- ░░ MATRIZ CENTRAL ░░ -->
+                          <g>
+                            <rect x="320" y="196" width="280" height="80" rx="14" fill="#1e3a8a" stroke="#3b82f6" stroke-width="2" filter="url(#nn-sh-mz)"/>
+                            <!-- Dots decorativos -->
+                            <circle cx="340" cy="214" r="2" fill="#60a5fa" opacity="0.6"/><circle cx="352" cy="214" r="2" fill="#60a5fa" opacity="0.6"/><circle cx="364" cy="214" r="2" fill="#60a5fa" opacity="0.6"/>
+                            <circle cx="576" cy="214" r="2" fill="#60a5fa" opacity="0.6"/><circle cx="564" cy="214" r="2" fill="#60a5fa" opacity="0.6"/><circle cx="588" cy="214" r="2" fill="#60a5fa" opacity="0.6"/>
+                            <text x="460" y="226" text-anchor="middle" fill="white" font-size="12" font-weight="800" letter-spacing="1.5">🧠  MATRIZ CENTRAL</text>
+                            <text x="460" y="244" text-anchor="middle" fill="rgba(147,197,253,0.85)" font-size="8">Fonte única de verdade — dados cruzados de todos os módulos</text>
+                            <text x="460" y="258" text-anchor="middle" fill="rgba(147,197,253,0.55)" font-size="7" letter-spacing=".5">P1 + P2 + P3 + P4 + P5 + P6 + FIN + MKT + CRM</text>
+                          </g>
+
+                          <!-- ░░ NÓ P6 — PERFORMANCE (vermelho) ░░ -->
+                          <g onclick="abrirPopupP('p6')" style="cursor:pointer" class="nn-node">
+                            <circle cx="460" cy="360" r="46" fill="white" stroke="#dc2626" stroke-width="2.5" filter="url(#nn-sh)" style="transition:all .2s"/>
+                            <circle cx="460" cy="360" r="38" fill="#fef2f2"/>
+                            <text x="460" y="350" text-anchor="middle" font-size="16">📈</text>
+                            <text x="460" y="365" text-anchor="middle" fill="#7f1d1d" font-size="9.5" font-weight="800" letter-spacing=".5">P6</text>
+                            <text x="460" y="376" text-anchor="middle" fill="#dc2626" font-size="7.5" font-weight="600">PERFORMANCE</text>
+                          </g>
+
+                          <!-- ░░ MÓDULOS ░░ -->
                           <!-- Financeiro -->
-                          <g onclick="nav('financeiro',document.querySelectorAll('.nav-item')[3])" style="cursor:pointer" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
-                            <rect x="55" y="400" width="350" height="70" rx="10" fill="url(#gFin)" stroke="#2563eb" stroke-width="1.5"/>
-                            <rect x="55" y="400" width="350" height="3" rx="2" fill="#60a5fa"/>
-                            <text x="230" y="426" text-anchor="middle" fill="rgba(96,165,250,0.7)" font-size="16">💰</text>
-                            <text x="230" y="446" text-anchor="middle" fill="rgba(96,165,250,0.7)" font-size="10.5" font-weight="700" letter-spacing="1">FINANCEIRO</text>
-                            <text x="230" y="461" text-anchor="middle" fill="rgba(96,165,250,0.6)" font-size="8">DRE · Fluxo · Metas · Estoque · KPIs</text>
+                          <g onclick="nav('financeiro',document.querySelectorAll('.nav-item')[3])" style="cursor:pointer">
+                            <rect x="90" y="430" width="180" height="52" rx="10" fill="white" stroke="#d97706" stroke-width="1.5" filter="url(#nn-sh)"/>
+                            <rect x="90" y="430" width="180" height="3" rx="2" fill="#d97706"/>
+                            <text x="180" y="453" text-anchor="middle" font-size="14">💰</text>
+                            <text x="180" y="467" text-anchor="middle" fill="#92400e" font-size="8.5" font-weight="700">FINANCEIRO</text>
+                            <text x="180" y="477" text-anchor="middle" fill="#94a3b8" font-size="7">DRE · Fluxo · Metas · KPIs</text>
                           </g>
                           <!-- CRM -->
-                          <g onclick="nav('mkt',document.querySelectorAll('.nav-item')[2]);setTimeout(()=>mktTab('crm',document.getElementById('mktab-crm')),200)" style="cursor:pointer" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
-                            <rect x="430" y="400" width="200" height="70" rx="10" fill="url(#gCRM)" stroke="#22c55e" stroke-width="1.5"/>
-                            <rect x="430" y="400" width="200" height="3" rx="2" fill="#4ade80"/>
-                            <text x="530" y="426" text-anchor="middle" fill="#86efac" font-size="16">👥</text>
-                            <text x="530" y="446" text-anchor="middle" fill="#86efac" font-size="10.5" font-weight="700" letter-spacing="1">CRM</text>
-                            <text x="530" y="461" text-anchor="middle" fill="rgba(134,239,172,0.6)" font-size="8">Leads · Pipeline · Funil</text>
+                          <g onclick="nav('mkt',document.querySelectorAll('.nav-item')[2]);setTimeout(()=>mktTab('crm',document.getElementById('mktab-crm')),200)" style="cursor:pointer">
+                            <rect x="370" y="430" width="180" height="52" rx="10" fill="white" stroke="#059669" stroke-width="1.5" filter="url(#nn-sh)"/>
+                            <rect x="370" y="430" width="180" height="3" rx="2" fill="#059669"/>
+                            <text x="460" y="453" text-anchor="middle" font-size="14">👥</text>
+                            <text x="460" y="467" text-anchor="middle" fill="#064e3b" font-size="8.5" font-weight="700">CRM</text>
+                            <text x="460" y="477" text-anchor="middle" fill="#94a3b8" font-size="7">Leads · Pipeline · Funil</text>
                           </g>
                           <!-- Marketing -->
-                          <g onclick="nav('mkt',document.querySelectorAll('.nav-item')[2])" style="cursor:pointer" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
-                            <rect x="655" y="400" width="350" height="70" rx="10" fill="url(#gMkt)" stroke="#a855f7" stroke-width="1.5"/>
-                            <rect x="655" y="400" width="350" height="3" rx="2" fill="#d8b4fe"/>
-                            <text x="830" y="426" text-anchor="middle" fill="#d8b4fe" font-size="16">📡</text>
-                            <text x="830" y="446" text-anchor="middle" fill="#d8b4fe" font-size="10.5" font-weight="700" letter-spacing="1">MARKETING</text>
-                            <text x="830" y="461" text-anchor="middle" fill="rgba(216,180,254,0.6)" font-size="8">Ads · Conteúdo · Meta · Analytics</text>
+                          <g onclick="nav('mkt',document.querySelectorAll('.nav-item')[2])" style="cursor:pointer">
+                            <rect x="650" y="430" width="180" height="52" rx="10" fill="white" stroke="#7c3aed" stroke-width="1.5" filter="url(#nn-sh)"/>
+                            <rect x="650" y="430" width="180" height="3" rx="2" fill="#7c3aed"/>
+                            <text x="740" y="453" text-anchor="middle" font-size="14">📡</text>
+                            <text x="740" y="467" text-anchor="middle" fill="#3b0764" font-size="8.5" font-weight="700">MARKETING</text>
+                            <text x="740" y="477" text-anchor="middle" fill="#94a3b8" font-size="7">Ads · Conteúdo · Meta · Analytics</text>
                           </g>
 
                           <!-- Label rodapé -->
-                          <text x="530" y="504" text-anchor="middle" fill="rgba(255,255,255,0.1)" font-size="8" letter-spacing="2">SISTEMA INTEGRADO — TODO O ECOSSISTEMA CONVERSA ATRAVÉS DA MATRIZ CENTRAL</text>
+                          <text x="460" y="498" text-anchor="middle" fill="#cbd5e1" font-size="7.5" letter-spacing="1.5">SISTEMA INTEGRADO — TODO O ECOSSISTEMA CONVERSA ATRAVÉS DA MATRIZ CENTRAL</text>
                         </svg>
                       </div>
                     </div>
@@ -5781,7 +5737,31 @@ async function abrirP(modulo){
   document.getElementById('sixps-modulo-titulo').textContent=cfg.titulo;document.getElementById('sixps-modulo-sub').textContent=cfg.sub;
   document.getElementById('sixps-agent-name').textContent=cfg.agentName;document.getElementById('sixps-dados-titulo').textContent='Dados — '+cfg.titulo;
   document.getElementById('sixps-diagrama').style.display=modulo==='p4'?'block':'none';
+  // Limpa dados antes de carregar para evitar mostrar conteúdo de outro P
+  const dadosEl=document.getElementById('sixps-dados-content');
+  if(dadosEl) dadosEl.innerHTML='<span style="color:var(--muted);font-size:12px">Carregando...</span>';
   await loadConversasSixps(modulo);
+  // ── Renderiza painel Dados ──
+  if(dadosEl){
+    // 1ª tentativa: SP.dados carregado pelo loadSixps
+    let resumo = SP.dados?.[modulo+'_resumo']||'';
+    // 2ª tentativa: última mensagem do assistente na conversa já carregada
+    if(resumo.length < 50){
+      resumo = (SP.conversas[modulo]||[]).filter(c=>c.role==='assistant').slice(-1)[0]?.content||'';
+    }
+    // 3ª tentativa: query direta ao banco (fallback garantido)
+    if(resumo.length < 50){
+      try {
+        const {data:d} = await sb.from('sixps_dados').select('resumo').eq('user_id',S.user.id).eq('modulo',modulo).limit(1);
+        if(d&&d[0]?.resumo) resumo = d[0].resumo;
+      } catch(e){}
+    }
+    if(resumo.length > 50){
+      dadosEl.innerHTML=resumo.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/##\s*(.*?)<br>/g,'<div style="font-size:11px;font-weight:700;color:var(--accent);letter-spacing:.5px;margin:10px 0 4px;text-transform:uppercase">$1</div>');
+    } else {
+      dadosEl.innerHTML='<span style="color:var(--muted);font-style:italic;font-size:12px">Converse com o agente para preencher os dados desta etapa.</span>';
+    }
+  }
 }
 
 function mostrarBotaoConcluir(modulo) {
@@ -6098,9 +6078,10 @@ async function sendSixpsMsg(){
 }
 
 function appendSixpsMsg(role,text){
-  const lbl=role==='agent'?'DM':'👤';
+  const isAgent = role==='agent'||role==='assistant';
+  const lbl=isAgent?'DM':'👤';
   const fmt2=text.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>');
-  document.getElementById('chat-sixps')?.insertAdjacentHTML('beforeend',`<div class="msg ${role==='agent'?'agent':'user'}"><div class="msg-av">${lbl}</div><div class="msg-bub">${fmt2}</div></div>`);
+  document.getElementById('chat-sixps')?.insertAdjacentHTML('beforeend',`<div class="msg ${isAgent?'agent':'user'}"><div class="msg-av">${lbl}</div><div class="msg-bub">${fmt2}</div></div>`);
   const el=document.getElementById('chat-sixps');if(el)el.scrollTop=el.scrollHeight;
 }
 
@@ -6421,36 +6402,36 @@ async function sincP5CRM(resumo) {
 
 async function sincP2Financeiro(resumo) {
   SP.dados.time = resumo;
-  // Extrai custo total de pessoal para referência no financeiro
+  // Extrai custo total de pessoal via edge function
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch(EDGE, {
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+SB_ANON,'apikey':SB_ANON},
       body: JSON.stringify({
-        model:'claude-sonnet-4-20250514', max_tokens:200,
-        messages:[{role:'user',content:`Do texto abaixo, some todos os salários/custos mensais mencionados. Responda SOMENTE um número (total em reais, sem R$ ou pontos). Se não houver valores claros, responda 0. TEXTO: ${resumo.slice(0,800)}`}]
+        model:'claude-haiku-4-5-20251001', max_tokens:200,
+        messages:[{role:'user',content:`Do texto abaixo, some todos os salários/custos mensais mencionados. Responda SOMENTE um número (total em reais, sem R$ ou pontos). Se não houver valores claros, responda 0. TEXTO: ${resumo.slice(0,800)}`}],
+        systemPrompt:'Retorne apenas um número inteiro, sem texto.'
       })
     });
     const data = await res.json();
-    const total = parseFloat(data.content?.[0]?.text||'0')||0;
+    const total = parseFloat(data.reply||'0')||0;
     if(total > 0) SP.dados.custo_pessoal = total;
   } catch(e) {}
 }
 
 async function sincP3Estoque(resumo) {
-  // Extrai produtos do texto usando IA
+  // Extrai produtos do texto usando edge function
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch(EDGE, {
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+SB_ANON,'apikey':SB_ANON},
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 500,
-        messages:[{role:'user',content:`Do texto abaixo, extraia APENAS os produtos/serviços com nome e preço mencionados. Responda SOMENTE em JSON array: [{"nome":"...", "preco":0, "tipo":"produto|servico"}]. Se não houver produtos claros, retorne []. TEXTO: ${resumo.slice(0,1000)}`}]
+        messages:[{role:'user',content:`Do texto abaixo, extraia APENAS os produtos/serviços com nome e preço mencionados. Responda SOMENTE em JSON array: [{"nome":"...", "preco":0, "tipo":"produto|servico"}]. Se não houver produtos claros, retorne []. TEXTO: ${resumo.slice(0,1000)}`}],
+        systemPrompt:'Retorne apenas JSON válido, sem texto adicional.'
       })
     });
     const data = await res.json();
-    const txt = data.content?.[0]?.text||'[]';
+    const txt = (data.reply||'[]').replace(/```json|```/g,'').trim();
     const produtos = JSON.parse(txt.replace(/```json|```/g,'').trim());
     if(produtos.length && S.user) {
       for(const p of produtos.slice(0,5)) {
