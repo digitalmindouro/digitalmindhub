@@ -224,3 +224,12 @@ tbody tr:hover { background: #fafafb !important; }
 #page-adm { min-height: auto !important; }
 #sixps-modulo { padding-top: 0 !important; margin-top: 0 !important; }
 #page-adm .content { min-height: auto !important; }
+
+/* FIX: Marketing Estratégia — texto invisível (branco no fundo claro) */
+#mkt-estrat-posicionamento { color: var(--text) !important; }
+#persona-tab-1,
+#persona-tab-2,
+#persona-tab-3 { color: var(--text) !important; }
+
+/* FIX: Painel Dados dos 6Ps — texto invisível */
+#sixps-dados-content { color: var(--text) !important; }

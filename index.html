@@ -2927,8 +2927,10 @@ async function marcarRecebido(id){
 // renderReceber redefinida acima com CRUD
 
 function renderMetricas(){
-  const ent=S.lancamentos.filter(l=>l.tipo==='entrada').reduce((s,l)=>s+parseFloat(l.valor||0),0);
-  const sai=S.lancamentos.filter(l=>l.tipo==='saida').reduce((s,l)=>s+parseFloat(l.valor||0),0);
+  const mesAtual=new Date().toISOString().slice(0,7); // YYYY-MM
+  const lancMes=S.lancamentos.filter(l=>l.data&&l.data.startsWith(mesAtual));
+  const ent=lancMes.filter(l=>l.tipo==='entrada').reduce((s,l)=>s+parseFloat(l.valor||0),0);
+  const sai=lancMes.filter(l=>l.tipo==='saida').reduce((s,l)=>s+parseFloat(l.valor||0),0);
   const saldo=ent-sai;
   const hoje=new Date().toISOString().split('T')[0];
   const em7=new Date(Date.now()+7*86400000).toISOString().split('T')[0];
@@ -3048,10 +3050,16 @@ function renderConversasFin(){
   const el=document.getElementById('chat-fin');if(!el)return;
   el.innerHTML='';
   const hoje=new Date().toLocaleDateString('pt-BR');
-  const ent=S.lancamentos.filter(l=>l.tipo==='entrada').reduce((s,l)=>s+parseFloat(l.valor||0),0);
-  const sai=S.lancamentos.filter(l=>l.tipo==='saida').reduce((s,l)=>s+parseFloat(l.valor||0),0);
+  const mesAtual=new Date().toISOString().slice(0,7);
+  const lancMes=S.lancamentos.filter(l=>l.data&&l.data.startsWith(mesAtual));
+  const ent=lancMes.filter(l=>l.tipo==='entrada').reduce((s,l)=>s+parseFloat(l.valor||0),0);
+  const sai=lancMes.filter(l=>l.tipo==='saida').reduce((s,l)=>s+parseFloat(l.valor||0),0);
+  const ap=(S.contas_pagar||[]).filter(c=>c.status==='pendente').reduce((s,c)=>s+parseFloat(c.valor||0),0);
+  const ar=(S.contas_receber||[]).filter(c=>c.status==='pendente').reduce((s,c)=>s+parseFloat(c.valor||0),0);
   if(!S.conversas_fin.length){
-    appendMFin('agent',`Olá! Hoje é ${hoje}.\n\n📊 **Resumo atual:**\n• Receitas: ${fmt(ent)} | Despesas: ${fmt(sai)} | Saldo: ${fmt(ent-sai)}\n\nSou seu Assistente Financeiro. Registre movimentações por texto ou faça perguntas!`);
+    const pe=MZ?.p6_ponto_equilibrio?`\n• Ponto de equilíbrio (6Ps): ${fmt(MZ.p6_ponto_equilibrio)}/mês`:'';
+    const meta=MZ?.p6_meta_receita?`\n• Meta de receita (6Ps): ${fmt(MZ.p6_meta_receita)}/mês`:'';
+    appendMFin('agent',`Olá! Hoje é ${hoje}.\n\n📊 **Resumo do mês (${mesAtual}):**\n• Receitas: ${fmt(ent)} | Despesas: ${fmt(sai)} | Resultado: ${fmt(ent-sai)}\n• A pagar: ${fmt(ap)} | A receber: ${fmt(ar)}${pe}${meta}\n\nPosso registrar lançamentos por texto ("recebi R$500 de cliente") ou analisar seu financeiro. O que precisa?`);
   } else {S.conversas_fin.slice(-30).forEach(m=>appendMFin(m.role==='user'?'user':'agent',m.content));}
   el.scrollTop=99999;
 }
@@ -3106,15 +3114,31 @@ async function sendFinMsg(){
       scrollFin();
     }
   }
-  const SYSTEM_FIN=`Você é o Assistente Financeiro da plataforma DigitalMind. Analise EXCLUSIVAMENTE dados financeiros. Os lançamentos já foram registrados automaticamente. Confirme e analise o impacto. Responda em português brasileiro. Máximo 5 linhas.`;
+  const SYSTEM_FIN=`Você é o Agente Financeiro da DigitalMind, especialista em gestão financeira empresarial. Analise os dados financeiros reais do usuário e responda de forma direta, prática e estratégica. Responda em português brasileiro. Use listas numeradas para ações. Máximo 10 linhas para análises simples, até 20 para diagnósticos completos.`;
   const btn=document.getElementById('send-fin');btn.disabled=true;
   const lid='lf-'+Date.now();
   document.getElementById('chat-fin').insertAdjacentHTML('beforeend',`<div class="msg agent" id="${lid}"><div class="msg-av">DM</div><div class="msg-bub"><div class="typing"><span></span><span></span><span></span></div></div></div>`);
   scrollFin();
   try {
-    const ent=S.lancamentos.filter(l=>l.tipo==='entrada').reduce((s,l)=>s+parseFloat(l.valor||0),0);
-    const sai=S.lancamentos.filter(l=>l.tipo==='saida').reduce((s,l)=>s+parseFloat(l.valor||0),0);
-    const finCtx=`Empresa: ${S.empresa?.nome||''} | Receitas: R$${ent.toFixed(2)} | Despesas: R$${sai.toFixed(2)} | Saldo: R$${(ent-sai).toFixed(2)}${lancRegistrado?`\n[Registrado: ${mov.tipo} R$${mov.valor} - ${mov.categoria}]`:''}`;
+    const mesAtual=new Date().toISOString().slice(0,7);
+    const lancMes=S.lancamentos.filter(l=>l.data&&l.data.startsWith(mesAtual));
+    const entMes=lancMes.filter(l=>l.tipo==='entrada').reduce((s,l)=>s+parseFloat(l.valor||0),0);
+    const saiMes=lancMes.filter(l=>l.tipo==='saida').reduce((s,l)=>s+parseFloat(l.valor||0),0);
+    const entTotal=S.lancamentos.filter(l=>l.tipo==='entrada').reduce((s,l)=>s+parseFloat(l.valor||0),0);
+    const saiTotal=S.lancamentos.filter(l=>l.tipo==='saida').reduce((s,l)=>s+parseFloat(l.valor||0),0);
+    const ap=(S.contas_pagar||[]).filter(c=>c.status==='pendente').reduce((s,c)=>s+parseFloat(c.valor||0),0);
+    const ar=(S.contas_receber||[]).filter(c=>c.status==='pendente').reduce((s,c)=>s+parseFloat(c.valor||0),0);
+    const cats={};S.lancamentos.forEach(l=>{const c=l.categoria||'outro';cats[c]=(cats[c]||{e:0,s:0});if(l.tipo==='entrada')cats[c].e+=parseFloat(l.valor||0);else cats[c].s+=parseFloat(l.valor||0);});
+    const catsStr=Object.entries(cats).map(([k,v])=>`${k}:+R$${v.e.toFixed(0)}/-R$${v.s.toFixed(0)}`).join(' | ');
+    const matrizCtx=typeof matrizParaContexto==='function'?matrizParaContexto():'';
+    const finCtx=`EMPRESA: ${S.empresa?.nome||'—'} | Setor: ${S.empresa?.setor||'—'}
+MÊS ATUAL (${mesAtual}): Receitas=R$${entMes.toFixed(2)} | Despesas=R$${saiMes.toFixed(2)} | Lucro=R$${(entMes-saiMes).toFixed(2)} | Margem=${entMes>0?((entMes-saiMes)/entMes*100).toFixed(1):0}%
+ACUMULADO TOTAL: Receitas=R$${entTotal.toFixed(2)} | Despesas=R$${saiTotal.toFixed(2)} | Saldo=R$${(entTotal-saiTotal).toFixed(2)}
+CONTAS A PAGAR (pendentes): R$${ap.toFixed(2)} em ${(S.contas_pagar||[]).filter(c=>c.status==='pendente').length} contas
+CONTAS A RECEBER (pendentes): R$${ar.toFixed(2)} em ${(S.contas_receber||[]).filter(c=>c.status==='pendente').length} contas
+CATEGORIAS: ${catsStr||'sem lançamentos'}
+PONTO DE EQUILÍBRIO (6Ps): R$${MZ?.p6_ponto_equilibrio||0}/mês
+META RECEITA (6Ps): R$${MZ?.p6_meta_receita||0}/mês${matrizCtx?'\n\nCONTEXTO EMPRESA (6Ps):\n'+matrizCtx.slice(0,600):''}${lancRegistrado?`\n[Registrado agora: ${mov.tipo} R$${mov.valor} - ${mov.categoria}]`:''}`;
     const msgs=S.conversas_fin.slice(-20).map(c=>({role:c.role==='assistant'?'assistant':'user',content:c.content}));
     const res=await fetch(EDGE,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+SB_ANON,'apikey':SB_ANON},body:JSON.stringify({messages:msgs,clientContext:finCtx,systemPrompt:SYSTEM_FIN})});
     document.getElementById(lid)?.remove();
@@ -5758,18 +5782,6 @@ async function abrirP(modulo){
   document.getElementById('sixps-agent-name').textContent=cfg.agentName;document.getElementById('sixps-dados-titulo').textContent='Dados — '+cfg.titulo;
   document.getElementById('sixps-diagrama').style.display=modulo==='p4'?'block':'none';
   await loadConversasSixps(modulo);
-  // Renderiza resumo salvo no painel Dados (fix: painel vazio ao reabrir um P)
-  const dadosEl=document.getElementById('sixps-dados-content');
-  if(dadosEl){
-    const resumo=SP.dados[modulo+'_resumo']||'';
-    if(resumo.length>50){
-      dadosEl.innerHTML=resumo.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
-    } else {
-      // Fallback: última mensagem do assistente na conversa atual
-      const ultMsg=(SP.conversas[modulo]||[]).filter(c=>c.role==='assistant').slice(-1)[0]?.content||'';
-      if(ultMsg.length>50) dadosEl.innerHTML=ultMsg.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
-    }
-  }
 }
 
 function mostrarBotaoConcluir(modulo) {
