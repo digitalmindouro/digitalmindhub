@@ -833,6 +833,7 @@
                     <div class="metric-card"><div class="metric-label">Saldo hoje</div><div class="metric-value" id="prev-saldo-hoje" style="color:var(--accent2)">—</div></div>
                     <div class="metric-card"><div class="metric-label">Entradas previstas</div><div class="metric-value neutral" id="prev-entradas">—</div><div class="metric-delta" id="prev-entradas-d"></div></div>
                     <div class="metric-card"><div class="metric-label">Saídas previstas</div><div class="metric-value negative" id="prev-saidas">—</div><div class="metric-delta" id="prev-saidas-d"></div></div>
+                    <div id="prev-rec-info" style="display:none;font-size:10px;color:var(--accent);font-weight:500;padding:6px 10px;background:rgba(37,99,235,0.08);border-radius:6px;margin-top:8px"></div>
                     <div class="metric-card"><div class="metric-label">Saldo projetado</div><div class="metric-value" id="prev-saldo-proj">—</div><div class="metric-delta" id="prev-alerta"></div></div>
                   </div>
                   <div class="card" style="margin-bottom:16px">
@@ -909,6 +910,16 @@
 
             <div class="page" id="page-adm">
                 <div id="sixps-home" style="display:block">
+                    <div id="revisao-banner" style="display:none;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:10px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
+                      <div style="display:flex;align-items:center;gap:8px">
+                        <span style="font-size:14px">↺</span>
+                        <div>
+                          <div style="font-size:11px;font-weight:700;color:#d97706" id="revisao-banner-titulo">Tempo de revisão</div>
+                          <div style="font-size:10px;color:var(--muted)" id="revisao-banner-desc">Alguns pilares têm mais de 90 dias sem revisão</div>
+                        </div>
+                      </div>
+                      <button onclick="document.getElementById('revisao-banner').style.display='none'" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;line-height:1">×</button>
+                    </div>
 
                     <!-- CARDS COMPACTOS — 6 colunas -->
                     <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:18px" id="sixps-grid"></div>
@@ -2636,7 +2647,7 @@ async function callAgent(userMsg, chatId, btnId, extraCtx) {
   try {
     const messages=S.conversas.slice(-30).map(c=>({role:c.role==='assistant'?'assistant':'user',content:c.content}));
     // Contexto completo dos 3 pilares
-    const clientCtx = buildFullContext() + (extraCtx ? '\n'+extraCtx : '');
+    const clientCtx = buildFullContext('Administrativo') + (extraCtx ? '\n'+extraCtx : '');
     const res=await fetch(EDGE,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+SB_ANON,'apikey':SB_ANON},body:JSON.stringify({messages,clientContext:clientCtx,systemPrompt:SYSTEM})});
     document.getElementById(lid)?.remove();
     const data=await res.json();
@@ -3124,7 +3135,13 @@ async function sendFinMsg(){
       scrollFin();
     }
   }
-  const SYSTEM_FIN=`Você é o Agente Financeiro da DigitalMind, especialista em gestão financeira empresarial. Analise os dados financeiros reais do usuário e responda de forma direta, prática e estratégica. Responda em português brasileiro. Use listas numeradas para ações. Máximo 10 linhas para análises simples, até 20 para diagnósticos completos.`;
+  const SYSTEM_FIN=`Você é o Agente Financeiro da Administração DigitalMind.
+Você tem acesso ao contexto COMPLETO da empresa: 6Ps estratégicos, dados financeiros em tempo real, CRM e marketing.
+Sua função é cruzar esses dados e entregar inteligência financeira — não apenas responder sobre lançamentos.
+Quando analisar números, sempre cruze com: ponto de equilíbrio (P6), meta de receita (P6), modelo de negócio (P2) e custo de pessoal (P3).
+Quando detectar risco, aponte a causa raiz usando os dados dos Ps.
+Responda em português brasileiro. Seja direto, específico e use os números reais do contexto.
+Máximo 15 linhas. Termine sempre com 1-3 ações priorizadas e numeradas.`;
   const btn=document.getElementById('send-fin');btn.disabled=true;
   const lid='lf-'+Date.now();
   document.getElementById('chat-fin').insertAdjacentHTML('beforeend',`<div class="msg agent" id="${lid}"><div class="msg-av">DM</div><div class="msg-bub"><div class="typing"><span></span><span></span><span></span></div></div></div>`);
@@ -3141,14 +3158,7 @@ async function sendFinMsg(){
     const cats={};S.lancamentos.forEach(l=>{const c=l.categoria||'outro';cats[c]=(cats[c]||{e:0,s:0});if(l.tipo==='entrada')cats[c].e+=parseFloat(l.valor||0);else cats[c].s+=parseFloat(l.valor||0);});
     const catsStr=Object.entries(cats).map(([k,v])=>`${k}:+R$${v.e.toFixed(0)}/-R$${v.s.toFixed(0)}`).join(' | ');
     const matrizCtx=typeof matrizParaContexto==='function'?matrizParaContexto():'';
-    const finCtx=`EMPRESA: ${S.empresa?.nome||'—'} | Setor: ${S.empresa?.setor||'—'}
-MÊS ATUAL (${mesAtual}): Receitas=R$${entMes.toFixed(2)} | Despesas=R$${saiMes.toFixed(2)} | Lucro=R$${(entMes-saiMes).toFixed(2)} | Margem=${entMes>0?((entMes-saiMes)/entMes*100).toFixed(1):0}%
-ACUMULADO TOTAL: Receitas=R$${entTotal.toFixed(2)} | Despesas=R$${saiTotal.toFixed(2)} | Saldo=R$${(entTotal-saiTotal).toFixed(2)}
-CONTAS A PAGAR (pendentes): R$${ap.toFixed(2)} em ${(S.contas_pagar||[]).filter(c=>c.status==='pendente').length} contas
-CONTAS A RECEBER (pendentes): R$${ar.toFixed(2)} em ${(S.contas_receber||[]).filter(c=>c.status==='pendente').length} contas
-CATEGORIAS: ${catsStr||'sem lançamentos'}
-PONTO DE EQUILÍBRIO (6Ps): R$${MZ?.p6_ponto_equilibrio||0}/mês
-META RECEITA (6Ps): R$${MZ?.p6_meta_receita||0}/mês${matrizCtx?'\n\nCONTEXTO EMPRESA (6Ps):\n'+matrizCtx.slice(0,600):''}${lancRegistrado?`\n[Registrado agora: ${mov.tipo} R$${mov.valor} - ${mov.categoria}]`:''}`;
+    const finCtx = buildFullContext('Financeiro') + (lancRegistrado?`\n[Registrado agora: ${mov.tipo} R$${mov.valor} - ${mov.categoria}]`:'');
     const msgs=S.conversas_fin.slice(-20).map(c=>({role:c.role==='assistant'?'assistant':'user',content:c.content}));
     const res=await fetch(EDGE,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+SB_ANON,'apikey':SB_ANON},body:JSON.stringify({messages:msgs,clientContext:finCtx,systemPrompt:SYSTEM_FIN})});
     document.getElementById(lid)?.remove();
@@ -4922,7 +4932,7 @@ async function sendMktMsg(){
   document.getElementById('chat-mkt').scrollTop=99999;
   try {
     const msgs=MKT.chatHistory.slice(-20);
-    const res=await fetch(EDGE,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+SB_ANON,'apikey':SB_ANON},body:JSON.stringify({messages:msgs,clientContext:`Empresa: ${S.empresa?.nome}, Setor: ${S.empresa?.setor}`,systemPrompt:mktGetSystemPrompt()})});
+    const res=await fetch(EDGE,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+SB_ANON,'apikey':SB_ANON},body:JSON.stringify({messages:msgs,clientContext:buildFullContext('Marketing'),systemPrompt:mktGetSystemPrompt()})});
     document.getElementById(lid)?.remove();
     const data=await res.json();const reply=data.reply||'';
     MKT.chatHistory.push({role:'assistant',content:reply});
@@ -5338,7 +5348,8 @@ async function adminAprovarP(modulo,userId){
   const sk=(await sb.auth.getSession()).data.session?.access_token||SB_ANON;
   const headers={'apikey':sk,'Authorization':`Bearer ${sk}`,'Content-Type':'application/json'};
   const ps=['p1','p2','p3','p4','p5','p6'];const idx=ps.indexOf(modulo);
-  const updates={[modulo+'_status']:'concluido'};
+  const now = new Date().toISOString();
+  const updates={[modulo+'_status']:'concluido', [modulo+'_concluido_em']:now};
   if(idx<ps.length-1)updates[ps[idx+1]+'_status']='em_andamento';
   await fetch(`${SB_URL}/rest/v1/sixps_progresso?user_id=eq.${userId}`,{method:'PATCH',headers,body:JSON.stringify(updates)});
   await carregarSixpsCliente();alert(`${modulo.toUpperCase()} aprovado!`);
@@ -5777,8 +5788,12 @@ function renderSixpsGrid(){
       </div>
       <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:11px;margin-bottom:2px;color:var(--text)">${cfg.titulo}</div>
       <div style="font-size:10px;color:var(--muted);margin-bottom:8px;line-height:1.3">${cfg.sub}</div>
-      <div style="border-top:1px solid var(--border);padding-top:7px">
+      <div style="border-top:1px solid var(--border);padding-top:7px;display:flex;align-items:center;justify-content:space-between">
         <div style="font-size:9px;font-weight:600;color:var(--accent);letter-spacing:.3px">${cfg.outputsLabel}</div>
+        ${concluido && SP.progresso[p+'_concluido_em'] ? (() => {
+          const dias = Math.floor((Date.now()-new Date(SP.progresso[p+'_concluido_em']))/86400000);
+          return dias >= 90 ? '<span style="font-size:8px;font-weight:700;color:#f59e0b;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);border-radius:4px;padding:1px 5px">↺ Revisar</span>' : '';
+        })() : ''}
       </div>
     </div>`;
   }).join('');
@@ -5790,6 +5805,31 @@ function renderSixpsGrid(){
   if(fluxEl) {
     fluxEl.style.display = p15Concluidos ? 'block' : 'none';
     if(p15Concluidos) atualizarFluxograma();
+  }
+  // Verifica ciclo de revisão — alerta se algum P concluído tem 90+ dias
+  verificarRevisaoCiclo();
+}
+
+function verificarRevisaoCiclo() {
+  if(!SP.progresso) return;
+  const ps = ['p1','p2','p3','p4','p5','p6'];
+  const vencidos = ps.filter(p => {
+    const data = SP.progresso[p+'_concluido_em'];
+    if(!data) return false;
+    const dias = Math.floor((Date.now()-new Date(data))/86400000);
+    return SP.progresso[p+'_status']==='concluido' && dias >= 90;
+  });
+  const banner = document.getElementById('revisao-banner');
+  if(!banner) return;
+  if(vencidos.length > 0) {
+    const nomes = vencidos.map(p=>SIXPS_CONFIG[p]?.titulo?.split(' — ')[1]||p.toUpperCase()).join(', ');
+    banner.style.display = 'flex';
+    const titulo = document.getElementById('revisao-banner-titulo');
+    const desc   = document.getElementById('revisao-banner-desc');
+    if(titulo) titulo.textContent = vencidos.length === 1 ? '1 pilar para revisar' : vencidos.length+' pilares para revisar';
+    if(desc)   desc.textContent   = nomes+' — mais de 90 dias sem atualização';
+  } else {
+    banner.style.display = 'none';
   }
 }
 
@@ -6157,7 +6197,8 @@ function appendSixpsMsg(role,text){
 async function concluirP(moduloForce){
   const modulo=moduloForce||SP.moduloAtivo;if(!modulo)return;
   const ps=['p1','p2','p3','p4','p5','p6'];const idx=ps.indexOf(modulo);
-  const updates={[modulo+'_status']:'concluido'};
+  const now = new Date().toISOString();
+  const updates={[modulo+'_status']:'concluido', [modulo+'_concluido_em']:now};
   if(idx<ps.length-1)updates[ps[idx+1]+'_status']='em_andamento';
   await sb.from('sixps_progresso').update(updates).eq('user_id',S.user.id);
   SP.progresso={...SP.progresso,...updates};
@@ -6566,17 +6607,38 @@ const CRM = {
 };
 
 // ── buildFullContext atualizado com dados dos 6Ps ──
-function buildFullContext() {
-  // Usa a matriz central como fonte única de verdade
-  const matrizCtx = matrizParaContexto();
-  if(matrizCtx) return matrizCtx;
+function buildFullContext(modulo_origem) {
+  // Contexto completo cruzado — todos os agentes leem a mesma fonte
+  const emp = S.empresa || {};
+  const mesAtual = new Date().toISOString().slice(0,7);
+  const lancMes  = (S.lancamentos||[]).filter(l=>l.data?.startsWith(mesAtual));
+  const entMes   = lancMes.filter(l=>l.tipo==='entrada').reduce((s,l)=>s+parseFloat(l.valor||0),0);
+  const saiMes   = lancMes.filter(l=>l.tipo==='saida').reduce((s,l)=>s+parseFloat(l.valor||0),0);
+  const entTotal = (S.lancamentos||[]).filter(l=>l.tipo==='entrada').reduce((s,l)=>s+parseFloat(l.valor||0),0);
+  const saiTotal = (S.lancamentos||[]).filter(l=>l.tipo==='saida').reduce((s,l)=>s+parseFloat(l.valor||0),0);
+  const ap = (S.contas_pagar||[]).filter(c=>c.status==='pendente').reduce((s,c)=>s+parseFloat(c.valor||0),0);
+  const ar = (S.contas_receber||[]).filter(c=>c.status==='pendente').reduce((s,c)=>s+parseFloat(c.valor||0),0);
+  const crmLeads = typeof CRM !== 'undefined' ? (CRM.leads||[]) : [];
+  const leadsAtivos = crmLeads.filter(l=>!['fechado','perdido'].includes(l.estagio)).length;
+  const pipeline    = crmLeads.reduce((s,l)=>s+parseFloat(l.valor||0),0);
 
-  // Fallback se matriz ainda não foi populada
-  const emp = S.empresa;
-  if(!emp) return '';
-  const ent = (S.lancamentos||[]).filter(l=>l.tipo==='entrada').reduce((s,l)=>s+parseFloat(l.valor||0),0);
-  const sai = (S.lancamentos||[]).filter(l=>l.tipo==='saida').reduce((s,l)=>s+parseFloat(l.valor||0),0);
-  return `EMPRESA: ${emp.nome} | Setor: ${emp.setor||'—'} | Fase: ${emp.fase||'—'}\n▸ FINANCEIRO: Receitas R$${ent.toFixed(2)} | Despesas R$${sai.toFixed(2)} | Saldo R$${(ent-sai).toFixed(2)}`;
+  // Matriz Central — fonte única de verdade dos 6Ps
+  const matrizCtx = matrizParaContexto();
+
+  return `═══ CONTEXTO COMPLETO — ADMINISTRAÇÃO DIGITALMIND ═══
+EMPRESA: ${emp.nome||'—'} | Setor: ${emp.setor||'—'} | Fase: ${emp.fase||'—'}
+${modulo_origem ? 'MÓDULO CONSULTADO: '+modulo_origem : ''}
+
+▸ FINANCEIRO ATUAL (${mesAtual}):
+  Receitas do mês: R$${entMes.toFixed(2)} | Despesas do mês: R$${saiMes.toFixed(2)} | Resultado: R$${(entMes-saiMes).toFixed(2)}
+  Saldo acumulado: R$${(entTotal-saiTotal).toFixed(2)} | A pagar: R$${ap.toFixed(2)} | A receber: R$${ar.toFixed(2)}
+  Ponto de equilíbrio (P6): R$${MZ?.p6_ponto_equilibrio||0}/mês | Meta receita (P6): R$${MZ?.p6_meta_receita||0}/mês
+
+▸ CRM ATUAL:
+  Leads ativos: ${leadsAtivos} | Pipeline: R$${pipeline.toFixed(2)}
+
+${matrizCtx ? matrizCtx : '(Matriz Central ainda não populada — complete os 6Ps no Administrativo)'}
+═══ FIM DO CONTEXTO ═══`;
 }
 
 function renderDiagramaP4(){
@@ -7953,6 +8015,31 @@ async function metaSalvar() {
 // ══════════════════════════════════════════════
 // PREVISÃO DE CAIXA
 // ══════════════════════════════════════════════
+function detectarRecorrencias(lancamentos) {
+  // Detecta lançamentos que se repetem mensalmente com valor similar
+  const grupos = {};
+  lancamentos.forEach(l => {
+    const chave = (l.descricao||'').toLowerCase().slice(0,20)+'_'+l.tipo;
+    if(!grupos[chave]) grupos[chave] = [];
+    grupos[chave].push({ data: l.data, valor: parseFloat(l.valor||0), tipo: l.tipo, descricao: l.descricao, categoria: l.categoria });
+  });
+  const recorrentes = [];
+  Object.values(grupos).forEach(grupo => {
+    if(grupo.length < 2) return;
+    grupo.sort((a,b)=>a.data.localeCompare(b.data));
+    const datas = grupo.map(g=>new Date(g.data));
+    let totalDiff = 0;
+    for(let i=1;i<datas.length;i++) totalDiff += (datas[i]-datas[i-1])/(86400000);
+    const mediaInterval = totalDiff/(datas.length-1);
+    if(mediaInterval >= 20 && mediaInterval <= 40) { // ~mensal
+      const mediaValor = grupo.reduce((s,g)=>s+g.valor,0)/grupo.length;
+      const ultimaData = new Date(grupo[grupo.length-1].data);
+      recorrentes.push({ descricao: grupo[0].descricao, tipo: grupo[0].tipo, categoria: grupo[0].categoria, valor: mediaValor, ultimaData, intervaloDias: Math.round(mediaInterval) });
+    }
+  });
+  return recorrentes;
+}
+
 function previsaoRender(dias = 60) {
   ['30','60','90'].forEach(d => {
     const btn = document.getElementById('prev-btn-'+d);
@@ -7968,13 +8055,47 @@ function previsaoRender(dias = 60) {
   const sai = (S.lancamentos||[]).filter(l=>l.tipo==='saida').reduce((s,l)=>s+parseFloat(l.valor||0),0);
   const saldoAtual = ent - sai;
 
-  // Contas a receber abertas no período
+  // Contas a receber/pagar abertas no período
   const receber = (S.contas_receber||[]).filter(r => r.status==='pendente' && r.vencimento >= fmt(hoje) && r.vencimento <= fmt(limite));
-  const pagar = (S.contas_pagar||[]).filter(p => p.status==='pendente' && p.vencimento >= fmt(hoje) && p.vencimento <= fmt(limite));
+  const pagar   = (S.contas_pagar||[]).filter(p => p.status==='pendente' && p.vencimento >= fmt(hoje) && p.vencimento <= fmt(limite));
 
-  const totalReceber = receber.reduce((s,r)=>s+parseFloat(r.valor||0),0);
-  const totalPagar = pagar.reduce((s,p)=>s+parseFloat(p.valor||0),0);
-  const saldoProj = saldoAtual + totalReceber - totalPagar;
+  // Recorrências detectadas automaticamente no histórico
+  const recorrentes = detectarRecorrencias(S.lancamentos||[]);
+  const recorrentesProj = [];
+  recorrentes.forEach(r => {
+    let proxData = new Date(r.ultimaData);
+    proxData.setDate(proxData.getDate()+r.intervaloDias);
+    while(proxData <= limite) {
+      if(proxData > hoje) recorrentesProj.push({ ...r, data: fmt(proxData), vencimento: fmt(proxData), descricao: r.descricao+' (recorrente)', valor: r.valor });
+      proxData = new Date(proxData);
+      proxData.setDate(proxData.getDate()+r.intervaloDias);
+    }
+  });
+
+  const totalReceber = receber.reduce((s,r)=>s+parseFloat(r.valor||0),0)
+    + recorrentesProj.filter(r=>r.tipo==='entrada').reduce((s,r)=>s+r.valor,0);
+  const totalPagar   = pagar.reduce((s,p)=>s+parseFloat(p.valor||0),0)
+    + recorrentesProj.filter(r=>r.tipo==='saida').reduce((s,r)=>s+r.valor,0);
+  const saldoProj    = saldoAtual + totalReceber - totalPagar;
+
+  // Benchmark dos 6Ps
+  const pe        = MZ?.p6_ponto_equilibrio || 0;
+  const metaRec   = MZ?.p6_meta_receita || MZ?.p2_receita_mensal || 0;
+  const mesesProj = dias/30;
+  const alertaEl  = document.getElementById('prev-alerta');
+  let alertaMsg='', alertaColor='var(--success)';
+  if(saldoProj < 0) { alertaMsg='⚠️ Caixa negativo projetado!'; alertaColor='var(--danger)'; }
+  else if(pe > 0 && (totalReceber/mesesProj) < pe) { alertaMsg=`⚠️ Receita projetada (R$${(totalReceber/mesesProj).toFixed(0)}/mês) abaixo do ponto de equilíbrio (R$${pe.toFixed(0)})`; alertaColor='var(--fin)'; }
+  else if(metaRec > 0 && (totalReceber/mesesProj) >= metaRec) { alertaMsg=`🎯 Projeção acima da meta! R$${(totalReceber/mesesProj).toFixed(0)}/mês`; alertaColor='var(--success)'; }
+  else { alertaMsg='✅ Fluxo positivo projetado'; alertaColor='var(--success)'; }
+  if(alertaEl) { alertaEl.textContent=alertaMsg; alertaEl.style.color=alertaColor; }
+
+  // Exibe info de recorrências detectadas
+  const recTag = document.getElementById('prev-rec-info');
+  if(recTag) {
+    recTag.textContent = recorrentes.length > 0 ? `+ ${recorrentes.length} lançamento${recorrentes.length>1?'s':''} recorrente${recorrentes.length>1?'s':''} detectado${recorrentes.length>1?'s':''}` : '';
+    recTag.style.display = recorrentes.length > 0 ? 'block' : 'none';
+  }
 
   const set = (id,v) => { const el=document.getElementById(id); if(el)el.textContent=v; };
   set('prev-saldo-hoje', 'R$ '+saldoAtual.toFixed(2));
