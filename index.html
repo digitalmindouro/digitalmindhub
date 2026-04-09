@@ -460,6 +460,13 @@
             <div class="page-title" id="page-title">Início</div>
             <div style="display:flex;gap:10px;align-items:center">
               <span id="topbar-empresa" style="font-size:12px;color:var(--muted)"></span>
+              <!-- Botão tarefas do dia — só aparece no ADM -->
+              <button id="tarefas-notif-btn" onclick="abrirPopupTarefas()" style="display:none;align-items:center;gap:5px;padding:4px 10px 4px 8px;background:transparent;border:1px solid #e2e8f0;border-radius:20px;cursor:pointer;font-size:10px;font-weight:600;color:#1e3a8a;transition:all .15s;font-family:inherit" onmouseover="this.style.background='#eff6ff';this.style.borderColor='#3b82f6'" onmouseout="this.style.background='transparent';this.style.borderColor='#e2e8f0'">
+                <span style="font-size:11px">📋</span>
+                <span id="tarefas-notif-txt">Tarefas</span>
+                <span id="tarefas-notif-badge" style="display:none;background:#1e3a8a;color:white;border-radius:8px;padding:0 5px;font-size:9px;font-weight:700;min-width:14px;text-align:center"></span>
+              </button>
+
               <!-- Botão de revisão — só aparece na aba ADM com Ps para revisar -->
               <button id="revisao-notif-btn" onclick="abrirRevisaoRapida()" style="display:none;align-items:center;gap:5px;padding:4px 10px 4px 7px;background:transparent;border:1px solid #e2e8f0;border-radius:20px;cursor:pointer;font-size:10px;font-weight:600;color:#92400e;transition:all .15s;font-family:inherit" onmouseover="this.style.background='#fef3c7';this.style.borderColor='#d97706'" onmouseout="this.style.background='transparent';this.style.borderColor='#e2e8f0'">
                 <span style="width:6px;height:6px;border-radius:50%;background:#d97706;display:inline-block;flex-shrink:0"></span>
@@ -920,26 +927,6 @@
 
                     <!-- CARDS COMPACTOS — 6 colunas -->
                     <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:18px" id="sixps-grid"></div>
-
-                    <!-- TAREFAS DO DIA — no ADM, acima do fluxograma -->
-                    <div id="tarefas-do-dia-wrap" style="display:none;margin-bottom:14px">
-                      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden">
-                        <div style="padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
-                          <div style="display:flex;align-items:center;gap:8px">
-                            <span style="font-size:13px">📋</span>
-                            <div style="font-size:11px;font-weight:700;color:var(--text)">Tarefas do Dia</div>
-                            <span id="tarefas-data" style="font-size:10px;color:var(--muted)">—</span>
-                          </div>
-                          <div style="display:flex;gap:6px;align-items:center">
-                            <span id="tarefas-count" style="font-size:10px;color:var(--muted)"></span>
-                            <button onclick="gerarPlanoAcao()" id="btn-gerar-plano" style="display:none;align-items:center;gap:5px;padding:4px 12px;background:#1e3a8a;border:none;border-radius:20px;color:white;font-size:10px;font-weight:600;cursor:pointer;font-family:inherit">⚡ Gerar Plano</button>
-                          </div>
-                        </div>
-                        <div id="tarefas-lista" style="padding:10px 14px;display:flex;flex-direction:column;gap:5px;max-height:220px;overflow-y:auto">
-                          <div style="font-size:11px;color:var(--muted);text-align:center;padding:10px">Carregando...</div>
-                        </div>
-                      </div>
-                    </div>
 
                     <!-- FLUXOGRAMA TECH — aparece após P1-P5 concluídos -->
                     <div id="sixps-fluxograma" style="display:none;margin-bottom:18px">
@@ -2559,32 +2546,38 @@ async function carregarTarefasDoDia() {
   if(!S.user) return;
   try {
     const hoje = new Date().toISOString().slice(0,10);
-    const { data } = await sb.from('planos_acao')
+    const { data, error } = await sb.from('planos_acao')
       .select('*').eq('user_id', S.user.id)
       .eq('data_alvo', hoje).eq('status','ativo')
       .order('prioridade', {ascending:true});
+    // Se tabela não existe (400/42P01), mostra botão de gerar silenciosamente
+    if(error) { TAREFAS_DO_DIA = []; renderTarefasDoDia(); return; }
     TAREFAS_DO_DIA = data || [];
     renderTarefasDoDia();
-  } catch(e) { console.log('tarefas erro:', e.message); }
+  } catch(e) { TAREFAS_DO_DIA = []; renderTarefasDoDia(); }
 }
 
 function renderTarefasDoDia() {
-  const wrap  = document.getElementById('tarefas-do-dia-wrap');
   const lista = document.getElementById('tarefas-lista');
   const count = document.getElementById('tarefas-count');
   const btnGerar = document.getElementById('btn-gerar-plano');
   const dataEl = document.getElementById('tarefas-data');
-  if(!wrap || !lista) return;
+  if(!lista) return;
+  // Atualiza badge e visibilidade do botão no topbar
+  const notifBtn = document.getElementById('tarefas-notif-btn');
+  const notifBadge = document.getElementById('tarefas-notif-badge');
+  const emADM = document.getElementById('page-adm')?.classList.contains('active');
+  if(notifBtn) notifBtn.style.display = emADM ? 'flex' : 'none';
 
   const hoje = new Date();
   if(dataEl) dataEl.textContent = hoje.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'});
 
-  // Só mostra se P6 foi concluído
-  const p6ok = MZ?.p6_concluido || SP?.progresso?.p6_status === 'concluido';
-  wrap.style.display = p6ok ? 'block' : 'none';
-
-  // Mostra botão Gerar se não há tarefas hoje
+  // Só mostra botão Gerar se P6 concluído e sem tarefas hoje
+  const p6ok = MZ?.p6_concluido || SP?.progresso?.p6_status === 'concluido' || isConcluidoP?.('p6');
   if(btnGerar) btnGerar.style.display = (p6ok && TAREFAS_DO_DIA.length === 0) ? 'flex' : 'none';
+  // Atualiza badge de pendentes
+  const pendentes = TAREFAS_DO_DIA.filter(t=>t.status_exec!=='concluida').length;
+  if(notifBadge) { notifBadge.textContent=pendentes; notifBadge.style.display=pendentes>0?'inline':'none'; }
 
   if(TAREFAS_DO_DIA.length === 0) {
     lista.innerHTML = p6ok
@@ -2805,6 +2798,15 @@ function fecharModalPlano() {
   PLANO_PENDENTE = [];
 }
 
+function abrirPopupTarefas() {
+  const popup = document.getElementById('popup-tarefas');
+  if(popup) popup.style.display = popup.style.display==='flex' ? 'none' : 'flex';
+}
+function fecharPopupTarefas() {
+  const popup = document.getElementById('popup-tarefas');
+  if(popup) popup.style.display = 'none';
+}
+
 // Recarrega dados dos 6Ps quando o usuário volta para a aba
 document.addEventListener('visibilitychange', async () => {
   if(document.visibilityState !== 'visible') return;
@@ -2899,9 +2901,12 @@ function nav(page, el) {
   const titles={inicio:'Início',agente:'Agente IA',agenda:'Agendamento',adm:'Administrativo',mkt:'Marketing',financeiro:'Financeiro',onboarding:'Bem-vindo!',cronograma:'Cronograma',dashboard:'Início'};
   document.getElementById('page-title').textContent=titles[page]||page;
   if(page==='adm'){setTimeout(async ()=>{initAdmChat();await loadSixps();await carregarTarefasDoDia();},100);}
-  // Botão de revisão só visível no ADM
+  // Botões só visíveis no ADM
   const nb = document.getElementById('revisao-notif-btn');
   if(nb && page !== 'adm') nb.style.display = 'none';
+  const tb = document.getElementById('tarefas-notif-btn');
+  if(tb && page !== 'adm') tb.style.display = 'none';
+  if(page !== 'adm') fecharPopupTarefas?.();
   if(page==='mkt'){initMktPage();document.querySelector('.content').scrollTop=0;}
   if(page==='cronograma'){setTimeout(initCronograma,100);}
   if(page==='inicio'||page==='dashboard'){setTimeout(initInicio,100);}
@@ -6162,6 +6167,7 @@ function abrirRevisaoRapida() {
 }
 
 async function abrirP(modulo){
+  if(!modulo || !SIXPS_CONFIG[modulo]) { console.warn('abrirP: módulo inválido', modulo); return; }
   SP.moduloAtivo=modulo;const cfg=SIXPS_CONFIG[modulo];
   document.getElementById('sixps-home').style.display='none';document.getElementById('sixps-modulo').style.display='block';
   document.getElementById('sixps-modulo-titulo').textContent=cfg.titulo;document.getElementById('sixps-modulo-sub').textContent=cfg.sub;
@@ -6481,6 +6487,9 @@ async function iniciarAgenteSixps(modulo){
     SP.conversas[modulo]=SP.conversas[modulo]||[];
     SP.conversas[modulo].push({role:'assistant',content:reply});
     appendSixpsMsg('agent',reply);
+    // Propaga para Matriz em background a cada resposta relevante
+    SP.dados[modulo+'_resumo'] = reply;
+    if(reply.length > 200) extrairEAtualizarMatriz(modulo, reply).catch(()=>{});
     try{await sb.from('sixps_progresso').update({[modulo+'_status']:'em_andamento'}).eq('user_id',S.user.id);}catch(e2){}
     // Detecta sinal de conclusão também na abertura (ex: P6 já chega com análise completa)
     const sinalInicial = SIXPS_CONFIG[modulo]?.conclusaoSinal||'';
@@ -6564,6 +6573,11 @@ async function concluirP(moduloForce){
   voltarSixps();renderSixpsGrid();
   const prox=idx<ps.length-1?SIXPS_CONFIG[ps[idx+1]].titulo:null;
   appendSpecialMsg('agent',`✅ **${SIXPS_CONFIG[modulo].titulo}** concluído!${prox?`\n\n🔓 **${prox}** foi desbloqueado. Clique para continuar.`:'\n\n🎉 Você completou todos os 6Ps!'}\n\n${getSincronizacaoMsg(modulo)}`,'chat-adm');
+  // Atualiza tarefas do dia com base nos novos dados
+  setTimeout(async () => {
+    await matrizCarregar();
+    await carregarTarefasDoDia();
+  }, 1000);
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -6678,6 +6692,19 @@ async function sincronizarPilarComEcossistema(modulo) {
   if(modulo==='p3') await sincP3Financeiro(resumo);
   if(modulo==='p5') await sincP5CRM(resumo);
   if(modulo==='p6') await sincP6Metas(resumo);
+
+  // Recarrega o painel de Dados do P aberto (para refletir alterações imediatamente)
+  if(SP.moduloAtivo === modulo) {
+    const dadosEl = document.getElementById('sixps-dados-content');
+    if(dadosEl && resumo.length > 50) {
+      dadosEl.innerHTML = resumo
+        .replace(/\n/g,'<br>')
+        .replace(/\*\*(.*?)\*\*/g,'<strong style="color:#0f172a;font-weight:700">$1</strong>')
+        .replace(/^#{1,3}\s*(.+)$/gm,'<div style="font-size:11px;font-weight:800;color:var(--accent);letter-spacing:.5px;margin:10px 0 4px;text-transform:uppercase">$1</div>');
+    }
+  }
+  // Renderiza grid para refletir novos dados na Matriz
+  setTimeout(()=>{ renderSixpsGrid(); atualizarFluxograma?.(); }, 200);
 }
 
 async function extrairEAtualizarMatriz(modulo, resumo) {
