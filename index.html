@@ -908,7 +908,7 @@
             </div>
 
 
-            <div class="page" id="page-adm">
+            <div class="page" id="page-adm" style="position:relative">
                 <!-- Card de revisão — aparece no header quando há Ps com 90+ dias -->
                 <div id="revisao-header-card" style="display:none;position:absolute;top:0;right:0;z-index:10">
                   <div id="revisao-header-btn" onclick="abrirRevisaoRapida()" style="display:flex;align-items:center;gap:7px;padding:5px 12px 5px 10px;background:white;border:1px solid #e2e8f0;border-radius:0 0 0 10px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.06);transition:all .15s" onmouseover="this.style.borderColor='#d97706'" onmouseout="this.style.borderColor='#e2e8f0'">
@@ -2607,7 +2607,7 @@ function nav(page, el) {
   if(el)el.classList.add('active');
   const titles={inicio:'Início',agente:'Agente IA',agenda:'Agendamento',adm:'Administrativo',mkt:'Marketing',financeiro:'Financeiro',onboarding:'Bem-vindo!',cronograma:'Cronograma',dashboard:'Início'};
   document.getElementById('page-title').textContent=titles[page]||page;
-  if(page==='adm'){setTimeout(()=>{initAdmChat();loadSixps();},100);}
+  if(page==='adm'){setTimeout(async ()=>{initAdmChat();await loadSixps();},100);}
   if(page==='mkt'){initMktPage();document.querySelector('.content').scrollTop=0;}
   if(page==='cronograma'){setTimeout(initCronograma,100);}
   if(page==='inicio'||page==='dashboard'){setTimeout(initInicio,100);}
@@ -5821,11 +5821,17 @@ function renderSixpsGrid(){
 function verificarRevisaoCiclo() {
   if(!SP.progresso) return;
   const ps = ['p1','p2','p3','p4','p5','p6'];
+  // getDiasP: retorna dias desde a conclusão (usa _concluido_em ou updated_at como fallback)
+  const getDiasP = (p) => {
+    const data = SP.progresso[p+'_concluido_em'] || SP.progresso['updated_at'] || SP.progresso['created_at'];
+    if(!data) return 999; // sem data = muito antigo, sempre revisar
+    return Math.floor((Date.now()-new Date(data))/86400000);
+  };
   const vencidos = ps.filter(p => {
-    const data = SP.progresso[p+'_concluido_em'];
-    if(!data) return false;
-    const dias = Math.floor((Date.now()-new Date(data))/86400000);
-    return SP.progresso[p+'_status']==='concluido' && dias >= 90;
+    if(SP.progresso[p+'_status']!=='concluido') return false;
+    const dias = getDiasP(p);
+    // Mostra revisão se: sem data registrada (Ps antigos) OU mais de 90 dias
+    return !SP.progresso[p+'_concluido_em'] || dias >= 90;
   });
   const banner = document.getElementById('revisao-banner');
   if(!banner) return;
@@ -5848,11 +5854,9 @@ function verificarRevisaoCiclo() {
     // Calcula o P mais urgente (mais dias sem revisão)
     let maxDias = 0; let pMaisUrgente = vencidos[0];
     vencidos.forEach(p => {
-      const data = SP.progresso[p+'_concluido_em'];
-      if(data) {
-        const d = Math.floor((Date.now()-new Date(data))/86400000);
-        if(d > maxDias) { maxDias=d; pMaisUrgente=p; }
-      }
+      const data = SP.progresso[p+'_concluido_em'] || SP.progresso['updated_at'];
+      const d = data ? Math.floor((Date.now()-new Date(data))/86400000) : 999;
+      if(d > maxDias) { maxDias=d; pMaisUrgente=p; }
     });
     headerCard.style.display = 'block';
     headerTxt.textContent = vencidos.length === 1
@@ -5869,10 +5873,9 @@ function abrirRevisaoRapida() {
   let maxDias = 0; let pAlvo = null;
   ps.forEach(p => {
     if(SP.progresso[p+'_status']!=='concluido') return;
-    const data = SP.progresso[p+'_concluido_em'];
-    if(!data) return;
-    const d = Math.floor((Date.now()-new Date(data))/86400000);
-    if(d >= 90 && d > maxDias) { maxDias=d; pAlvo=p; }
+    const data = SP.progresso[p+'_concluido_em'] || SP.progresso['updated_at'];
+    const d = data ? Math.floor((Date.now()-new Date(data))/86400000) : 999;
+    if(d > maxDias) { maxDias=d; pAlvo=p; }
   });
   if(pAlvo) {
     // Mostra modal de confirmação antes de abrir
@@ -6106,6 +6109,11 @@ function atualizarFluxograma() {
 async function loadConversasSixps(modulo){
   const{data}=await sb.from('sixps_conversas').select('*').eq('user_id',S.user.id).eq('modulo',modulo).order('created_at',{ascending:true}).limit(50);
   SP.conversas[modulo]=data||[];renderConversasSixps(modulo);
+  // Popula SP.dados com última mensagem do assistente se ainda vazio
+  if(!SP.dados[modulo+'_resumo'] && SP.conversas[modulo].length) {
+    const ultMsg = [...SP.conversas[modulo]].reverse().find(c=>c.role==='assistant');
+    if(ultMsg?.content?.length > 50) SP.dados[modulo+'_resumo'] = ultMsg.content;
+  }
   if(!SP.conversas[modulo].length){
     await iniciarAgenteSixps(modulo);
   } else {
