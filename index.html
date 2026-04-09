@@ -8104,11 +8104,7 @@ function previsaoRender(dias = 60) {
   set('prev-saidas', 'R$ '+totalPagar.toFixed(2));
   set('prev-saidas-d', pagar.length+' lançamentos previstos');
   set('prev-saldo-proj', 'R$ '+saldoProj.toFixed(2));
-  const alertaEl = document.getElementById('prev-alerta');
-  if(alertaEl) {
-    alertaEl.textContent = saldoProj < 0 ? '⚠️ Caixa negativo projetado!' : saldoProj < saldoAtual*0.2 ? '⚠️ Reserva abaixo de 20%' : '✅ Fluxo positivo projetado';
-    alertaEl.style.color = saldoProj < 0 ? 'var(--danger)' : saldoProj < saldoAtual*0.2 ? 'var(--fin)' : 'var(--success)';
-  }
+  // alertaEl já tratado acima com benchmark 6Ps
 
   // Gráfico de linha temporal
   const ctx = document.getElementById('chart-previsao'); if(!ctx) return;
