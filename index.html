@@ -909,6 +909,14 @@
 
 
             <div class="page" id="page-adm">
+                <!-- Card de revisão — aparece no header quando há Ps com 90+ dias -->
+                <div id="revisao-header-card" style="display:none;position:absolute;top:0;right:0;z-index:10">
+                  <div id="revisao-header-btn" onclick="abrirRevisaoRapida()" style="display:flex;align-items:center;gap:7px;padding:5px 12px 5px 10px;background:white;border:1px solid #e2e8f0;border-radius:0 0 0 10px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.06);transition:all .15s" onmouseover="this.style.borderColor='#d97706'" onmouseout="this.style.borderColor='#e2e8f0'">
+                    <div style="width:7px;height:7px;border-radius:50%;background:#d97706;flex-shrink:0"></div>
+                    <span id="revisao-header-texto" style="font-size:10px;font-weight:600;color:#92400e;white-space:nowrap">—</span>
+                    <span style="font-size:9px;color:#94a3b8">↺</span>
+                  </div>
+                </div>
                 <div id="sixps-home" style="display:block">
                     <div id="revisao-banner" style="display:none;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:10px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
                       <div style="display:flex;align-items:center;gap:8px">
@@ -5831,6 +5839,49 @@ function verificarRevisaoCiclo() {
   } else {
     banner.style.display = 'none';
   }
+
+  // Atualiza card do header
+  const headerCard = document.getElementById('revisao-header-card');
+  const headerTxt  = document.getElementById('revisao-header-texto');
+  if(!headerCard || !headerTxt) return;
+  if(vencidos.length > 0) {
+    // Calcula o P mais urgente (mais dias sem revisão)
+    let maxDias = 0; let pMaisUrgente = vencidos[0];
+    vencidos.forEach(p => {
+      const data = SP.progresso[p+'_concluido_em'];
+      if(data) {
+        const d = Math.floor((Date.now()-new Date(data))/86400000);
+        if(d > maxDias) { maxDias=d; pMaisUrgente=p; }
+      }
+    });
+    headerCard.style.display = 'block';
+    headerTxt.textContent = vencidos.length === 1
+      ? SIXPS_CONFIG[pMaisUrgente]?.titulo?.split(' — ')[1] + ' — revisar'
+      : vencidos.length + ' pilares para revisar';
+  } else {
+    headerCard.style.display = 'none';
+  }
+}
+
+function abrirRevisaoRapida() {
+  // Descobre qual P tem mais dias sem revisão e abre diretamente
+  const ps = ['p1','p2','p3','p4','p5','p6'];
+  let maxDias = 0; let pAlvo = null;
+  ps.forEach(p => {
+    if(SP.progresso[p+'_status']!=='concluido') return;
+    const data = SP.progresso[p+'_concluido_em'];
+    if(!data) return;
+    const d = Math.floor((Date.now()-new Date(data))/86400000);
+    if(d >= 90 && d > maxDias) { maxDias=d; pAlvo=p; }
+  });
+  if(pAlvo) {
+    // Mostra modal de confirmação antes de abrir
+    const cfg = SIXPS_CONFIG[pAlvo];
+    const nomeP = cfg?.titulo || pAlvo.toUpperCase();
+    if(confirm('Abrir '+nomeP+' para revisão?\n\nÚltima atualização: '+maxDias+' dias atrás.\n\nAo revisar, você pode atualizar informações sem perder o histórico anterior.')) {
+      abrirP(pAlvo);
+    }
+  }
 }
 
 async function abrirP(modulo){
@@ -5845,23 +5896,45 @@ async function abrirP(modulo){
   await loadConversasSixps(modulo);
   // ── Renderiza painel Dados ──
   if(dadosEl){
-    // 1ª tentativa: SP.dados carregado pelo loadSixps
-    let resumo = SP.dados?.[modulo+'_resumo']||'';
-    // 2ª tentativa: última mensagem do assistente na conversa já carregada
-    if(resumo.length < 50){
-      resumo = (SP.conversas[modulo]||[]).filter(c=>c.role==='assistant').slice(-1)[0]?.content||'';
-    }
-    // 3ª tentativa: query direta ao banco (fallback garantido)
-    if(resumo.length < 50){
-      try {
-        const {data:d} = await sb.from('sixps_dados').select('resumo').eq('user_id',S.user.id).eq('modulo',modulo).limit(1);
-        if(d&&d[0]?.resumo) resumo = d[0].resumo;
-      } catch(e){}
-    }
-    if(resumo.length > 50){
-      dadosEl.innerHTML=resumo.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/##\s*(.*?)<br>/g,'<div style="font-size:11px;font-weight:700;color:var(--accent);letter-spacing:.5px;margin:10px 0 4px;text-transform:uppercase">$1</div>');
-    } else {
-      dadosEl.innerHTML='<span style="color:var(--muted);font-style:italic;font-size:12px">Converse com o agente para preencher os dados desta etapa.</span>';
+    // Função local para renderizar resumo no painel Dados
+    const renderDados = (resumo) => {
+      if(resumo && resumo.length > 50){
+        dadosEl.innerHTML = resumo
+          .replace(/\n/g,'<br>')
+          .replace(/\*\*(.*?)\*\*/g,'<strong style="color:#0f172a;font-weight:700">$1</strong>')
+          .replace(/^#{1,3}\s*(.+)$/gm,'<div style="font-size:11px;font-weight:800;color:var(--accent);letter-spacing:.5px;margin:10px 0 4px;text-transform:uppercase">$1</div>');
+        return true;
+      }
+      return false;
+    };
+
+    // 1ª tentativa: SP.dados (carregado pelo loadSixps no init)
+    if(renderDados(SP.dados?.[modulo+'_resumo']||'')) { /* ok */ }
+    // 2ª tentativa: últimas mensagens do assistente na conversa
+    else {
+      const msgs = (SP.conversas[modulo]||[])
+        .filter(c=>c.role==='assistant'||c.role==='agent')
+        .slice(-3)
+        .map(c=>c.content).join('\n\n');
+      if(renderDados(msgs)) { /* ok */ }
+      else {
+        // 3ª tentativa: query direta ao banco
+        try {
+          const {data:d} = await sb.from('sixps_dados').select('resumo')
+            .eq('user_id',S.user.id).eq('modulo',modulo).limit(1);
+          if(!renderDados(d?.[0]?.resumo||'')) {
+            // Última opção: busca última mensagem diretamente de sixps_conversas
+            const {data:conv} = await sb.from('sixps_conversas')
+              .select('content').eq('user_id',S.user.id).eq('modulo',modulo)
+              .eq('role','assistant').order('created_at',{ascending:false}).limit(1);
+            if(!renderDados(conv?.[0]?.content||'')) {
+              dadosEl.innerHTML='<span style="color:var(--muted);font-style:italic;font-size:12px">Converse com o agente para preencher os dados desta etapa.</span>';
+            }
+          }
+        } catch(e){
+          dadosEl.innerHTML='<span style="color:var(--muted);font-style:italic;font-size:12px">Converse com o agente para preencher os dados desta etapa.</span>';
+        }
+      }
     }
   }
 }
