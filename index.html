@@ -458,8 +458,13 @@
     <main class="main">
         <div class="topbar">
             <div class="page-title" id="page-title">Início</div>
-            <div style="display:flex;gap:8px;align-items:center">
+            <div style="display:flex;gap:10px;align-items:center">
               <span id="topbar-empresa" style="font-size:12px;color:var(--muted)"></span>
+              <!-- Botão de revisão — só aparece na aba ADM com Ps para revisar -->
+              <button id="revisao-notif-btn" onclick="abrirRevisaoRapida()" style="display:none;align-items:center;gap:5px;padding:4px 10px 4px 7px;background:transparent;border:1px solid #e2e8f0;border-radius:20px;cursor:pointer;font-size:10px;font-weight:600;color:#92400e;transition:all .15s;font-family:inherit" onmouseover="this.style.background='#fef3c7';this.style.borderColor='#d97706'" onmouseout="this.style.background='transparent';this.style.borderColor='#e2e8f0'">
+                <span style="width:6px;height:6px;border-radius:50%;background:#d97706;display:inline-block;flex-shrink:0"></span>
+                <span id="revisao-notif-txt">revisar</span>
+              </button>
             </div>
         </div>
         <div class="content">
@@ -909,25 +914,9 @@
 
 
             <div class="page" id="page-adm" style="position:relative">
-                <!-- Card de revisão — aparece no header quando há Ps com 90+ dias -->
-                <div id="revisao-header-card" style="display:none;position:absolute;top:0;right:0;z-index:10">
-                  <div id="revisao-header-btn" onclick="abrirRevisaoRapida()" style="display:flex;align-items:center;gap:7px;padding:5px 12px 5px 10px;background:white;border:1px solid #e2e8f0;border-radius:0 0 0 10px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.06);transition:all .15s" onmouseover="this.style.borderColor='#d97706'" onmouseout="this.style.borderColor='#e2e8f0'">
-                    <div style="width:7px;height:7px;border-radius:50%;background:#d97706;flex-shrink:0"></div>
-                    <span id="revisao-header-texto" style="font-size:10px;font-weight:600;color:#92400e;white-space:nowrap">—</span>
-                    <span style="font-size:9px;color:#94a3b8">↺</span>
-                  </div>
-                </div>
+
                 <div id="sixps-home" style="display:block">
-                    <div id="revisao-banner" style="display:none;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:10px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
-                      <div style="display:flex;align-items:center;gap:8px">
-                        <span style="font-size:14px">↺</span>
-                        <div>
-                          <div style="font-size:11px;font-weight:700;color:#d97706" id="revisao-banner-titulo">Tempo de revisão</div>
-                          <div style="font-size:10px;color:var(--muted)" id="revisao-banner-desc">Alguns pilares têm mais de 90 dias sem revisão</div>
-                        </div>
-                      </div>
-                      <button onclick="document.getElementById('revisao-banner').style.display='none'" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;line-height:1">×</button>
-                    </div>
+
 
                     <!-- CARDS COMPACTOS — 6 colunas -->
                     <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:18px" id="sixps-grid"></div>
@@ -2539,6 +2528,31 @@ async function handleAuth() {
 function showMsg(t,c){const el=document.getElementById('auth-msg');el.textContent=t;el.className='auth-msg '+c;el.style.display='block';}
 async function logout(){await sb.auth.signOut();S.user=null;S.empresa=null;S.conversas=[];}
 
+// Recarrega dados dos 6Ps quando o usuário volta para a aba
+document.addEventListener('visibilitychange', async () => {
+  if(document.visibilityState !== 'visible') return;
+  if(!S.user) return;
+  // Só recarrega se estiver na aba ADM e SP.dados estiver vazio
+  const emADM = document.getElementById('page-adm')?.classList.contains('active');
+  if(!emADM) return;
+  const dadosVazios = !SP.dados || Object.keys(SP.dados).filter(k=>k.endsWith('_resumo')&&SP.dados[k]).length === 0;
+  if(dadosVazios) {
+    await loadSixps();
+    // Se havia um módulo aberto, re-renderiza os dados
+    if(SP.moduloAtivo) {
+      const dadosEl = document.getElementById('sixps-dados-content');
+      if(dadosEl && dadosEl.textContent.includes('Carregando')) {
+        const resumo = SP.dados[SP.moduloAtivo+'_resumo'] || '';
+        if(resumo.length > 50) {
+          dadosEl.innerHTML = resumo
+            .replace(/\n/g,'<br>')
+            .replace(/\*\*(.*?)\*\*/g,'<strong style="color:#0f172a;font-weight:700">$1</strong>');
+        }
+      }
+    }
+  }
+});
+
 // ══════════════════════════════════════════════
 // APP LOAD
 // ══════════════════════════════════════════════
@@ -2608,6 +2622,9 @@ function nav(page, el) {
   const titles={inicio:'Início',agente:'Agente IA',agenda:'Agendamento',adm:'Administrativo',mkt:'Marketing',financeiro:'Financeiro',onboarding:'Bem-vindo!',cronograma:'Cronograma',dashboard:'Início'};
   document.getElementById('page-title').textContent=titles[page]||page;
   if(page==='adm'){setTimeout(async ()=>{initAdmChat();await loadSixps();},100);}
+  // Botão de revisão só visível no ADM
+  const nb = document.getElementById('revisao-notif-btn');
+  if(nb && page !== 'adm') nb.style.display = 'none';
   if(page==='mkt'){initMktPage();document.querySelector('.content').scrollTop=0;}
   if(page==='cronograma'){setTimeout(initCronograma,100);}
   if(page==='inicio'||page==='dashboard'){setTimeout(initInicio,100);}
@@ -5833,37 +5850,17 @@ function verificarRevisaoCiclo() {
     // Mostra revisão se: sem data registrada (Ps antigos) OU mais de 90 dias
     return !SP.progresso[p+'_concluido_em'] || dias >= 90;
   });
-  const banner = document.getElementById('revisao-banner');
-  if(!banner) return;
-  if(vencidos.length > 0) {
-    const nomes = vencidos.map(p=>SIXPS_CONFIG[p]?.titulo?.split(' — ')[1]||p.toUpperCase()).join(', ');
-    banner.style.display = 'flex';
-    const titulo = document.getElementById('revisao-banner-titulo');
-    const desc   = document.getElementById('revisao-banner-desc');
-    if(titulo) titulo.textContent = vencidos.length === 1 ? '1 pilar para revisar' : vencidos.length+' pilares para revisar';
-    if(desc)   desc.textContent   = nomes+' — mais de 90 dias sem atualização';
-  } else {
-    banner.style.display = 'none';
-  }
+  // banner removido — notificação agora é o botão no topbar
 
-  // Atualiza card do header
-  const headerCard = document.getElementById('revisao-header-card');
-  const headerTxt  = document.getElementById('revisao-header-texto');
-  if(!headerCard || !headerTxt) return;
+  // Atualiza botão de notificação no topbar
+  const notifBtn = document.getElementById('revisao-notif-btn');
+  const notifTxt = document.getElementById('revisao-notif-txt');
+  if(!notifBtn) return;
   if(vencidos.length > 0) {
-    // Calcula o P mais urgente (mais dias sem revisão)
-    let maxDias = 0; let pMaisUrgente = vencidos[0];
-    vencidos.forEach(p => {
-      const data = SP.progresso[p+'_concluido_em'] || SP.progresso['updated_at'];
-      const d = data ? Math.floor((Date.now()-new Date(data))/86400000) : 999;
-      if(d > maxDias) { maxDias=d; pMaisUrgente=p; }
-    });
-    headerCard.style.display = 'block';
-    headerTxt.textContent = vencidos.length === 1
-      ? SIXPS_CONFIG[pMaisUrgente]?.titulo?.split(' — ')[1] + ' — revisar'
-      : vencidos.length + ' pilares para revisar';
+    notifBtn.style.display = 'flex';
+    if(notifTxt) notifTxt.textContent = vencidos.length === 1 ? 'revisar P' : vencidos.length+'Ps revisar';
   } else {
-    headerCard.style.display = 'none';
+    notifBtn.style.display = 'none';
   }
 }
 
