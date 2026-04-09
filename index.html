@@ -2558,22 +2558,27 @@ async function carregarTarefasDoDia() {
 }
 
 function renderTarefasDoDia() {
-  const lista = document.getElementById('tarefas-lista');
-  const count = document.getElementById('tarefas-count');
-  const btnGerar = document.getElementById('btn-gerar-plano');
-  const dataEl = document.getElementById('tarefas-data');
-  if(!lista) return;
-  // Atualiza badge e visibilidade do botão no topbar
+  // Botão topbar — sempre visível no ADM (independe do popup)
   const notifBtn = document.getElementById('tarefas-notif-btn');
   const notifBadge = document.getElementById('tarefas-notif-badge');
   const emADM = document.getElementById('page-adm')?.classList.contains('active');
   if(notifBtn) notifBtn.style.display = emADM ? 'flex' : 'none';
 
+  const lista = document.getElementById('tarefas-lista');
+  const count = document.getElementById('tarefas-count');
+  const btnGerar = document.getElementById('btn-gerar-plano');
+  const dataEl = document.getElementById('tarefas-data');
+  if(!lista) return; // popup ainda não aberto — ok, botão topbar já está visível
+
   const hoje = new Date();
   if(dataEl) dataEl.textContent = hoje.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'});
 
   // Só mostra botão Gerar se P6 concluído e sem tarefas hoje
-  const p6ok = MZ?.p6_concluido || SP?.progresso?.p6_status === 'concluido' || isConcluidoP?.('p6');
+  // p6ok: concluído se DB diz, ou se MZ tem dados de performance, ou se P5 já foi concluído (cascata)
+  const p6ok = SP?.progresso?.p6_status === 'concluido'
+    || MZ?.p6_concluido
+    || (MZ?.p6_meta_receita > 0)
+    || SP?.progresso?.p5_status === 'concluido'; // mostra gerar se P5+ concluído
   if(btnGerar) btnGerar.style.display = (p6ok && TAREFAS_DO_DIA.length === 0) ? 'flex' : 'none';
   // Atualiza badge de pendentes
   const pendentes = TAREFAS_DO_DIA.filter(t=>t.status_exec!=='concluida').length;
@@ -2814,19 +2819,21 @@ document.addEventListener('visibilitychange', async () => {
   // Só recarrega se estiver na aba ADM e SP.dados estiver vazio
   const emADM = document.getElementById('page-adm')?.classList.contains('active');
   if(!emADM) return;
-  const dadosVazios = !SP.dados || Object.keys(SP.dados).filter(k=>k.endsWith('_resumo')&&SP.dados[k]).length === 0;
-  if(dadosVazios) {
-    await loadSixps();
-    // Se havia um módulo aberto, re-renderiza os dados
-    if(SP.moduloAtivo) {
-      const dadosEl = document.getElementById('sixps-dados-content');
-      if(dadosEl && dadosEl.textContent.includes('Carregando')) {
-        const resumo = SP.dados[SP.moduloAtivo+'_resumo'] || '';
-        if(resumo.length > 50) {
-          dadosEl.innerHTML = resumo
-            .replace(/\n/g,'<br>')
-            .replace(/\*\*(.*?)\*\*/g,'<strong style="color:#0f172a;font-weight:700">$1</strong>');
-        }
+  await loadSixps();
+  // Se há um módulo aberto, recarrega conversas para garantir dados no painel
+  if(SP.moduloAtivo) {
+    const dadosEl = document.getElementById('sixps-dados-content');
+    const temDados = SP.dados?.[SP.moduloAtivo+'_resumo']?.length > 50;
+    if(!temDados) {
+      await loadConversasSixps(SP.moduloAtivo);
+    }
+    // Força re-render do painel se ainda estiver em Carregando
+    if(dadosEl && dadosEl.innerHTML.includes('Carregando')) {
+      const resumo = SP.dados?.[SP.moduloAtivo+'_resumo'] || '';
+      if(resumo.length > 50) {
+        dadosEl.innerHTML = resumo
+          .replace(/\n/g,'<br>')
+          .replace(/\*\*(.*?)\*\*/g,'<strong style="color:#0f172a;font-weight:700">$1</strong>');
       }
     }
   }
@@ -6175,7 +6182,10 @@ async function abrirP(modulo){
   document.getElementById('sixps-diagrama').style.display=modulo==='p4'?'block':'none';
   // Limpa dados antes de carregar para evitar mostrar conteúdo de outro P
   const dadosEl=document.getElementById('sixps-dados-content');
-  if(dadosEl) dadosEl.innerHTML='<span style="color:var(--muted);font-size:12px">Carregando...</span>';
+  // Só mostra Carregando se não há dados em cache
+  if(dadosEl && !SP.dados?.[modulo+'_resumo']) {
+    dadosEl.innerHTML='<span style="color:var(--muted);font-size:12px">Carregando...</span>';
+  }
   await loadConversasSixps(modulo);
   // ── Renderiza painel Dados ──
   if(dadosEl){
@@ -9149,5 +9159,44 @@ function waCarregarLeads() {
 
 init();
 </script>
+
+        <!-- ── POPUP TAREFAS DO DIA ── -->
+        <div id="popup-tarefas" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:9998;align-items:flex-start;justify-content:flex-end;padding-top:50px;padding-right:16px" onclick="if(event.target===this)fecharPopupTarefas()">
+          <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:14px;width:340px;max-height:500px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,0.15)">
+            <div style="padding:12px 16px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+              <div>
+                <div style="font-size:13px;font-weight:700;color:#0f172a">📋 Tarefas do Dia</div>
+                <div style="font-size:10px;color:#64748b" id="tarefas-data">—</div>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center">
+                <span id="tarefas-count" style="font-size:10px;color:#64748b"></span>
+                <button id="btn-gerar-plano" onclick="gerarPlanoAcao()" style="display:none;padding:3px 10px;background:#1e3a8a;border:none;border-radius:20px;color:white;font-size:10px;font-weight:600;cursor:pointer;font-family:inherit">⚡ Gerar</button>
+                <button onclick="fecharPopupTarefas()" style="background:#f1f5f9;border:1px solid #e2e8f0;border-radius:6px;color:#64748b;font-size:11px;cursor:pointer;width:24px;height:24px">✕</button>
+              </div>
+            </div>
+            <div id="tarefas-lista" style="padding:10px 14px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:5px">
+              <div style="font-size:11px;color:#94a3b8;text-align:center;padding:16px">Carregando...</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── MODAL PLANO DE AÇÃO ── -->
+        <div id="modal-plano-acao" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(4px)" onclick="if(event.target===this)fecharModalPlano()">
+          <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;width:92%;max-width:680px;max-height:88vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,0.2)">
+            <div style="padding:16px 20px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+              <div>
+                <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:#0f172a">⚡ Plano de Ação Gerado</div>
+                <div style="font-size:11px;color:#64748b;margin-top:2px">Edite as tarefas e aprove para ativar</div>
+              </div>
+              <button onclick="fecharModalPlano()" style="background:#f1f5f9;border:1px solid #e2e8f0;border-radius:6px;color:#64748b;font-size:12px;cursor:pointer;width:30px;height:30px">✕</button>
+            </div>
+            <div id="plano-acao-preview" style="padding:16px 20px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:8px"></div>
+            <div style="padding:14px 20px;border-top:1px solid #e2e8f0;display:flex;gap:8px;justify-content:flex-end;flex-shrink:0">
+              <button onclick="fecharModalPlano()" style="padding:8px 18px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;color:#374151;font-size:12px;cursor:pointer;font-family:inherit">Cancelar</button>
+              <button onclick="aprovarPlanoAcao()" id="btn-aprovar-plano" style="padding:8px 20px;background:#1e3a8a;border:none;border-radius:8px;color:white;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">✅ Ativar este plano</button>
+            </div>
+          </div>
+        </div>
+
 </body>
 </html>
