@@ -921,6 +921,26 @@
                     <!-- CARDS COMPACTOS — 6 colunas -->
                     <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:18px" id="sixps-grid"></div>
 
+                    <!-- TAREFAS DO DIA — no ADM, acima do fluxograma -->
+                    <div id="tarefas-do-dia-wrap" style="display:none;margin-bottom:14px">
+                      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden">
+                        <div style="padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+                          <div style="display:flex;align-items:center;gap:8px">
+                            <span style="font-size:13px">📋</span>
+                            <div style="font-size:11px;font-weight:700;color:var(--text)">Tarefas do Dia</div>
+                            <span id="tarefas-data" style="font-size:10px;color:var(--muted)">—</span>
+                          </div>
+                          <div style="display:flex;gap:6px;align-items:center">
+                            <span id="tarefas-count" style="font-size:10px;color:var(--muted)"></span>
+                            <button onclick="gerarPlanoAcao()" id="btn-gerar-plano" style="display:none;align-items:center;gap:5px;padding:4px 12px;background:#1e3a8a;border:none;border-radius:20px;color:white;font-size:10px;font-weight:600;cursor:pointer;font-family:inherit">⚡ Gerar Plano</button>
+                          </div>
+                        </div>
+                        <div id="tarefas-lista" style="padding:10px 14px;display:flex;flex-direction:column;gap:5px;max-height:220px;overflow-y:auto">
+                          <div style="font-size:11px;color:var(--muted);text-align:center;padding:10px">Carregando...</div>
+                        </div>
+                      </div>
+                    </div>
+
                     <!-- FLUXOGRAMA TECH — aparece após P1-P5 concluídos -->
                     <div id="sixps-fluxograma" style="display:none;margin-bottom:18px">
                       <style>
@@ -2528,6 +2548,263 @@ async function handleAuth() {
 function showMsg(t,c){const el=document.getElementById('auth-msg');el.textContent=t;el.className='auth-msg '+c;el.style.display='block';}
 async function logout(){await sb.auth.signOut();S.user=null;S.empresa=null;S.conversas=[];}
 
+// ══════════════════════════════════════════════════════════
+// ENGINE DE TAREFAS DO DIA — baseado nos KPIs reais do P6
+// ══════════════════════════════════════════════════════════
+
+let TAREFAS_DO_DIA = [];
+let PLANO_PENDENTE = [];
+
+async function carregarTarefasDoDia() {
+  if(!S.user) return;
+  try {
+    const hoje = new Date().toISOString().slice(0,10);
+    const { data } = await sb.from('planos_acao')
+      .select('*').eq('user_id', S.user.id)
+      .eq('data_alvo', hoje).eq('status','ativo')
+      .order('prioridade', {ascending:true});
+    TAREFAS_DO_DIA = data || [];
+    renderTarefasDoDia();
+  } catch(e) { console.log('tarefas erro:', e.message); }
+}
+
+function renderTarefasDoDia() {
+  const wrap  = document.getElementById('tarefas-do-dia-wrap');
+  const lista = document.getElementById('tarefas-lista');
+  const count = document.getElementById('tarefas-count');
+  const btnGerar = document.getElementById('btn-gerar-plano');
+  const dataEl = document.getElementById('tarefas-data');
+  if(!wrap || !lista) return;
+
+  const hoje = new Date();
+  if(dataEl) dataEl.textContent = hoje.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'});
+
+  // Só mostra se P6 foi concluído
+  const p6ok = MZ?.p6_concluido || SP?.progresso?.p6_status === 'concluido';
+  wrap.style.display = p6ok ? 'block' : 'none';
+
+  // Mostra botão Gerar se não há tarefas hoje
+  if(btnGerar) btnGerar.style.display = (p6ok && TAREFAS_DO_DIA.length === 0) ? 'flex' : 'none';
+
+  if(TAREFAS_DO_DIA.length === 0) {
+    lista.innerHTML = p6ok
+      ? '<div style="font-size:12px;color:var(--muted);text-align:center;padding:14px">Nenhuma tarefa para hoje. Clique em "⚡ Gerar Plano" para criar.</div>'
+      : '<div style="font-size:12px;color:var(--muted);text-align:center;padding:14px">Complete o P6 no Administrativo para ativar as tarefas do dia.</div>';
+    if(count) count.textContent = '';
+    return;
+  }
+
+  const concluidas = TAREFAS_DO_DIA.filter(t=>t.status_exec==='concluida').length;
+  if(count) count.textContent = concluidas+'/'+TAREFAS_DO_DIA.length+' concluídas';
+
+  lista.innerHTML = TAREFAS_DO_DIA.map(t => {
+    const feita = t.status_exec === 'concluida';
+    const corMod = {administrativo:'#2563eb',marketing:'#7c3aed',financeiro:'#d97706',crm:'#059669'}[t.modulo] || '#64748b';
+    return `<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:${feita?'var(--surface2)':'var(--surface)'};border:1px solid ${feita?'var(--border)':'var(--border2)'};border-radius:8px;border-left:3px solid ${feita?'var(--border)':corMod};opacity:${feita?.6:1};transition:all .2s">
+      <button onclick="toggleTarefa('${t.id}','${feita?'ativo':'concluida'}')" style="width:20px;height:20px;border-radius:50%;border:2px solid ${feita?'var(--success)':corMod};background:${feita?'var(--success)':'transparent'};cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:white">
+        ${feita?'✓':''}
+      </button>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:12px;font-weight:600;color:var(--text);${feita?'text-decoration:line-through;color:var(--muted)':''}">${t.titulo}</div>
+        ${t.descricao?`<div style="font-size:10px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t.descricao}</div>`:''}
+      </div>
+      <span style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:10px;background:${corMod}18;color:${corMod};white-space:nowrap">${t.modulo||'geral'}</span>
+    </div>`;
+  }).join('');
+}
+
+async function toggleTarefa(id, novoStatus) {
+  try {
+    await sb.from('planos_acao').update({status_exec: novoStatus, updated_at: new Date().toISOString()}).eq('id', id);
+    const t = TAREFAS_DO_DIA.find(x=>x.id==id);
+    if(t) t.status_exec = novoStatus;
+    renderTarefasDoDia();
+  } catch(e) { console.log('toggle tarefa erro:', e.message); }
+}
+
+async function gerarPlanoAcao() {
+  const btn = document.getElementById('btn-gerar-plano');
+  if(btn) { btn.textContent = '⏳ Gerando...'; btn.disabled = true; }
+
+  try {
+    // Monta contexto rico com dados reais
+    const mesAtual = new Date().toISOString().slice(0,7);
+    const lancMes  = (S.lancamentos||[]).filter(l=>l.data?.startsWith(mesAtual));
+    const recMes   = lancMes.filter(l=>l.tipo==='entrada').reduce((s,l)=>s+parseFloat(l.valor||0),0);
+    const despMes  = lancMes.filter(l=>l.tipo==='saida').reduce((s,l)=>s+parseFloat(l.valor||0),0);
+    const crmLeads = typeof CRM!=='undefined' ? (CRM.leads||[]) : [];
+    const leadsAtivos = crmLeads.filter(l=>!['fechado','perdido'].includes(l.estagio)).length;
+    const leadsNovos  = crmLeads.filter(l=>l.estagio==='novo').length;
+
+    const ctx = `
+EMPRESA: ${S.empresa?.nome||'—'} | Setor: ${S.empresa?.setor||'—'}
+P6 — METAS:
+- Meta receita: R$${MZ?.p6_meta_receita||0}/mês
+- Meta clientes: ${MZ?.p6_meta_clientes||0}
+- Ticket alvo: R$${MZ?.p6_ticket_alvo||0}
+- Ponto equilíbrio: R$${MZ?.p6_ponto_equilibrio||0}/mês
+- OKR: ${MZ?.p6_okr?.slice(0,300)||'não definido'}
+- KPIs: ${MZ?.p6_kpis?.slice(0,300)||'não definidos'}
+
+SITUAÇÃO ATUAL:
+- Receita este mês: R$${recMes.toFixed(2)} (meta: R$${MZ?.p6_meta_receita||0})
+- Despesas este mês: R$${despMes.toFixed(2)} (PE: R$${MZ?.p6_ponto_equilibrio||0})
+- Leads ativos no CRM: ${leadsAtivos} (meta: ${MZ?.p6_meta_clientes||0})
+- Leads novos aguardando contato: ${leadsNovos}
+- Posicionamento (P5): ${MZ?.p5_proposta_valor||'não definido'}
+- Processo (P4): ${MZ?.p4_funil||'não definido'}`;
+
+    const res = await fetch(EDGE, {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+SB_ANON,'apikey':SB_ANON},
+      body: JSON.stringify({
+        messages:[{role:'user', content: `Com base nos dados abaixo, gere EXATAMENTE 5 tarefas concretas e executáveis para HOJE que vão gerar resultado real para a empresa. Para cada tarefa retorne JSON no formato:
+{"titulo":"string curto (máx 60 chars)","descricao":"ação específica com número/meta","modulo":"administrativo|marketing|financeiro|crm","prioridade":1-5}
+
+Regras:
+- Tarefas devem ser ações HOJE, não planos futuros
+- Use os números reais (se receita está abaixo da meta, tarefa de prospecção com número X)
+- Distribua entre os módulos conforme necessidade real
+- Prioridade 1 = mais urgente
+- Retorne APENAS um JSON array válido com 5 objetos, sem texto adicional
+
+${ctx}`}],
+        systemPrompt:'Retorne apenas JSON array válido com 5 objetos. Sem markdown, sem texto adicional.'
+      })
+    });
+
+    const data = await res.json();
+    const txt = (data.reply||'[]').replace(/```json|```/g,'').trim();
+    const tarefas = JSON.parse(txt);
+
+    if(!Array.isArray(tarefas) || tarefas.length === 0) throw new Error('Resposta inválida');
+
+    PLANO_PENDENTE = tarefas;
+    mostrarPreviewPlano(tarefas);
+
+  } catch(e) {
+    alert('Erro ao gerar plano: '+e.message);
+  } finally {
+    if(btn) { btn.textContent = '⚡ Gerar Plano'; btn.disabled = false; }
+  }
+}
+
+function mostrarPreviewPlano(tarefas) {
+  const preview = document.getElementById('plano-acao-preview');
+  const modal   = document.getElementById('modal-plano-acao');
+  if(!preview || !modal) return;
+
+  const corMod = {administrativo:'#2563eb',marketing:'#7c3aed',financeiro:'#d97706',crm:'#059669'};
+  const modulos = ['administrativo','marketing','financeiro','crm','geral'];
+
+  preview.innerHTML = `
+    <div style="background:rgba(30,58,138,0.06);border:1px solid rgba(30,58,138,0.15);border-radius:8px;padding:10px 14px;margin-bottom:4px">
+      <div style="font-size:11px;color:#1e3a8a;font-weight:600">📊 Baseado nos seus dados reais — edite antes de ativar</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px">Clique em qualquer campo para editar. Depois aprove para ativar.</div>
+    </div>
+    ${tarefas.map((t,i) => {
+      const cor = corMod[t.modulo] || '#64748b';
+      return `<div style="padding:10px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;border-left:3px solid ${cor}">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
+          <div style="width:18px;height:18px;border-radius:50%;background:${cor};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white;flex-shrink:0">${t.prioridade||i+1}</div>
+          <input
+            id="plano-titulo-${i}"
+            value="${(t.titulo||'').replace(/"/g,'&quot;')}"
+            style="flex:1;font-size:12px;font-weight:700;color:var(--text);background:transparent;border:none;border-bottom:1px solid transparent;padding:2px 4px;outline:none;font-family:inherit;transition:border-color .15s"
+            onfocus="this.style.borderBottomColor='var(--accent)';this.style.background='var(--surface)'"
+            onblur="this.style.borderBottomColor='transparent';this.style.background='transparent'"
+          />
+          <select id="plano-mod-${i}" style="font-size:9px;font-weight:600;padding:2px 6px;border-radius:10px;background:${cor}18;color:${cor};border:1px solid ${cor}40;cursor:pointer;font-family:inherit" onchange="atualizarCorPlano(${i},this.value)">
+            ${modulos.map(m=>`<option value="${m}" ${m===t.modulo?'selected':''}>${m}</option>`).join('')}
+          </select>
+        </div>
+        <textarea
+          id="plano-desc-${i}"
+          rows="2"
+          style="width:100%;font-size:11px;color:var(--muted);background:transparent;border:1px solid transparent;border-radius:6px;padding:4px 6px;outline:none;resize:none;font-family:inherit;line-height:1.5;transition:all .15s;box-sizing:border-box"
+          onfocus="this.style.borderColor='var(--accent)';this.style.background='var(--surface)'"
+          onblur="this.style.borderColor='transparent';this.style.background='transparent'"
+        >${t.descricao||''}</textarea>
+      </div>`;
+    }).join('')}`;
+
+  modal.style.display = 'flex';
+}
+
+function atualizarCorPlano(i, modulo) {
+  const corMod = {administrativo:'#2563eb',marketing:'#7c3aed',financeiro:'#d97706',crm:'#059669',geral:'#64748b'};
+  const cor = corMod[modulo] || '#64748b';
+  const sel = document.getElementById('plano-mod-'+i);
+  if(sel) { sel.style.background=cor+'18'; sel.style.color=cor; sel.style.borderColor=cor+'40'; }
+}
+
+async function aprovarPlanoAcao() {
+  const btn = document.getElementById('btn-aprovar-plano');
+  if(btn) { btn.textContent = '⏳ Ativando...'; btn.disabled = true; }
+
+  try {
+    const hoje = new Date().toISOString().slice(0,10);
+    // Lê campos editados pelo usuário
+    const inserir = PLANO_PENDENTE.map((t,i) => ({
+      user_id: S.user.id,
+      titulo: document.getElementById('plano-titulo-'+i)?.value || t.titulo,
+      descricao: document.getElementById('plano-desc-'+i)?.value || t.descricao||'',
+      modulo: document.getElementById('plano-mod-'+i)?.value || t.modulo||'geral',
+      prioridade: t.prioridade||i+1,
+      data_alvo: hoje,
+      status: 'ativo',
+      status_exec: 'ativo',
+      created_at: new Date().toISOString()
+    }));
+
+    const { error } = await sb.from('planos_acao').insert(inserir);
+    if(error) throw error;
+
+    TAREFAS_DO_DIA = [];
+    fecharModalPlano();
+    await carregarTarefasDoDia();
+    alert('✅ Plano ativado! Suas tarefas de hoje estão prontas.');
+
+  } catch(e) {
+    // Tabela pode não existir ainda — criar e tentar de novo
+    if(e.message?.includes('relation') || e.code === '42P01') {
+      await criarTabelaPlanos();
+      await aprovarPlanoAcao();
+      return;
+    }
+    alert('Erro ao ativar plano: '+e.message);
+  } finally {
+    if(btn) { btn.textContent = '✅ Ativar este plano'; btn.disabled = false; }
+  }
+}
+
+async function criarTabelaPlanos() {
+  // Tenta criar via RPC se não existir (requer sql exec permission)
+  // Na prática o usuário precisa criar no Supabase — mostramos o SQL
+  console.log(`-- Execute no Supabase SQL Editor:
+CREATE TABLE IF NOT EXISTS planos_acao (
+  id BIGSERIAL PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  titulo TEXT NOT NULL,
+  descricao TEXT,
+  modulo TEXT DEFAULT 'geral',
+  prioridade INTEGER DEFAULT 1,
+  data_alvo DATE,
+  status TEXT DEFAULT 'ativo',
+  status_exec TEXT DEFAULT 'ativo',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+ALTER TABLE planos_acao ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "planos_user" ON planos_acao FOR ALL USING (auth.uid()=user_id);`);
+}
+
+function fecharModalPlano() {
+  const modal = document.getElementById('modal-plano-acao');
+  if(modal) modal.style.display = 'none';
+  PLANO_PENDENTE = [];
+}
+
 // Recarrega dados dos 6Ps quando o usuário volta para a aba
 document.addEventListener('visibilitychange', async () => {
   if(document.visibilityState !== 'visible') return;
@@ -2621,7 +2898,7 @@ function nav(page, el) {
   if(el)el.classList.add('active');
   const titles={inicio:'Início',agente:'Agente IA',agenda:'Agendamento',adm:'Administrativo',mkt:'Marketing',financeiro:'Financeiro',onboarding:'Bem-vindo!',cronograma:'Cronograma',dashboard:'Início'};
   document.getElementById('page-title').textContent=titles[page]||page;
-  if(page==='adm'){setTimeout(async ()=>{initAdmChat();await loadSixps();},100);}
+  if(page==='adm'){setTimeout(async ()=>{initAdmChat();await loadSixps();await carregarTarefasDoDia();},100);}
   // Botão de revisão só visível no ADM
   const nb = document.getElementById('revisao-notif-btn');
   if(nb && page !== 'adm') nb.style.display = 'none';
