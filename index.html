@@ -4585,23 +4585,37 @@ const DS = {
         if(cur)sel.value=cur;
       }
 
-      // ── PASSO 2: Insights agregados no nível da conta (1 chamada) ──
-      // Retorna breakdown por campanha — muito mais rápido
+      // ── PASSO 2: Insights por campanha ──
       let acctIns = {};
+      const campsParaInsights = this.filtroIds && this.filtroIds.length > 0
+        ? camps.filter(c => this.filtroIds.includes(c.id))
+        : camps;
+      
       try {
+        // Tenta busca em nível de conta primeiro (mais rápido)
         const acctRes = await metaGet('/'+MKT.config.adAccount+'/insights',{
           fields:'campaign_id,campaign_name,spend,reach,impressions,clicks,cpm,cpc,ctr,actions',
-          level:'campaign',
-          limit:50,
-          ...pp
+          level:'campaign', limit:100, ...pp
         }, adsToken);
         (acctRes.data||[]).forEach(d=>{ acctIns[d.campaign_id]=d; });
       } catch(e2) {
-        console.warn('insights conta falhou, tentando por campanha:', e2.message);
+        console.warn('insights conta falhou:', e2.message);
       }
 
-      // ── PASSO 3: Sem fallback para maximum — respeitar o período selecionado sempre ──
-      // Se não tem dados no período, mostra zerado (comportamento correto)
+      // Para campanhas selecionadas sem dados, tenta busca individual
+      const semDados = campsParaInsights.filter(c => !acctIns[c.id]);
+      if(semDados.length > 0 && semDados.length <= 10) {
+        await Promise.all(semDados.map(async c => {
+          try {
+            const ins = await metaGet('/'+c.id+'/insights',{
+              fields:'spend,reach,impressions,clicks,cpm,cpc,ctr,actions', ...pp
+            }, adsToken);
+            if(ins.data?.[0]) acctIns[c.id] = ins.data[0];
+          } catch(e3) {}
+        }));
+      }
+
+      // ── PASSO 3: Resultado final ──
 
       // ── PASSO 4: Monta resultado ──
       const result = camps.map(c=>{
@@ -4723,12 +4737,21 @@ const DS = {
 
       this.anuncios=withIns;
       this.renderCriativos();
-    this.renderCidades();
-      console.log(`🎨 ${withIns.length} anúncios carregados · ${withIns.filter(a=>a.creative?.thumbnail_url).length} com thumbnail`);
+      this.renderCidades();
+      // Limpar texto de carregando
+      const updEl2 = document.getElementById('dash-last-update');
+      const camps2 = this.campanhas.filter(c=>c.spend>0||c.impressions>0).length;
+      if(updEl2 && !updEl2.textContent.includes(':')) {
+        const now=new Date();
+        updEl2.textContent=`${this.campanhas.length} camp. · ${camps2} com dados · ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+      }
+      console.log('🎨 Anúncios: '+withIns.length+' carregados');
     } catch(e){
       console.error('_carregarAnuncios:',e.message);
       this.anuncios=[];
       this.renderCriativos();
+      const updEl3=document.getElementById('dash-last-update');
+      if(updEl3&&!updEl3.textContent.includes(':')) updEl3.textContent='Pronto';
     }
   },
 
@@ -5041,11 +5064,20 @@ const DS = {
     el.innerHTML = '<div style="color:#94a3b8;font-size:11px;text-align:center;padding:16px">⏳ Carregando...</div>';
     try {
       const pp = this._buildParams();
-      const res = await metaGet('/' + adAccount + '/insights', {
-        fields: 'spend,impressions,clicks',
-        breakdowns: 'region',
-        ...pp
-      }, adsToken);
+      // Tenta region, depois country como fallback
+      let res;
+      try {
+        res = await metaGet('/' + adAccount + '/insights', {
+          fields: 'spend,impressions,clicks', breakdowns: 'region', ...pp
+        }, adsToken);
+        if(!res.data?.length) throw new Error('sem dados de region');
+      } catch(e1) {
+        try {
+          res = await metaGet('/' + adAccount + '/insights', {
+            fields: 'spend,impressions,clicks', breakdowns: 'country', ...pp
+          }, adsToken);
+        } catch(e2) { res = {data:[]}; }
+      }
       const data = (res.data || [])
         .map(d => ({
           cidade: d.region || '—',
