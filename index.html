@@ -506,10 +506,7 @@
               </button>
 
               <!-- Botão de revisão — só aparece na aba ADM com Ps para revisar -->
-              <button id="revisao-notif-btn" onclick="abrirRevisaoRapida()" style="display:none;align-items:center;gap:5px;padding:4px 10px 4px 7px;background:transparent;border:1px solid #e2e8f0;border-radius:20px;cursor:pointer;font-size:10px;font-weight:600;color:#92400e;transition:all .15s;font-family:inherit" onmouseover="this.style.background='#fef3c7';this.style.borderColor='#d97706'" onmouseout="this.style.background='transparent';this.style.borderColor='#e2e8f0'">
-                <span style="width:6px;height:6px;border-radius:50%;background:#d97706;display:inline-block;flex-shrink:0"></span>
-                <span id="revisao-notif-txt">revisar</span>
-              </button>
+
             </div>
         </div>
         <div class="content">
@@ -966,20 +963,22 @@
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
 
                       <!-- Card: Administrar minha empresa -->
-                      <div onclick="abrirNivel2()" id="card-adm-empresa" style="background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 60%,#1e40af 100%);border-radius:20px;padding:28px 28px 24px;cursor:pointer;transition:all .25s;position:relative;overflow:hidden;box-shadow:0 8px 32px rgba(15,23,42,.25)"
+                      <div onclick="abrirNivel2()" id="card-adm-empresa" style="background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 60%,#1e40af 100%);border-radius:16px;padding:20px 22px;cursor:pointer;transition:all .25s;position:relative;overflow:hidden;box-shadow:0 8px 32px rgba(15,23,42,.25)"
                         onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 16px 48px rgba(15,23,42,.35)'"
                         onmouseout="this.style.transform='';this.style.boxShadow='0 8px 32px rgba(15,23,42,.25)'">
-                        <!-- Glow decorativo -->
-                        <div style="position:absolute;top:-40px;right:-40px;width:140px;height:140px;background:rgba(99,102,241,.15);border-radius:50%;filter:blur(30px)"></div>
-                        <div style="position:absolute;bottom:-20px;left:20px;width:80px;height:80px;background:rgba(59,130,246,.1);border-radius:50%;filter:blur(20px)"></div>
-                        <!-- Conteúdo -->
-                        <div style="font-size:28px;margin-bottom:14px">🏛️</div>
-                        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:18px;color:#fff;margin-bottom:6px;line-height:1.2">Administrar<br>minha empresa</div>
-                        <div style="font-size:12px;color:rgba(255,255,255,.6);margin-bottom:20px">6 módulos de consultoria · Metodologia 6Ps</div>
+                        <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:rgba(99,102,241,.15);border-radius:50%;filter:blur(25px)"></div>
+                        <!-- Linha superior: ícone + título -->
+                        <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+                          <div style="font-size:28px;flex-shrink:0">🏛️</div>
+                          <div>
+                            <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:17px;color:#fff;line-height:1.2">Administrar minha empresa</div>
+                            <div style="font-size:11px;color:rgba(255,255,255,.55);margin-top:3px">6 módulos de consultoria · Metodologia 6Ps</div>
+                          </div>
+                        </div>
                         <!-- Progresso -->
-                        <div id="adm-progresso-bar-wrap" style="margin-bottom:16px">
+                        <div style="margin-bottom:12px">
                           <div style="display:flex;justify-content:space-between;margin-bottom:5px">
-                            <span style="font-size:10px;color:rgba(255,255,255,.6);font-weight:600;text-transform:uppercase;letter-spacing:.8px">Progresso</span>
+                            <span style="font-size:9px;color:rgba(255,255,255,.55);font-weight:700;text-transform:uppercase;letter-spacing:.8px">Progresso</span>
                             <span style="font-size:11px;font-weight:700;color:#60a5fa" id="adm-progresso-pct">0/6</span>
                           </div>
                           <div style="height:4px;background:rgba(255,255,255,.15);border-radius:4px">
@@ -987,25 +986,27 @@
                           </div>
                         </div>
                         <div style="display:flex;align-items:center;gap:6px;color:#60a5fa;font-size:12px;font-weight:600">
-                          <span>Acessar módulos</span>
-                          <span style="font-size:14px">→</span>
+                          <span>Acessar módulos</span><span>→</span>
                         </div>
                       </div>
 
                       <!-- Card: Tarefas do Dia -->
-                      <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:20px;overflow:hidden;box-shadow:0 2px 12px rgba(15,23,42,.06);display:flex;flex-direction:column">
-                        <div style="padding:20px 20px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #f1f5f9">
-                          <div>
-                            <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:#0f172a">📋 Tarefas do Dia</div>
-                            <div style="font-size:11px;color:#94a3b8;margin-top:2px" id="tarefas-data-card">—</div>
+                      <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(15,23,42,.06);display:flex;flex-direction:column">
+                        <div style="padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #f1f5f9">
+                          <div style="display:flex;align-items:center;gap:10px">
+                            <span style="font-size:16px">📋</span>
+                            <div>
+                              <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:14px;color:#0f172a">Tarefas do Dia</div>
+                              <div style="font-size:10px;color:#94a3b8;margin-top:1px" id="tarefas-data-card">—</div>
+                            </div>
                           </div>
                           <div style="display:flex;gap:6px;align-items:center">
                             <span id="tarefas-count-card" style="font-size:10px;color:#64748b"></span>
                             <button id="btn-gerar-plano-card" onclick="gerarPlanoAcao()" style="display:none;padding:4px 12px;background:#0f172a;border:none;border-radius:20px;color:white;font-size:10px;font-weight:600;cursor:pointer;font-family:inherit">⚡ Gerar</button>
                           </div>
                         </div>
-                        <div id="tarefas-lista-card" style="flex:1;overflow-y:auto;padding:10px 16px;display:flex;flex-direction:column;gap:5px;max-height:220px">
-                          <div style="color:#94a3b8;font-size:12px;text-align:center;padding:16px">Carregando tarefas...</div>
+                        <div id="tarefas-lista-card" style="flex:1;overflow-y:auto;padding:8px 14px;display:flex;flex-direction:column;gap:4px;max-height:160px">
+                          <div style="color:#94a3b8;font-size:12px;text-align:center;padding:16px">Nenhuma tarefa para hoje.</div>
                         </div>
                       </div>
                     </div>
@@ -2941,13 +2942,15 @@ let PLANO_PENDENTE = [];
 
 async function carregarTarefasDoDia() {
   if(!S.user) return;
+  // Mostrar estado de carregando no card
+  const listaC = document.getElementById('tarefas-lista-card');
+  if(listaC) listaC.innerHTML = '<div style="color:#94a3b8;font-size:12px;text-align:center;padding:16px">⏳ Carregando...</div>';
   try {
     const hoje = new Date().toISOString().slice(0,10);
     const { data, error } = await sb.from('planos_acao')
       .select('*').eq('user_id', S.user.id)
       .eq('data_alvo', hoje).eq('status','ativo')
       .order('prioridade', {ascending:true});
-    // Se tabela não existe (400/42P01), mostra botão de gerar silenciosamente
     if(error) { TAREFAS_DO_DIA = []; renderTarefasDoDia(); return; }
     TAREFAS_DO_DIA = data || [];
     renderTarefasDoDia();
@@ -3305,11 +3308,7 @@ function nav(page, el) {
   const titles={inicio:'Início',agente:'Agente IA',agenda:'Agendamento',adm:'Administrativo',mkt:'Marketing',financeiro:'Financeiro',onboarding:'Bem-vindo!',cronograma:'Cronograma',dashboard:'Início'};
   document.getElementById('page-title').textContent=titles[page]||page;
   if(page==='adm'){setTimeout(async ()=>{initAdmChat();await loadSixps();await carregarTarefasDoDia();},100);}
-  // Botões de revisão e tarefas removidos do topbar — movidos para cards ADM
-  const nb = document.getElementById('revisao-notif-btn');
-  if(nb) nb.style.display = 'none';
-  const tb = document.getElementById('tarefas-notif-btn');
-  if(tb) tb.style.display = 'none';
+  // Botões topbar removidos — revisão e tarefas estão nos cards ADM
   fecharPopupTarefas?.();
   if(page==='mkt'){initMktPage();document.querySelector('.content').scrollTop=0;}
   if(page==='cronograma'){setTimeout(initCronograma,100);}
@@ -6758,7 +6757,7 @@ function verificarRevisaoCiclo() {
   // banner removido — notificação agora é o botão no topbar
 
   // Atualiza botão de notificação no topbar
-  const notifBtn = document.getElementById('revisao-notif-btn');
+  const notifBtn = null; // botão removido do topbar
   const notifTxt = document.getElementById('revisao-notif-txt');
   if(!notifBtn) return;
   if(vencidos.length > 0) {
