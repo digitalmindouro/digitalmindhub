@@ -6822,13 +6822,24 @@ function abrirRevisaoRapida() {
   if(pAlvo) abrirModalRevisao(pAlvo, maxDias);
 }
 
-function abrirModalRevisao(modulo, dias) {
-  const cfg = SIXPS_CONFIG[modulo];
-  const nomeP = cfg?.titulo || modulo.toUpperCase();
+async function abrirModalRevisao(modulo, dias) {
   const modal = document.getElementById('modal-revisao-p');
   if(!modal) return;
-  document.getElementById('modal-revisao-titulo').textContent = nomeP;
-  document.getElementById('modal-revisao-dias').textContent = dias + ' dias atrás';
+  // Descobrir qual será o número da próxima versão (baseado no P1 como referência)
+  let proxVersao = 1;
+  try {
+    const { data } = await sb.from('sixps_versoes')
+      .select('versao').eq('user_id', S.user.id).eq('modulo', 'p1')
+      .order('versao', {ascending: false}).limit(1);
+    proxVersao = (data?.[0]?.versao || 0) + 1;
+  } catch(e) {}
+  const tituloVersao = String(proxVersao).padStart(2,'0') + ' Estrutura';
+  const diasEl = document.getElementById('modal-revisao-dias');
+  const tituloEl = document.getElementById('modal-revisao-titulo');
+  const versaoEl = document.getElementById('modal-versao-nome');
+  if(diasEl) diasEl.textContent = dias > 0 ? dias + ' dias atrás' : 'hoje';
+  if(tituloEl) tituloEl.textContent = 'todos os 6 módulos';
+  if(versaoEl) versaoEl.textContent = tituloVersao;
   modal.dataset.modulo = modulo;
   modal.style.display = 'flex';
 }
@@ -6841,51 +6852,63 @@ function fecharModalRevisao() {
 async function confirmarRevisao() {
   const modal = document.getElementById('modal-revisao-p');
   if(!modal) return;
-  const modulo = modal.dataset.modulo;
   fecharModalRevisao();
-  
-  // 1. Salvar versão atual
-  const versaoNum = await salvarVersaoP(modulo);
-  
-  // 2. Limpar conversas do módulo no banco
-  try {
-    await sb.from('sixps_conversas')
-      .delete().eq('user_id', S.user.id).eq('modulo', modulo);
-    console.log('✅ Conversas limpas para', modulo);
-  } catch(e) { console.log('limpar conversas erro:', e.message); }
-  
-  // 3. Limpar cache local
-  if(SP.conversas) SP.conversas[modulo] = [];
-  // Limpar guard de versão para próxima revisão
-  if(!window._versaoSalva) window._versaoSalva = {};
-  window._versaoSalva[modulo] = null;
-  if(SP.dados) {
-    delete SP.dados[modulo+'_resumo'];
-    delete SP.dados[modulo];
+
+  const ps = ['p1','p2','p3','p4','p5','p6'];
+  window._versaoSalva = {};
+
+  // Mostrar loading
+  const btnConf = document.getElementById('btn-confirmar-revisao');
+  if(btnConf) { btnConf.textContent = '⏳ Salvando...'; btnConf.disabled = true; }
+
+  // 1. Salvar versão de TODOS os módulos
+  let versaoNum = 1;
+  for(let i = 0; i < ps.length; i++) {
+    try {
+      const v = await salvarVersaoP(ps[i]);
+      if(ps[i] === 'p1' && v) versaoNum = v;
+    } catch(e) { console.log('salvar versão erro', ps[i], e.message); }
   }
-  
-  // 4. Resetar status para em_andamento (permite recomeçar)
+  const tituloVersao = String(versaoNum).padStart(2,'0') + ' Estrutura';
+
+  // 2. Limpar conversas de TODOS no banco
+  for(let i = 0; i < ps.length; i++) {
+    try {
+      await sb.from('sixps_conversas').delete().eq('user_id', S.user.id).eq('modulo', ps[i]);
+    } catch(e) {}
+  }
+
+  // 3. Limpar cache local de TODOS
+  if(SP.conversas) ps.forEach(p => { SP.conversas[p] = []; });
+  if(SP.dados) ps.forEach(p => { delete SP.dados[p+'_resumo']; delete SP.dados[p]; });
+  window._versaoSalva = {};
+
+  // 4. Resetar progresso: P1 = em_andamento, P2-P6 = bloqueado
+  const updates = {};
+  ps.forEach((p, i) => {
+    updates[p+'_status'] = i === 0 ? 'em_andamento' : 'bloqueado';
+  });
   try {
-    await sb.from('sixps_progresso')
-      .update({ [modulo+'_status']: 'em_andamento' })
-      .eq('user_id', S.user.id);
-    if(SP.progresso) SP.progresso[modulo+'_status'] = 'em_andamento';
-  } catch(e) {}
-  
-  // 5. Abrir o P limpo
-  const vTxt = versaoNum ? ` (v${String(versaoNum-1).padStart(2,'0')} salva)` : '';
-  abrirP(modulo);
-  
-  // 6. Após abrir, mostrar mensagem de boas-vindas da revisão
+    await sb.from('sixps_progresso').update(updates).eq('user_id', S.user.id);
+    if(SP.progresso) Object.assign(SP.progresso, updates);
+  } catch(e) { console.log('reset progresso erro:', e.message); }
+
+  // 5. Atualizar UI
+  renderSixpsGrid();
+  atualizarProgressoADM?.();
+  if(document.getElementById('sixps-nivel2')?.style?.display === 'block') {
+    renderNivel2Grid();
+  }
+
+  // 6. Abrir P1 limpo
   setTimeout(() => {
-    const cfg = SIXPS_CONFIG[modulo];
-    appendSixpsMsg('agent', `🔄 **Revisão iniciada!**
-
-Sua versão anterior foi salva como **${String(versaoNum).padStart(2,'0')} Estrutura**. Você pode consultá-la a qualquer momento pelo botão **📚 Estruturas**.
-
-Agora me conte: o que mudou desde a última vez que preenchemos o ${cfg?.titulo}? Quais informações precisam ser atualizadas?`);
-  }, 500);
+    abrirP('p1');
+    setTimeout(() => {
+      appendSixpsMsg('agent', `🔄 **Novo ciclo de revisão iniciado!**\n\nTodos os 6 módulos foram salvos como **${tituloVersao}**. Consulte pelo botão 📚 Estruturas em qualquer módulo.\n\nVamos recomeçar pelo **P1 — Propósito**. O que mudou no seu negócio desde o último ciclo?`);
+    }, 600);
+  }, 300);
 }
+
 
 async function salvarVersaoP(modulo) {
   if(!S.user) return;
@@ -10085,30 +10108,35 @@ init();
         <div id="modal-revisao-p" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(4px)">
           <div style="background:#fff;border-radius:20px;width:92%;max-width:460px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.2)">
             <div style="padding:28px 28px 20px">
-              <div style="font-size:20px;font-weight:800;color:#0f172a;font-family:'Syne',sans-serif;margin-bottom:6px" id="modal-revisao-titulo">P1 — Propósito</div>
-              <div style="font-size:13px;color:#64748b;margin-bottom:20px">Última atualização: <span id="modal-revisao-dias" style="font-weight:600;color:#475569"></span></div>
+              <div style="font-size:20px;font-weight:800;color:#0f172a;font-family:'Syne',sans-serif;margin-bottom:4px">Novo ciclo de revisão</div>
+              <div style="font-size:13px;color:#64748b;margin-bottom:20px">Última revisão: <span id="modal-revisao-dias" style="font-weight:600;color:#475569"></span> · <span id="modal-revisao-titulo" style="color:#94a3b8"></span></div>
               
-              <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;margin-bottom:24px">
-                <div style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">O que acontece ao revisar:</div>
-                <div style="display:flex;flex-direction:column;gap:8px">
-                  <div style="display:flex;gap:10px;align-items:flex-start">
-                    <div style="width:20px;height:20px;border-radius:50%;background:#0f172a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px">1</div>
-                    <div style="font-size:12px;color:#374151">A versão atual é <strong>salva automaticamente</strong> como "01 Estrutura" — nada é perdido</div>
+              <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:14px 16px;margin-bottom:16px">
+                <div style="font-size:12px;font-weight:700;color:#c2410c;margin-bottom:6px">⚠️ Isso resetará TODOS os 6 módulos</div>
+                <div style="font-size:11px;color:#9a3412;line-height:1.6">O ciclo de revisão recomeça do P1. Cada módulo será respondido do zero, módulo por módulo, como um novo ciclo de consultoria.</div>
+              </div>
+
+              <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;margin-bottom:24px">
+                <div style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">O que é salvo automaticamente:</div>
+                <div style="display:flex;flex-direction:column;gap:7px">
+                  <div style="display:flex;gap:10px;align-items:center">
+                    <div style="width:18px;height:18px;border-radius:50%;background:#0f172a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0">1</div>
+                    <div style="font-size:12px;color:#374151">Todos os 6 módulos salvos como <strong>"<span id="modal-versao-nome">01 Estrutura</span>"</strong></div>
                   </div>
-                  <div style="display:flex;gap:10px;align-items:flex-start">
-                    <div style="width:20px;height:20px;border-radius:50%;background:#0f172a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px">2</div>
-                    <div style="font-size:12px;color:#374151">Uma nova conversa começa para você <strong>atualizar as informações</strong></div>
+                  <div style="display:flex;gap:10px;align-items:center">
+                    <div style="width:18px;height:18px;border-radius:50%;background:#0f172a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0">2</div>
+                    <div style="font-size:12px;color:#374151">Consulte pelo botão <strong>📚 Estruturas</strong> em cada módulo</div>
                   </div>
-                  <div style="display:flex;gap:10px;align-items:flex-start">
-                    <div style="width:20px;height:20px;border-radius:50%;background:#0f172a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px">3</div>
-                    <div style="font-size:12px;color:#374151">Acesse todas as versões pelo botão <strong>📚 Estruturas</strong></div>
+                  <div style="display:flex;gap:10px;align-items:center">
+                    <div style="width:18px;height:18px;border-radius:50%;background:#0f172a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0">3</div>
+                    <div style="font-size:12px;color:#374151">Novo ciclo começa do <strong>P1 — Propósito</strong></div>
                   </div>
                 </div>
               </div>
               
               <div style="display:flex;gap:10px;justify-content:flex-end">
                 <button onclick="fecharModalRevisao()" style="padding:10px 20px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:10px;color:#475569;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Cancelar</button>
-                <button onclick="confirmarRevisao()" style="padding:10px 24px;background:#0f172a;border:none;border-radius:10px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Iniciar revisão →</button>
+                <button onclick="confirmarRevisao()" id="btn-confirmar-revisao" style="padding:10px 24px;background:#0f172a;border:none;border-radius:10px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">🔄 Iniciar novo ciclo</button>
               </div>
             </div>
           </div>
