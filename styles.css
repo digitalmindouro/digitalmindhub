@@ -282,76 +282,150 @@ tbody tr:hover { background: #fafafb !important; }
 
 
 
-/* ═══ DASHBOARD MARKETING PREMIUM ═══ */
-/* Seções de gráficos — fundo branco com sombra */
-#mkt-panel-campanhas > div > div[style*="background:var(--surface)"],
-#mkt-panel-campanhas > div[style*="background:var(--surface)"] {
+
+
+/* ═══════════════════════════════════════════════
+   DASHBOARD MARKETING — REDESIGN PREMIUM
+   Paleta: Navy #0f172a · Azul #1e40af · Branco
+   Verde apenas positivo · Vermelho apenas negativo
+═══════════════════════════════════════════════ */
+
+/* ── KPI Cards principais ── */
+.dash-kpi-card {
   background: #ffffff !important;
-  border: 1px solid #e8edf4 !important;
+  border: 1px solid #e2e8f0 !important;
   border-radius: 16px !important;
-  box-shadow: 0 2px 12px rgba(15,23,42,.06) !important;
+  padding: 18px 16px 14px !important;
+  box-shadow: 0 4px 16px rgba(15,23,42,.08), 0 1px 4px rgba(15,23,42,.04) !important;
+  transition: transform .2s ease, box-shadow .2s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+.dash-kpi-card::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important; left: 0 !important; right: 0 !important;
+  height: 3px !important;
+  background: linear-gradient(90deg, #0f172a 0%, #1e40af 100%) !important;
+}
+.dash-kpi-card:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 12px 32px rgba(15,23,42,.14) !important;
+}
+.dkc-label {
+  font-size: 9px !important;
+  color: #94a3b8 !important;
+  letter-spacing: 1.2px !important;
+  text-transform: uppercase !important;
+  font-weight: 700 !important;
+  margin-bottom: 8px !important;
+  display: block !important;
+}
+.dkc-val {
+  font-size: 24px !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  font-family: 'Syne', sans-serif !important;
+  line-height: 1 !important;
+  letter-spacing: -0.5px !important;
+}
+.dkc-sub {
+  font-size: 10px !important;
+  color: #94a3b8 !important;
+  margin-top: 6px !important;
+  font-weight: 500 !important;
+  display: block !important;
 }
 
-/* Barra de filtros */
-#mkt-panel-campanhas > div:first-child {
+/* ── Botões de filtro ── */
+.dash-filt-btn {
+  color: #64748b !important;
+  font-weight: 500 !important;
+  border-radius: 8px !important;
+  transition: all .15s !important;
+  padding: 5px 12px !important;
+  font-size: 11px !important;
+}
+.dash-filt-btn:hover {
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+.dash-filt-btn.active {
+  background: #0f172a !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 8px rgba(15,23,42,.3) !important;
+}
+
+/* ── Containers de gráficos ── */
+#mkt-panel-campanhas div[style*="var(--surface)"],
+#mkt-panel-campanhas div[style*="var(--surface2)"] {
   background: #ffffff !important;
-  border: 1px solid #e8edf4 !important;
-  border-radius: 14px !important;
-  box-shadow: 0 2px 8px rgba(15,23,42,.05) !important;
 }
 
-/* Seções dos gráficos dentro do panel */
-#mkt-panel-campanhas .dash-section,
+/* Override direto nos containers de chart */
 #dash-health-wrap,
 #dash-compare-wrap {
   background: #ffffff !important;
-  border: 1px solid #e8edf4 !important;
+  border: 1px solid #e2e8f0 !important;
   border-radius: 16px !important;
   box-shadow: 0 2px 12px rgba(15,23,42,.06) !important;
 }
 
-/* Funil de tráfego e gauge cards */
-#dash-funil,
-#mkt-panel-campanhas canvas {
-  background: transparent !important;
+/* ROAS gauge val */
+#gauge-roas-val {
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+  background: none !important;
+  -webkit-background-clip: unset !important;
 }
+#gauge-taxa-val { color: #16a34a !important; }
 
-/* Títulos de seção */
-#mkt-panel-campanhas [style*="text-transform:uppercase"],
-#mkt-panel-campanhas [style*="text-transform: uppercase"] {
+/* Legenda dos charts */
+#leg-genero div, #leg-etaria div, #leg-pizza div {
+  font-size: 10px !important;
   color: #475569 !important;
 }
 
-/* Linha de grade nos gráficos Chart.js */
-#mkt-panel-campanhas .chart-container {
-  background: #ffffff !important;
-}
-
-/* Cards de gráfico individuais que usam inline style var(--surface) */
-#mkt-panel-campanhas div[style*="var(--surface)"] {
-  background: #ffffff !important;
-  border-color: #e8edf4 !important;
+/* ROI inputs */
+#dash-roi-list input {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #0f172a !important;
+  border-radius: 6px !important;
 }
 
 /* Sync bar */
-#mkt-panel-campanhas div[style*="Sync"] {
+#mkt-panel-campanhas div:last-of-type[style*="Sync"] {
   background: #f8fafc !important;
+  border-color: #e2e8f0 !important;
 }
 
-/* Score de saúde e comparativo */
-#dash-health-list,
-#dash-compare-grid {
-  background: #ffffff !important;
+/* Títulos das seções de gráfico */
+#mkt-panel-campanhas span[style*="uppercase"] {
+  color: #64748b !important;
 }
 
-/* Gauge valores */
-#gauge-roas-val { color: #1e40af !important; -webkit-text-fill-color: #1e40af !important; }
-#gauge-taxa-val { color: #16a34a !important; }
+/* Funil barras */
+#dash-funil div[style*="background"] {
+  border-radius: 4px !important;
+}
 
-/* ROI cards internos */
-#dash-roi-list div[style*="surface2"],
-#mkt-panel-campanhas div[style*="var(--surface2)"] {
+/* Score health items */
+#dash-health-list > div {
   background: #f8fafc !important;
-  border: 1px solid #e8edf4 !important;
+  border: 1px solid #e2e8f0 !important;
   border-radius: 8px !important;
+}
+
+/* Criativos cards */
+#dash-criativos > div {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+}
+#dash-criativos > div:hover {
+  border-color: #1e40af !important;
+  box-shadow: 0 4px 16px rgba(30,64,175,.12) !important;
 }
