@@ -1228,6 +1228,7 @@
                         <button class="btn btn-ghost btn-sm" onclick="voltarSixps()">← Voltar</button>
                         <div><div class="section-title" id="sixps-modulo-titulo">P1 — Propósito</div><div style="font-size:12px;color:var(--muted)" id="sixps-modulo-sub">Defina a essência do seu negócio</div></div>
                         <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+                          <button onclick="abrirHistoricoVersoes(SP.moduloAtivo)" style="padding:5px 12px;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:11px;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px">📚 Estruturas</button>
                           <button id="btn-concluir-manual" onclick="concluirPManual()" style="display:none;padding:5px 12px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);border-radius:6px;color:#34d399;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s" onmouseover="this.style.background='rgba(16,185,129,0.3)'" onmouseout="this.style.background='rgba(16,185,129,0.15)'">✅ Marcar como concluído</button>
                           <div style="font-size:11px;color:var(--muted);padding:4px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:6px" id="sixps-status-label">Em andamento...</div>
                         </div>
@@ -6640,11 +6641,44 @@ async function confirmarRevisao() {
   const modulo = modal.dataset.modulo;
   fecharModalRevisao();
   
-  // Salvar versão atual antes de revisar
-  await salvarVersaoP(modulo);
+  // 1. Salvar versão atual
+  const versaoNum = await salvarVersaoP(modulo);
   
-  // Abrir o P para edição
+  // 2. Limpar conversas do módulo no banco
+  try {
+    await sb.from('sixps_conversas')
+      .delete().eq('user_id', S.user.id).eq('modulo', modulo);
+    console.log('✅ Conversas limpas para', modulo);
+  } catch(e) { console.log('limpar conversas erro:', e.message); }
+  
+  // 3. Limpar cache local
+  if(SP.conversas) SP.conversas[modulo] = [];
+  if(SP.dados) {
+    delete SP.dados[modulo+'_resumo'];
+    delete SP.dados[modulo];
+  }
+  
+  // 4. Resetar status para em_andamento (permite recomeçar)
+  try {
+    await sb.from('sixps_progresso')
+      .update({ [modulo+'_status']: 'em_andamento' })
+      .eq('user_id', S.user.id);
+    if(SP.progresso) SP.progresso[modulo+'_status'] = 'em_andamento';
+  } catch(e) {}
+  
+  // 5. Abrir o P limpo
+  const vTxt = versaoNum ? ` (v${String(versaoNum-1).padStart(2,'0')} salva)` : '';
   abrirP(modulo);
+  
+  // 6. Após abrir, mostrar mensagem de boas-vindas da revisão
+  setTimeout(() => {
+    const cfg = SIXPS_CONFIG[modulo];
+    appendSixpsMsg('agent', `🔄 **Revisão iniciada!**
+
+Sua versão anterior foi salva como **${String(versaoNum).padStart(2,'0')} Estrutura**. Você pode consultá-la a qualquer momento pelo botão **📚 Estruturas**.
+
+Agora me conte: o que mudou desde a última vez que preenchemos o ${cfg?.titulo}? Quais informações precisam ser atualizadas?`);
+  }, 500);
 }
 
 async function salvarVersaoP(modulo) {
