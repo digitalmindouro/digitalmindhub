@@ -284,148 +284,382 @@ tbody tr:hover { background: #fafafb !important; }
 
 
 
+
+
 /* ═══════════════════════════════════════════════
-   DASHBOARD MARKETING — REDESIGN PREMIUM
-   Paleta: Navy #0f172a · Azul #1e40af · Branco
-   Verde apenas positivo · Vermelho apenas negativo
+   ADMINISTRAÇÃO DIGITALMIND — DASHBOARD MARKETING
+   Design: premium, limpo, respira
+   Paleta: #0f172a navy · #1e40af azul · #fff branco
+   Acento: #16a34a verde (positivo) · #dc2626 vermelho (negativo)
 ═══════════════════════════════════════════════ */
 
-/* ── KPI Cards principais ── */
-.dash-kpi-card {
-  background: #ffffff !important;
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 16px !important;
-  padding: 18px 16px 14px !important;
-  box-shadow: 0 4px 16px rgba(15,23,42,.08), 0 1px 4px rgba(15,23,42,.04) !important;
-  transition: transform .2s ease, box-shadow .2s ease !important;
-  position: relative !important;
-  overflow: hidden !important;
-}
-.dash-kpi-card::before {
-  content: '' !important;
-  position: absolute !important;
-  top: 0 !important; left: 0 !important; right: 0 !important;
-  height: 3px !important;
-  background: linear-gradient(90deg, #0f172a 0%, #1e40af 100%) !important;
-}
-.dash-kpi-card:hover {
-  transform: translateY(-3px) !important;
-  box-shadow: 0 12px 32px rgba(15,23,42,.14) !important;
-}
-.dkc-label {
-  font-size: 9px !important;
-  color: #94a3b8 !important;
-  letter-spacing: 1.2px !important;
-  text-transform: uppercase !important;
-  font-weight: 700 !important;
-  margin-bottom: 8px !important;
-  display: block !important;
-}
-.dkc-val {
-  font-size: 24px !important;
-  font-weight: 800 !important;
-  color: #0f172a !important;
-  font-family: 'Syne', sans-serif !important;
-  line-height: 1 !important;
-  letter-spacing: -0.5px !important;
-}
-.dkc-sub {
-  font-size: 10px !important;
-  color: #94a3b8 !important;
-  margin-top: 6px !important;
-  font-weight: 500 !important;
-  display: block !important;
+/* ── Wrapper do painel ── */
+#mkt-panel-campanhas {
+  padding: 20px 0 0;
+  background: transparent;
 }
 
-/* ── Botões de filtro ── */
-.dash-filt-btn {
-  color: #64748b !important;
-  font-weight: 500 !important;
-  border-radius: 8px !important;
-  transition: all .15s !important;
-  padding: 5px 12px !important;
-  font-size: 11px !important;
+/* ── Barra de controle ── */
+#dm-dash-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 12px 16px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 4px rgba(15,23,42,.06);
 }
-.dash-filt-btn:hover {
-  background: #f1f5f9 !important;
-  color: #0f172a !important;
+.dm-period-group {
+  display: flex;
+  gap: 2px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 3px;
 }
-.dash-filt-btn.active {
+.dm-period-btn {
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 500;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  border-radius: 7px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all .15s;
+}
+.dm-period-btn:hover { background: #f1f5f9; color: #0f172a; }
+.dm-period-btn.active {
   background: #0f172a !important;
   color: #ffffff !important;
-  font-weight: 700 !important;
-  box-shadow: 0 2px 8px rgba(15,23,42,.3) !important;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(15,23,42,.25);
+}
+.dm-date-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.dm-date-input {
+  font-size: 11px;
+  padding: 5px 8px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  color: #0f172a;
+  outline: none;
+  font-family: 'DM Sans', sans-serif;
+}
+.dm-arrow { color: #94a3b8; font-size: 11px; }
+.dm-apply-btn {
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  border: none;
+  background: #0f172a;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+}
+.dm-select {
+  font-size: 11px;
+  padding: 5px 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  color: #0f172a;
+  outline: none;
+  max-width: 180px;
+  font-family: 'DM Sans', sans-serif;
+}
+.dm-select-wide { max-width: 220px; }
+.dm-load-btn {
+  padding: 6px 18px;
+  font-size: 12px;
+  font-weight: 700;
+  border: none;
+  background: #1e40af;
+  color: #fff;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  box-shadow: 0 2px 8px rgba(30,64,175,.3);
+  transition: all .15s;
+}
+.dm-load-btn:hover { background: #1d4ed8; transform: translateY(-1px); }
+.dm-last-update {
+  font-size: 10px;
+  color: #94a3b8;
+  margin-left: auto;
 }
 
-/* ── Containers de gráficos ── */
-#mkt-panel-campanhas div[style*="var(--surface)"],
-#mkt-panel-campanhas div[style*="var(--surface2)"] {
-  background: #ffffff !important;
+/* ── KPI Row principal ── */
+.dm-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.dm-kpi {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 18px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  box-shadow: 0 2px 8px rgba(15,23,42,.06);
+  transition: transform .2s, box-shadow .2s;
+  position: relative;
+  overflow: hidden;
+}
+.dm-kpi::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #0f172a, #1e40af);
+  border-radius: 0 0 16px 16px;
+}
+.dm-kpi:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(15,23,42,.12);
+}
+.dm-kpi-highlight {
+  background: linear-gradient(135deg, #0f172a 0%, #1e40af 100%) !important;
+  border-color: #1e40af !important;
+}
+.dm-kpi-highlight::after { display: none !important; }
+.dm-kpi-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.dm-kpi-body { flex: 1; min-width: 0; }
+.dm-kpi-label {
+  font-size: 9px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: block;
+  margin-bottom: 6px;
+}
+.dm-kpi-val {
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f172a;
+  font-family: 'Syne', sans-serif;
+  line-height: 1;
+  letter-spacing: -0.5px;
+}
+.dm-kpi-sub {
+  font-size: 10px;
+  color: #94a3b8;
+  margin-top: 4px;
+  font-weight: 500;
 }
 
-/* Override direto nos containers de chart */
-#dash-health-wrap,
-#dash-compare-wrap {
-  background: #ffffff !important;
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 16px !important;
-  box-shadow: 0 2px 12px rgba(15,23,42,.06) !important;
+/* ── Social Row ── */
+.dm-social-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.dm-social-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(15,23,42,.06);
+}
+.dm-social-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.dm-social-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 900;
+  color: #fff;
+  flex-shrink: 0;
+}
+.dm-fb-badge { background: #1877f2; }
+.dm-ig-badge { background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); font-size:10px; }
+.dm-wpp-badge { background: #25d366; }
+.dm-social-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+}
+.dm-social-metrics {
+  display: flex;
+  gap: 20px;
+}
+.dm-sm-val {
+  font-size: 22px;
+  font-weight: 800;
+  color: #0f172a;
+  font-family: 'Syne', sans-serif;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.dm-sm-label {
+  font-size: 10px;
+  color: #94a3b8;
+  font-weight: 500;
 }
 
-/* ROAS gauge val */
-#gauge-roas-val {
-  color: #1e40af !important;
-  -webkit-text-fill-color: #1e40af !important;
-  background: none !important;
-  -webkit-background-clip: unset !important;
+/* ── Cards genéricos ── */
+.dm-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(15,23,42,.06);
 }
-#gauge-taxa-val { color: #16a34a !important; }
-
-/* Legenda dos charts */
-#leg-genero div, #leg-etaria div, #leg-pizza div {
-  font-size: 10px !important;
-  color: #475569 !important;
+.dm-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f1f5f9;
 }
-
-/* ROI inputs */
-#dash-roi-list input {
-  background: #f8fafc !important;
-  border: 1px solid #e2e8f0 !important;
-  color: #0f172a !important;
-  border-radius: 6px !important;
-}
-
-/* Sync bar */
-#mkt-panel-campanhas div:last-of-type[style*="Sync"] {
-  background: #f8fafc !important;
-  border-color: #e2e8f0 !important;
+.dm-card-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-/* Títulos das seções de gráfico */
-#mkt-panel-campanhas span[style*="uppercase"] {
-  color: #64748b !important;
+/* ── Charts Row 1: Funil + Gauges + Donuts ── */
+.dm-charts-row {
+  display: grid;
+  grid-template-columns: 2fr 100px 100px 160px 160px;
+  gap: 12px;
+  margin-bottom: 16px;
+  align-items: start;
+}
+.dm-card-funil { }
+.dm-funil-body { display: flex; flex-direction: column; gap: 12px; }
+.dm-card-gauge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 16px 12px;
+}
+.dm-gauge-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.dm-gauge-val {
+  font-size: 20px;
+  font-weight: 800;
+  font-family: 'Syne', sans-serif;
+  color: #1e40af;
+  line-height: 1;
+}
+.dm-gauge-sub {
+  font-size: 9px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+.dm-card-donut { padding: 16px 14px; }
+.dm-donut-wrap { display: flex; flex-direction: column; gap: 8px; }
+
+/* ── Charts Row 2: Linha + Pizza ── */
+.dm-charts-row2 {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.dm-card-linha { }
+.dm-card-pizza { padding: 20px 16px; }
+
+/* ── Metric buttons ── */
+.dm-metric-btns { display: flex; gap: 2px; }
+.dm-metric-btn {
+  padding: 3px 10px;
+  font-size: 10px;
+  font-weight: 500;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all .15s;
+}
+.dm-metric-btn:hover { background: #f1f5f9; color: #0f172a; }
+.dm-metric-btn.active {
+  background: #0f172a !important;
+  color: #fff !important;
+  font-weight: 700;
 }
 
-/* Funil barras */
-#dash-funil div[style*="background"] {
-  border-radius: 4px !important;
+/* ── Legendas ── */
+.dm-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.dm-legend > div {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  color: #475569;
 }
 
-/* Score health items */
-#dash-health-list > div {
-  background: #f8fafc !important;
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 8px !important;
-}
-
-/* Criativos cards */
+/* ── Criativos ── */
 #dash-criativos > div {
   background: #f8fafc !important;
   border: 1px solid #e2e8f0 !important;
   border-radius: 12px !important;
   box-shadow: none !important;
+  transition: all .2s !important;
 }
 #dash-criativos > div:hover {
   border-color: #1e40af !important;
-  box-shadow: 0 4px 16px rgba(30,64,175,.12) !important;
+  box-shadow: 0 4px 16px rgba(30,64,175,.1) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* ── Override legacy classes ── */
+.dash-kpi-card { display: none !important; }
+.dkc-label, .dkc-val, .dkc-sub { display: none !important; }
+.dash-filt-btn { display: none !important; }
+
+/* ROAS gauge color fix */
+#gauge-roas-val {
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+  background: none !important;
+  -webkit-background-clip: unset !important;
 }

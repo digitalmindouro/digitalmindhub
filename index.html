@@ -1355,239 +1355,278 @@
               </div>
 
               <!-- CAMPANHAS — todo o dashboard Meta Ads -->
-              <div id="mkt-panel-campanhas" style="display:none;padding-top:14px">
-                <div id="mkt-token-warn" style="display:none;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--fin);margin-bottom:12px">
-                  ⚠️ Token não configurado. <button onclick="mktTab('config',document.getElementById('mktab-config'))" style="background:none;border:none;color:var(--fin);font-weight:700;cursor:pointer;text-decoration:underline">Configurar →</button>
+              <div id="mkt-panel-campanhas" style="display:none">
+                <!-- Token warn -->
+                <div id="mkt-token-warn" style="display:none;background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:12px 16px;font-size:12px;color:#c2410c;margin-bottom:16px">
+                  ⚠️ Token não configurado. <button onclick="mktTab('config',document.getElementById('mktab-config'))" style="background:none;border:none;color:#c2410c;font-weight:700;cursor:pointer;text-decoration:underline">Configurar →</button>
                 </div>
-                <!-- FILTROS — barra premium -->
-                <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px;padding:12px 16px;background:#ffffff;border:1px solid #e8edf4;border-radius:14px;flex-wrap:wrap;box-shadow:0 2px 8px rgba(15,23,42,.05)">
-                  <div style="display:flex;gap:2px;background:#f8fafc;border:1px solid #e8edf4;border-radius:10px;padding:3px">
-                    <button onclick="DS.setPeriod('last_7d',this)" id="dashbtn-7d" class="dash-filt-btn">7d</button>
-                    <button onclick="DS.setPeriod('last_30d',this)" id="dashbtn-30d" class="dash-filt-btn">30d</button>
-                    <button onclick="DS.setPeriod('last_90d',this)" id="dashbtn-90d" class="dash-filt-btn">90d</button>
-                    <button onclick="DS.setPeriod('last_year',this)" id="dashbtn-ano" class="dash-filt-btn">1 ano</button>
-                    <button onclick="DS.setPeriod('maximum',this)" id="dashbtn-all" class="dash-filt-btn active">Tudo</button>
+
+                <!-- ═══ BARRA DE CONTROLE ═══ -->
+                <div id="dm-dash-bar">
+                  <div class="dm-period-group">
+                    <button onclick="DS.setPeriod('last_7d',this)" id="dashbtn-7d" class="dm-period-btn">7d</button>
+                    <button onclick="DS.setPeriod('last_30d',this)" id="dashbtn-30d" class="dm-period-btn">30d</button>
+                    <button onclick="DS.setPeriod('last_90d',this)" id="dashbtn-90d" class="dm-period-btn">90d</button>
+                    <button onclick="DS.setPeriod('last_year',this)" id="dashbtn-ano" class="dm-period-btn">1 ano</button>
+                    <button onclick="DS.setPeriod('maximum',this)" id="dashbtn-all" class="dm-period-btn active">Tudo</button>
                   </div>
-                  <div style="display:flex;align-items:center;gap:4px">
-                    <input type="date" id="dash-date-from" onchange="DS.dateFrom=this.value;DS.preset=null;document.querySelectorAll('[id^=dashbtn-]').forEach(b=>b.classList.remove('active'))" style="font-size:11px;padding:4px 8px;background:var(--surface2);border:1px solid var(--border2);border-radius:7px;color:var(--text);outline:none">
-                    <span style="color:var(--muted);font-size:11px">→</span>
-                    <input type="date" id="dash-date-to" onchange="DS.dateTo=this.value;DS.preset=null;document.querySelectorAll('[id^=dashbtn-]').forEach(b=>b.classList.remove('active'))" style="font-size:11px;padding:4px 8px;background:var(--surface2);border:1px solid var(--border2);border-radius:7px;color:var(--text);outline:none">
-                    <button onclick="DS.setPeriodCustom()" class="dash-filt-btn" style="border:1px solid var(--border);background:var(--accent);color:#fff">↵ Aplicar</button>
+                  <div class="dm-date-group">
+                    <input type="date" id="dash-date-from" onchange="DS.dateFrom=this.value;DS.preset=null;document.querySelectorAll('[id^=dashbtn-]').forEach(b=>b.classList.remove('active'))" class="dm-date-input">
+                    <span class="dm-arrow">→</span>
+                    <input type="date" id="dash-date-to" onchange="DS.dateTo=this.value;DS.preset=null;document.querySelectorAll('[id^=dashbtn-]').forEach(b=>b.classList.remove('active'))" class="dm-date-input">
+                    <button onclick="DS.setPeriodCustom()" class="dm-apply-btn">↵ Aplicar</button>
                   </div>
-                  <select id="dash-adacc-sel" onchange="DS.setAdAccount(this.value)" style="font-size:11px;padding:5px 10px;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;color:var(--text);outline:none;max-width:200px">
+                  <select id="dash-adacc-sel" onchange="DS.setAdAccount(this.value)" class="dm-select">
                     <option value="">⏳ Carregando contas...</option>
                   </select>
-                  <select id="dash-camp-sel" onchange="DS.setFiltro(this.value)" style="font-size:11px;padding:5px 10px;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;color:var(--text);outline:none;max-width:220px">
+                  <select id="dash-camp-sel" onchange="DS.setFiltro(this.value)" class="dm-select dm-select-wide">
                     <option value="">Todas as campanhas</option>
                   </select>
-                  <button onclick="DS.carregar()" style="padding:6px 16px;font-size:12px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer;font-family:inherit;font-weight:700">↻ Carregar</button>
-                  <span id="dash-last-update" style="font-size:10px;color:var(--muted);margin-left:auto"></span>
+                  <button onclick="DS.carregar()" class="dm-load-btn">↻ Carregar</button>
+                  <span id="dash-last-update" class="dm-last-update"></span>
+                  <span id="dash-criat-info" style="display:none"></span>
                 </div>
-                <!-- KPIs Ads — premium navy cards -->
-                <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:12px" id="dash-kpis">
-                  <div class="dash-kpi-card">
-                    <div class="dkc-label">Investido</div>
-                    <div class="dkc-val" id="dk-invest" style="color:#dc2626">—</div>
-                    <div class="dkc-sub">período</div>
-                  </div>
-                  <div class="dash-kpi-card">
-                    <div class="dkc-label">Alcance</div>
-                    <div class="dkc-val" id="dk-alcance" style="color:#0f172a">—</div>
-                    <div class="dkc-sub">pessoas</div>
-                  </div>
-                  <div class="dash-kpi-card">
-                    <div class="dkc-label">Impressões</div>
-                    <div class="dkc-val" id="dk-impr" style="color:#0f172a">—</div>
-                    <div class="dkc-sub">total</div>
-                  </div>
-                  <div class="dash-kpi-card">
-                    <div class="dkc-label">Leads</div>
-                    <div class="dkc-val" id="dk-leads" style="color:#16a34a">—</div>
-                    <div class="dkc-sub">conversões</div>
-                  </div>
-                  <div class="dash-kpi-card">
-                    <div class="dkc-label">CPM</div>
-                    <div class="dkc-val" id="dk-cpm" style="color:#0f172a">—</div>
-                    <div class="dkc-sub">custo/mil</div>
-                  </div>
-                  <div class="dash-kpi-card">
-                    <div class="dkc-label">CPC</div>
-                    <div class="dkc-val" id="dk-cpc" style="color:#0f172a">—</div>
-                    <div class="dkc-sub">por clique</div>
-                  </div>
-                  <div class="dash-kpi-card">
-                    <div class="dkc-label">ROAS</div>
-                    <div class="dkc-val" id="dk-roas" style="color:#1e40af">—</div>
-                    <div class="dkc-sub">retorno</div>
-                  </div>
-                </div>
-                <!-- KPIs Orgânicos — FB · IG · WPP redesenhados -->
-                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px">
 
-                  <!-- FACEBOOK -->
-                  <div style="background:#ffffff;border:1px solid #e8edf4;border-radius:16px;padding:16px;box-shadow:0 2px 12px rgba(15,23,42,.06);position:relative;overflow:hidden">
-                    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#1877f2,#42a5f5)"></div>
-                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-                      <span style="font-size:10px;font-weight:700;color:#475569;letter-spacing:.8px;text-transform:uppercase">Facebook</span>
-                      <div style="width:24px;height:24px;background:#1877f2;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff">f</div>
-                    </div>
-                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-                      <div><div class="dkc-label">Seguidores</div><div class="dkc-val" id="mk-fans" style="color:#0f172a;font-size:18px">—</div></div>
-                      <div><div class="dkc-label">Views</div><div class="dkc-val" id="mk-views" style="color:#0f172a;font-size:18px">—</div><div class="dkc-sub" id="mk-fb-status">7d</div></div>
-                      <div><div class="dkc-label">Engaj.</div><div class="dkc-val" id="mk-eng" style="color:#0f172a;font-size:18px">—</div><div class="dkc-sub"><span id="mk-cta">—</span> CTA</div></div>
+                <!-- ═══ ROW 1: KPIs PRINCIPAIS ═══ -->
+                <div class="dm-kpi-row" id="dash-kpis">
+                  <div class="dm-kpi">
+                    <div class="dm-kpi-icon" style="background:#fff1f2">💸</div>
+                    <div class="dm-kpi-body">
+                      <div class="dm-kpi-label">Investido</div>
+                      <div class="dm-kpi-val" id="dk-invest">—</div>
+                      <div class="dm-kpi-sub">período</div>
                     </div>
                   </div>
-
-                  <!-- INSTAGRAM -->
-                  <div style="background:#ffffff;border:1px solid #e8edf4;border-radius:16px;padding:16px;box-shadow:0 2px 12px rgba(15,23,42,.06);position:relative;overflow:hidden">
-                    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#833ab4,#fd1d1d,#fcb045)"></div>
-                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-                      <span style="font-size:10px;font-weight:700;color:#475569;letter-spacing:.8px;text-transform:uppercase">Instagram</span>
-                      <div style="width:24px;height:24px;background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff">📷</div>
-                    </div>
-                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-                      <div><div class="dkc-label">Seguidores</div><div class="dkc-val" id="mk-ig-fans" style="color:#0f172a;font-size:18px">—</div><div class="dkc-sub" id="mk-ig-status">—</div></div>
-                      <div><div class="dkc-label">Alcance</div><div class="dkc-val" id="mk-ig-reach" style="color:#0f172a;font-size:18px">—</div><div class="dkc-sub"><span id="mk-ig-imp">—</span> impr.</div></div>
-                      <div><div class="dkc-label">Posts</div><div class="dkc-val" id="mk-ig-posts" style="color:#0f172a;font-size:18px">—</div><div class="dkc-sub"><span id="mk-ig-eng">—</span> curtidas</div></div>
+                  <div class="dm-kpi">
+                    <div class="dm-kpi-icon" style="background:#f0fdf4">👥</div>
+                    <div class="dm-kpi-body">
+                      <div class="dm-kpi-label">Alcance</div>
+                      <div class="dm-kpi-val" id="dk-alcance">—</div>
+                      <div class="dm-kpi-sub">pessoas únicas</div>
                     </div>
                   </div>
-
-                  <!-- WHATSAPP -->
-                  <div style="background:#ffffff;border:1px solid #e8edf4;border-radius:16px;padding:16px;box-shadow:0 2px 12px rgba(15,23,42,.06);position:relative;overflow:hidden">
-                    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#25d366,#128c7e)"></div>
-                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-                      <span style="font-size:10px;font-weight:700;color:#475569;letter-spacing:.8px;text-transform:uppercase">WhatsApp</span>
-                      <div style="width:24px;height:24px;background:#25d366;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px">💬</div>
+                  <div class="dm-kpi">
+                    <div class="dm-kpi-icon" style="background:#eff6ff">👁</div>
+                    <div class="dm-kpi-body">
+                      <div class="dm-kpi-label">Impressões</div>
+                      <div class="dm-kpi-val" id="dk-impr">—</div>
+                      <div class="dm-kpi-sub">total</div>
                     </div>
-                    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
-                      <div><div class="dkc-label">Conversões</div><div class="dkc-val" id="mk-wpp-conv" style="color:#16a34a;font-size:18px">—</div><div class="dkc-sub"><span id="mk-wpp-camps">—</span> camp.</div></div>
-                      <div><div class="dkc-label">Investido</div><div class="dkc-val" id="mk-wpp-spend" style="color:#dc2626;font-size:18px">—</div><div class="dkc-sub"><span id="mk-wpp-cpc">—</span>/conv.</div></div>
+                  </div>
+                  <div class="dm-kpi">
+                    <div class="dm-kpi-icon" style="background:#f0fdf4">🎯</div>
+                    <div class="dm-kpi-body">
+                      <div class="dm-kpi-label">Leads</div>
+                      <div class="dm-kpi-val" id="dk-leads" style="color:#16a34a">—</div>
+                      <div class="dm-kpi-sub">conversões</div>
+                    </div>
+                  </div>
+                  <div class="dm-kpi">
+                    <div class="dm-kpi-icon" style="background:#eff6ff">📊</div>
+                    <div class="dm-kpi-body">
+                      <div class="dm-kpi-label">CPM</div>
+                      <div class="dm-kpi-val" id="dk-cpm">—</div>
+                      <div class="dm-kpi-sub">custo / mil</div>
+                    </div>
+                  </div>
+                  <div class="dm-kpi">
+                    <div class="dm-kpi-icon" style="background:#eff6ff">🖱</div>
+                    <div class="dm-kpi-body">
+                      <div class="dm-kpi-label">CPC</div>
+                      <div class="dm-kpi-val" id="dk-cpc">—</div>
+                      <div class="dm-kpi-sub">por clique</div>
+                    </div>
+                  </div>
+                  <div class="dm-kpi dm-kpi-highlight">
+                    <div class="dm-kpi-icon" style="background:rgba(255,255,255,0.15)">📈</div>
+                    <div class="dm-kpi-body">
+                      <div class="dm-kpi-label" style="color:rgba(255,255,255,.7)">ROAS</div>
+                      <div class="dm-kpi-val" id="dk-roas" style="color:#fff">—</div>
+                      <div class="dm-kpi-sub" style="color:rgba(255,255,255,.6)">retorno</div>
                     </div>
                   </div>
                 </div>
+
+                <!-- ═══ ROW 2: SOCIAL ═══ -->
+                <div class="dm-social-row">
+                  <div class="dm-social-card">
+                    <div class="dm-social-header">
+                      <div class="dm-social-badge dm-fb-badge">f</div>
+                      <span class="dm-social-name">Facebook</span>
+                    </div>
+                    <div class="dm-social-metrics">
+                      <div><div class="dm-sm-val" id="mk-fans">—</div><div class="dm-sm-label">seguidores</div></div>
+                      <div><div class="dm-sm-val" id="mk-views">—</div><div class="dm-sm-label">views <span id="mk-fb-status" style="display:none"></span></div></div>
+                      <div><div class="dm-sm-val" id="mk-eng">—</div><div class="dm-sm-label"><span id="mk-cta">0</span> CTA</div></div>
+                    </div>
+                  </div>
+                  <div class="dm-social-card">
+                    <div class="dm-social-header">
+                      <div class="dm-social-badge dm-ig-badge">ig</div>
+                      <span class="dm-social-name">Instagram</span>
+                    </div>
+                    <div class="dm-social-metrics">
+                      <div><div class="dm-sm-val" id="mk-ig-fans">—</div><div class="dm-sm-label"><span id="mk-ig-status">seguidores</span></div></div>
+                      <div><div class="dm-sm-val" id="mk-ig-reach">—</div><div class="dm-sm-label"><span id="mk-ig-imp">—</span> impr.</div></div>
+                      <div><div class="dm-sm-val" id="mk-ig-posts">—</div><div class="dm-sm-label"><span id="mk-ig-eng">—</span> curtidas</div></div>
+                    </div>
+                  </div>
+                  <div class="dm-social-card">
+                    <div class="dm-social-header">
+                      <div class="dm-social-badge dm-wpp-badge">W</div>
+                      <span class="dm-social-name">WhatsApp</span>
+                    </div>
+                    <div class="dm-social-metrics">
+                      <div><div class="dm-sm-val" id="mk-wpp-conv" style="color:#16a34a">—</div><div class="dm-sm-label"><span id="mk-wpp-camps">—</span> camp.</div></div>
+                      <div><div class="dm-sm-val" id="mk-wpp-spend" style="color:#dc2626">—</div><div class="dm-sm-label"><span id="mk-wpp-cpc">—</span>/conv.</div></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ═══ ROW 3: FUNIL + GAUGES + DONUTS ═══ -->
+                <div class="dm-charts-row">
+                  <!-- Funil -->
+                  <div class="dm-card dm-card-funil">
+                    <div class="dm-card-header">
+                      <span class="dm-card-title">Funil de Tráfego</span>
+                    </div>
+                    <div id="dash-funil" class="dm-funil-body">
+                      <div style="color:#94a3b8;font-size:12px;text-align:center;padding:24px">Carregue os dados</div>
+                    </div>
+                  </div>
+                  <!-- ROAS Gauge -->
+                  <div class="dm-card dm-card-gauge">
+                    <div class="dm-card-header"><span class="dm-card-title">ROAS</span></div>
+                    <div class="dm-gauge-wrap">
+                      <canvas id="gauge-roas" width="90" height="52"></canvas>
+                      <div class="dm-gauge-val" id="gauge-roas-val">—</div>
+                      <div class="dm-gauge-sub">receita/invest.</div>
+                    </div>
+                  </div>
+                  <!-- Taxa Conv Gauge -->
+                  <div class="dm-card dm-card-gauge">
+                    <div class="dm-card-header"><span class="dm-card-title">Taxa Conv.</span></div>
+                    <div class="dm-gauge-wrap">
+                      <canvas id="gauge-taxa" width="90" height="52"></canvas>
+                      <div class="dm-gauge-val" id="gauge-taxa-val" style="color:#16a34a">—</div>
+                      <div class="dm-gauge-sub">cliques→leads</div>
+                    </div>
+                  </div>
+                  <!-- Gênero -->
+                  <div class="dm-card dm-card-donut">
+                    <div class="dm-card-header"><span class="dm-card-title">Gênero</span></div>
+                    <div class="dm-donut-wrap">
+                      <div style="position:relative;height:100px"><canvas id="chart-genero"></canvas></div>
+                      <div id="leg-genero" class="dm-legend"></div>
+                    </div>
+                  </div>
+                  <!-- Faixa Etária -->
+                  <div class="dm-card dm-card-donut">
+                    <div class="dm-card-header"><span class="dm-card-title">Faixa Etária</span></div>
+                    <div class="dm-donut-wrap">
+                      <div style="position:relative;height:100px"><canvas id="chart-etaria"></canvas></div>
+                      <div id="leg-etaria" class="dm-legend"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ═══ ROW 4: LINHA + PIZZA ═══ -->
+                <div class="dm-charts-row2">
+                  <div class="dm-card dm-card-linha">
+                    <div class="dm-card-header">
+                      <span class="dm-card-title">Evolução por Campanha</span>
+                      <div class="dm-metric-btns">
+                        <button onclick="DS.setMetricLinha('spend',this)" class="dm-metric-btn active">Invest.</button>
+                        <button onclick="DS.setMetricLinha('impressions',this)" class="dm-metric-btn">Impr.</button>
+                        <button onclick="DS.setMetricLinha('clicks',this)" class="dm-metric-btn">Cliques</button>
+                        <button onclick="DS.setMetricLinha('ctr',this)" class="dm-metric-btn">CTR</button>
+                      </div>
+                    </div>
+                    <div style="height:160px;position:relative"><canvas id="chart-linha"></canvas></div>
+                  </div>
+                  <div class="dm-card dm-card-pizza">
+                    <div class="dm-card-header"><span class="dm-card-title">Distribuição Invest.</span></div>
+                    <div style="position:relative;height:130px"><canvas id="chart-pizza"></canvas></div>
+                    <div id="leg-pizza" class="dm-legend"></div>
+                  </div>
+                </div>
+
+                <!-- ═══ ROW 5: BARRAS + ROI ═══ -->
+                <div class="dm-charts-row2">
+                  <div class="dm-card dm-card-linha">
+                    <div class="dm-card-header">
+                      <span class="dm-card-title">CPM · CPC · CTR por Campanha</span>
+                      <div class="dm-metric-btns">
+                        <button onclick="DS.setMetricBarras('cpm',this)" class="dm-metric-btn active">CPM</button>
+                        <button onclick="DS.setMetricBarras('cpc',this)" class="dm-metric-btn">CPC</button>
+                        <button onclick="DS.setMetricBarras('ctr',this)" class="dm-metric-btn">CTR</button>
+                      </div>
+                    </div>
+                    <div style="height:160px;position:relative"><canvas id="chart-barras"></canvas></div>
+                  </div>
+                  <div class="dm-card dm-card-pizza">
+                    <div class="dm-card-header">
+                      <span class="dm-card-title">ROI por Campanha</span>
+                      <button onclick="DS.salvarROI()" class="dm-metric-btn" style="border:1px solid #e2e8f0">💾</button>
+                    </div>
+                    <div id="dash-roi-list" style="display:flex;flex-direction:column;gap:4px;max-height:140px;overflow-y:auto"></div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid #f1f5f9">
+                      <div style="background:#f8fafc;border-radius:10px;padding:10px;text-align:center">
+                        <div style="font-size:9px;color:#94a3b8;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Receita</div>
+                        <div style="font-size:16px;font-weight:800;color:#16a34a" id="dk-receita">R$ —</div>
+                      </div>
+                      <div style="background:#f8fafc;border-radius:10px;padding:10px;text-align:center">
+                        <div style="font-size:9px;color:#94a3b8;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">ROI</div>
+                        <div style="font-size:16px;font-weight:800;color:#0f172a" id="dk-roi-geral">—</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ═══ ROW 6: CRIATIVOS ═══ -->
+                <div class="dm-card" style="margin-bottom:12px">
+                  <div class="dm-card-header">
+                    <span class="dm-card-title">Criativos — clique para analisar</span>
+                  </div>
+                  <div id="dash-criativos" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;padding:4px 0">
+                    <div style="color:#94a3b8;font-size:12px;text-align:center;padding:24px;grid-column:1/-1">Carregue os dados primeiro.</div>
+                  </div>
+                </div>
+
+                <!-- ═══ HEALTH + COMPARE (colapsados) ═══ -->
+                <div id="dash-health-wrap" style="display:none;margin-bottom:12px;background:#fff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden">
+                  <div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'" style="padding:14px 18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer">
+                    <span class="dm-card-title">Score de Saúde — Campanhas</span>
+                    <span id="dash-health-overall" style="font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px;background:#f0fdf4;color:#16a34a">—</span>
+                  </div>
+                  <div id="dash-health-list" style="display:none;padding:0 18px 14px;display:flex;flex-direction:column;gap:5px"></div>
+                </div>
+
+                <div id="dash-compare-wrap" style="display:none;background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:16px 18px;margin-bottom:12px">
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+                    <span class="dm-card-title">Comparativo — período atual vs anterior</span>
+                    <span id="dash-compare-label" style="font-size:10px;color:#94a3b8"></span>
+                  </div>
+                  <div id="dash-compare-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px"></div>
+                </div>
+
+                <!-- SYNC BAR -->
+                <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:10px 16px;margin-bottom:4px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                  <span style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1px">🔄 Sync Automático</span>
+                  <span id="webhook-status" style="font-size:11px;display:flex;align-items:center;gap:5px;color:#94a3b8"><span style="width:6px;height:6px;border-radius:50%;background:#94a3b8;display:inline-block"></span>Inativo</span>
+                  <div style="margin-left:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+                    <span style="font-size:10px;color:#94a3b8" id="webhook-last-sync"></span>
+                    <button onclick="webhookSyncNow()" class="dm-metric-btn" style="border:1px solid #e2e8f0">⚡ Sincronizar agora</button>
+                    <button onclick="webhookToggleAuto()" id="webhook-auto-btn" class="dm-metric-btn" style="border:1px solid #e2e8f0">▶ Auto (5min)</button>
+                  </div>
+                </div>
+
                 <!-- Hidden compat elements -->
                 <div id="mkt-pageinfo" style="display:none"></div>
                 <div id="mkt-breakdown" style="display:none"></div>
                 <div id="mkt-ig-details" style="display:none"></div>
                 <div id="mk-wpp-info" style="display:none"></div>
                 <div id="mk-video" style="display:none"></div>
-                <!-- LINHA 2: Funil + Gauges + Gênero + Etária -->
-                <div style="display:grid;grid-template-columns:1fr 120px 120px 155px 155px;gap:10px;margin-bottom:10px">
-                  <div style="background:#ffffff;border:1px solid #e8edf4;border-radius:16px;padding:18px;box-shadow:0 2px 12px rgba(15,23,42,.06)">
-                    <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">● Funil de Tráfego</div>
-                    <div id="dash-funil"><div style="color:var(--muted);font-size:11px;text-align:center;padding:16px">Carregue os dados</div></div>
-                  </div>
-                  <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;flex-direction:column;align-items:center;justify-content:center">
-                    <div style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">ROAS</div>
-                    <canvas id="gauge-roas" width="90" height="52"></canvas>
-                    <div style="font-size:18px;font-weight:900;background:var(--grad-acc);-webkit-background-clip:text;-webkit-text-fill-color:transparent" id="gauge-roas-val">—</div>
-                    <div style="font-size:9px;color:var(--muted)">receita/invest.</div>
-                  </div>
-                  <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;flex-direction:column;align-items:center;justify-content:center">
-                    <div style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Taxa Conv.</div>
-                    <canvas id="gauge-taxa" width="90" height="52"></canvas>
-                    <div style="font-size:18px;font-weight:900;color:#34d399" id="gauge-taxa-val">—</div>
-                    <div style="font-size:9px;color:var(--muted)">cliques→leads</div>
-                  </div>
-                  <div style="background:#ffffff;border:1px solid #e8edf4;border-radius:16px;padding:16px;box-shadow:0 2px 12px rgba(15,23,42,.06);display:flex;flex-direction:column">
-                    <div style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Gênero</div>
-                    <div style="position:relative;height:90px;flex:1"><canvas id="chart-genero"></canvas></div>
-                    <div id="leg-genero" style="display:flex;flex-direction:column;gap:2px;margin-top:6px"></div>
-                  </div>
-                  <div style="background:#ffffff;border:1px solid #e8edf4;border-radius:16px;padding:16px;box-shadow:0 2px 12px rgba(15,23,42,.06);display:flex;flex-direction:column">
-                    <div style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Faixa Etária</div>
-                    <div style="position:relative;height:90px;flex:1"><canvas id="chart-etaria"></canvas></div>
-                    <div id="leg-etaria" style="display:flex;flex-direction:column;gap:2px;margin-top:6px"></div>
-                  </div>
-                </div>
-                <!-- LINHA 3: Gráfico linha + Pizza -->
-                <div style="display:grid;grid-template-columns:1fr 210px;gap:10px;margin-bottom:10px">
-                  <div style="background:#ffffff;border:1px solid #e8edf4;border-radius:16px;padding:18px;box-shadow:0 2px 12px rgba(15,23,42,.06)">
-                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-                      <span style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px">📈 Evolução por Campanha</span>
-                      <div style="display:flex;gap:3px">
-                        <button onclick="DS.setMetricLinha('spend',this)" class="dash-filt-btn active" style="font-size:9px;padding:2px 7px">Invest.</button>
-                        <button onclick="DS.setMetricLinha('impressions',this)" class="dash-filt-btn" style="font-size:9px;padding:2px 7px">Imp.</button>
-                        <button onclick="DS.setMetricLinha('clicks',this)" class="dash-filt-btn" style="font-size:9px;padding:2px 7px">Cliques</button>
-                        <button onclick="DS.setMetricLinha('ctr',this)" class="dash-filt-btn" style="font-size:9px;padding:2px 7px">CTR</button>
-                      </div>
-                    </div>
-                    <div style="height:140px;position:relative"><canvas id="chart-linha"></canvas></div>
-                  </div>
-                  <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;display:flex;flex-direction:column">
-                    <div style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Distribuição Invest.</div>
-                    <div style="position:relative;height:120px;flex:1"><canvas id="chart-pizza"></canvas></div>
-                    <div id="leg-pizza" style="display:flex;flex-direction:column;gap:2px;margin-top:6px"></div>
-                  </div>
-                </div>
-                <!-- LINHA 4: Barras + ROI manual -->
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-                  <div style="background:#ffffff;border:1px solid #e8edf4;border-radius:16px;padding:18px;box-shadow:0 2px 12px rgba(15,23,42,.06)">
-                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-                      <span style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px">📊 CPM · CPC · CTR</span>
-                      <div style="display:flex;gap:3px">
-                        <button onclick="DS.setMetricBarras('cpm',this)" class="dash-filt-btn active" style="font-size:9px;padding:2px 7px">CPM</button>
-                        <button onclick="DS.setMetricBarras('cpc',this)" class="dash-filt-btn" style="font-size:9px;padding:2px 7px">CPC</button>
-                        <button onclick="DS.setMetricBarras('ctr',this)" class="dash-filt-btn" style="font-size:9px;padding:2px 7px">CTR</button>
-                      </div>
-                    </div>
-                    <div style="height:140px;position:relative"><canvas id="chart-barras"></canvas></div>
-                  </div>
-                  <div style="background:#ffffff;border:1px solid #e8edf4;border-radius:16px;padding:18px;box-shadow:0 2px 12px rgba(15,23,42,.06)">
-                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-                      <span style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px">💰 ROI por Campanha</span>
-                      <button onclick="DS.salvarROI()" class="dash-filt-btn" style="font-size:9px;padding:2px 7px;border:1px solid var(--border)">💾</button>
-                    </div>
-                    <div id="dash-roi-list" style="max-height:140px;overflow-y:auto;display:flex;flex-direction:column;gap:4px"></div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
-                      <div style="text-align:center;background:var(--surface2);border-radius:7px;padding:8px"><div style="font-size:9px;color:var(--muted);margin-bottom:3px">RECEITA</div><div style="font-size:14px;font-weight:800;color:var(--success)" id="dk-receita">R$ —</div></div>
-                      <div style="text-align:center;background:var(--surface2);border-radius:7px;padding:8px"><div style="font-size:9px;color:var(--muted);margin-bottom:3px">ROI</div><div style="font-size:14px;font-weight:800" id="dk-roi-geral">—</div></div>
-                    </div>
-                  </div>
-                </div>
-                <!-- LINHA 5: Criativos -->
-                <div style="background:#ffffff;border:1px solid #e8edf4;border-radius:16px;padding:18px;margin-bottom:12px;box-shadow:0 2px 12px rgba(15,23,42,.06)">
-                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-                    <span style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px">🎨 Criativos — clique para analisar</span>
-                    <span style="font-size:10px;color:var(--muted)" id="dash-criat-info">Carregando após campanhas...</span>
-                  </div>
-                  <div id="dash-criativos" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px">
-                    <div style="color:var(--muted);font-size:11px;text-align:center;padding:20px;grid-column:1/-1">Carregue os dados primeiro.</div>
-                  </div>
-                </div>
-                <!-- ── SCORE DE SAÚDE — colapsado por padrão ── -->
-                <div id="dash-health-wrap" style="background:#ffffff;border:1px solid #e8edf4;border-radius:16px;margin-bottom:12px;display:none;overflow:hidden;box-shadow:0 2px 12px rgba(15,23,42,.06)">
-                  <div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.querySelector('.health-arrow').textContent=this.nextElementSibling.style.display==='none'?'▼':'▲'"
-                    style="padding:10px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none">
-                    <span style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px">🩺 Score de Saúde — Campanhas</span>
-                    <div style="display:flex;align-items:center;gap:8px">
-                      <span id="dash-health-overall" style="font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px;background:rgba(16,185,129,.15);color:var(--success)">—</span>
-                      <span class="health-arrow" style="font-size:10px;color:var(--muted)">▼</span>
-                    </div>
-                  </div>
-                  <div id="dash-health-list" style="display:none;padding:0 14px 12px;display:flex;flex-direction:column;gap:5px"></div>
-                </div>
-
-                <!-- ── COMPARATIVO DE PERÍODOS ── -->
-                <div id="dash-compare-wrap" style="background:#ffffff;border:1px solid #e8edf4;border-radius:16px;padding:16px 18px;margin-bottom:12px;display:none;box-shadow:0 2px 12px rgba(15,23,42,.06)">
-                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-                    <span style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px">📅 Comparativo — Período atual vs anterior</span>
-                    <span id="dash-compare-label" style="font-size:10px;color:var(--muted)"></span>
-                  </div>
-                  <div id="dash-compare-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px"></div>
-                </div>
-
-                <!-- ── WEBHOOK STATUS ── -->
-                <div style="background:#f8fafc;border:1px solid #e8edf4;border-radius:12px;padding:10px 16px;margin-bottom:4px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-                  <span style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px">🔄 Sync Automático</span>
-                  <span id="webhook-status" style="font-size:11px;display:flex;align-items:center;gap:5px;color:var(--muted)"><span style="width:6px;height:6px;border-radius:50%;background:var(--muted);display:inline-block"></span>Inativo</span>
-                  <div style="margin-left:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-                    <span style="font-size:10px;color:var(--muted)" id="webhook-last-sync"></span>
-                    <button onclick="webhookSyncNow()" class="dash-filt-btn" style="border:1px solid var(--border);font-size:10px;padding:3px 10px">⚡ Sincronizar agora</button>
-                    <button onclick="webhookToggleAuto()" id="webhook-auto-btn" class="dash-filt-btn" style="border:1px solid var(--border);font-size:10px;padding:3px 10px">▶ Auto (5min)</button>
-                  </div>
-                </div>
-                <!-- Hidden compat -->
                 <select id="mkt-period" style="display:none"><option value="week">7d</option><option value="days_28">28d</option></select>
                 <div id="mkt-api-error" style="display:none"></div>
               </div>
@@ -4617,17 +4656,17 @@ const DS = {
     const leads=camps.reduce((s,c)=>s+c.leads,0);
     if(!impr){el.innerHTML='<div style="color:var(--muted);font-size:11px;text-align:center;padding:16px">Sem dados no período</div>';return;}
     const steps=[
-      {l:'Impressões',v:impr,pct:100,c:'#2563eb'},
-      {l:'Cliques',v:clk,pct:impr>0?+(clk/impr*100).toFixed(2):0,c:'#8b5cf6'},
-      {l:'Leads',v:leads,pct:clk>0?+(leads/clk*100).toFixed(2):0,c:'#059669'}
+      {l:'Impressões',v:impr,pct:100,c:'#0f172a'},
+      {l:'Cliques',v:clk,pct:impr>0?+(clk/impr*100).toFixed(2):0,c:'#1e40af'},
+      {l:'Leads',v:leads,pct:clk>0?+(leads/clk*100).toFixed(2):0,c:'#16a34a'}
     ];
-    el.innerHTML=steps.map((s,i)=>`<div style="margin-bottom:8px">
-      <div style="display:flex;justify-content:space-between;margin-bottom:3px;font-size:10px">
-        <span style="color:var(--muted)">${s.l}</span>
-        <span style="font-weight:700">${mktFmt(s.v)} <span style="color:${s.c};font-size:9px">${i>0?'('+s.pct+'%)':''}</span></span>
+    el.innerHTML=steps.map((s,i)=>`<div style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:5px;font-size:10px">
+        <span style="color:#64748b;font-weight:600">${s.l}</span>
+        <span style="font-weight:800;color:#0f172a">${mktFmt(s.v)} <span style="color:${s.c};font-size:9px">${i>0?'('+s.pct+'%)':''}</span></span>
       </div>
-      <div style="height:22px;background:var(--surface2);border-radius:5px;overflow:hidden">
-        <div style="height:100%;width:${Math.max(2,i===0?100:Math.min(s.pct*15,100))}%;background:${s.c};border-radius:5px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;transition:width .8s">
+      <div style="height:24px;background:#f1f5f9;border-radius:8px;overflow:hidden">
+        <div style="height:100%;width:${Math.max(3,i===0?100:Math.min(s.pct*15,100))}%;background:${s.c};border-radius:8px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;transition:width .8s ease">
           <span style="font-size:9px;font-weight:700;color:#fff">${s.pct}%</span>
         </div>
       </div>
