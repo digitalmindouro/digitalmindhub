@@ -221,8 +221,23 @@ tbody tr:hover { background: #fafafb !important; }
 .admin-client-card { background: #fff !important; border: none !important; box-shadow: 0 1px 3px rgba(0,0,0,.04) !important; }
 .adm-card-title { color: #1b1b21 !important; }
 .adm-icon { background: #f4f4f5 !important; }
-.dash-kpi-card { background: #fff !important; border: none !important; box-shadow: 0 1px 3px rgba(0,0,0,.04) !important; }
-.dash-filt-btn.active { background: #fff !important; color: #1b1b21 !important; }
+.dash-kpi-card {
+  background: #ffffff !important;
+  border: 1px solid #e8edf4 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 2px 12px rgba(15,23,42,.07), 0 1px 3px rgba(15,23,42,.04) !important;
+  transition: transform .2s, box-shadow .2s !important;
+}
+.dash-kpi-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 24px rgba(15,23,42,.12) !important;
+}
+.dkc-label { font-size: 9px !important; color: #94a3b8 !important; letter-spacing: 1px !important; font-weight: 600 !important; }
+.dkc-val { font-size: 22px !important; font-weight: 800 !important; color: #0f172a !important; font-family: 'Syne', sans-serif !important; }
+.dkc-sub { font-size: 10px !important; color: #94a3b8 !important; }
+.dash-filt-btn { color: #64748b !important; font-weight: 500 !important; border-radius: 8px !important; }
+.dash-filt-btn:hover { background: #f1f5f9 !important; color: #0f172a !important; }
+.dash-filt-btn.active { background: #0f172a !important; color: #ffffff !important; font-weight: 700 !important; box-shadow: 0 2px 8px rgba(15,23,42,.25) !important; }
 .onboard-card { background: #fff !important; border: 1px solid #ebebed !important; }
 .onboard-title { font-family: 'Outfit', sans-serif !important; color: #1b1b21 !important; }
 .pillar-card .pillar-icon { background: #f4f4f5 !important; color: #1b1b21 !important; }
@@ -265,3 +280,78 @@ tbody tr:hover { background: #fafafb !important; }
 /* FIX: Painel Dados dos 6Ps — texto invisível */
 #sixps-dados-content { color: var(--text) !important; }
 
+
+
+/* ═══ DASHBOARD MARKETING PREMIUM ═══ */
+/* Seções de gráficos — fundo branco com sombra */
+#mkt-panel-campanhas > div > div[style*="background:var(--surface)"],
+#mkt-panel-campanhas > div[style*="background:var(--surface)"] {
+  background: #ffffff !important;
+  border: 1px solid #e8edf4 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 2px 12px rgba(15,23,42,.06) !important;
+}
+
+/* Barra de filtros */
+#mkt-panel-campanhas > div:first-child {
+  background: #ffffff !important;
+  border: 1px solid #e8edf4 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 2px 8px rgba(15,23,42,.05) !important;
+}
+
+/* Seções dos gráficos dentro do panel */
+#mkt-panel-campanhas .dash-section,
+#dash-health-wrap,
+#dash-compare-wrap {
+  background: #ffffff !important;
+  border: 1px solid #e8edf4 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 2px 12px rgba(15,23,42,.06) !important;
+}
+
+/* Funil de tráfego e gauge cards */
+#dash-funil,
+#mkt-panel-campanhas canvas {
+  background: transparent !important;
+}
+
+/* Títulos de seção */
+#mkt-panel-campanhas [style*="text-transform:uppercase"],
+#mkt-panel-campanhas [style*="text-transform: uppercase"] {
+  color: #475569 !important;
+}
+
+/* Linha de grade nos gráficos Chart.js */
+#mkt-panel-campanhas .chart-container {
+  background: #ffffff !important;
+}
+
+/* Cards de gráfico individuais que usam inline style var(--surface) */
+#mkt-panel-campanhas div[style*="var(--surface)"] {
+  background: #ffffff !important;
+  border-color: #e8edf4 !important;
+}
+
+/* Sync bar */
+#mkt-panel-campanhas div[style*="Sync"] {
+  background: #f8fafc !important;
+}
+
+/* Score de saúde e comparativo */
+#dash-health-list,
+#dash-compare-grid {
+  background: #ffffff !important;
+}
+
+/* Gauge valores */
+#gauge-roas-val { color: #1e40af !important; -webkit-text-fill-color: #1e40af !important; }
+#gauge-taxa-val { color: #16a34a !important; }
+
+/* ROI cards internos */
+#dash-roi-list div[style*="surface2"],
+#mkt-panel-campanhas div[style*="var(--surface2)"] {
+  background: #f8fafc !important;
+  border: 1px solid #e8edf4 !important;
+  border-radius: 8px !important;
+}
