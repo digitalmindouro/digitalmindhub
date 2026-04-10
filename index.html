@@ -3991,6 +3991,27 @@ function mktSaveConfig(){
   DS.carregar();
 }
 
+async function dmCarregarListaCampanhas() {
+  // Carrega APENAS nomes das campanhas — sem insights, rápido
+  const adsToken = MKT.config.adsToken || MKT.config.token;
+  if(!adsToken || !MKT.config.adAccount) return;
+  const lbl = document.getElementById('dm-camp-label');
+  if(lbl) lbl.textContent = '⏳ Carregando...';
+  try {
+    const res = await metaGet('/'+MKT.config.adAccount+'/campaigns', {
+      fields: 'id,name,status', limit: 100
+    }, adsToken);
+    const camps = (res.data||[]).filter(c=>c.status!=='DELETED');
+    DM_CAMPS_TODAS = camps.map(c=>({id:c.id, name:c.name}));
+    dmPopularCampMenu(DM_CAMPS_TODAS);
+    if(lbl) lbl.textContent = camps.length > 0 ? 'Todas as campanhas' : 'Sem campanhas';
+    console.log(`✅ ${camps.length} campanhas no menu`);
+  } catch(e) {
+    console.log('dmCarregarListaCampanhas:', e.message);
+    if(lbl) lbl.textContent = 'Todas as campanhas';
+  }
+}
+
 async function carregarContasDaBM() {
   const sel = document.getElementById('dash-adacc-sel');
   if(!sel) return;
@@ -4046,7 +4067,7 @@ async function carregarContasDaBM() {
 
     console.log(`✅ ${contas.length} contas carregadas`);
     // Auto-carrega campanhas da conta selecionada
-    setTimeout(()=>DS._carregarListaCampanhas(), 200);
+    setTimeout(()=>dmCarregarListaCampanhas(), 200);
   } catch(e) {
     console.log('Erro ao carregar contas:', e.message);
     sel.innerHTML = `<option value="${MKT.config.adAccount}">${MKT.config.adAccount}</option>`;
@@ -4642,16 +4663,30 @@ const DS = {
         return;
       }
 
-      // Busca ads das campanhas selecionadas
+      // Busca ads das campanhas selecionadas (com timeout de 8s por campanha)
+      const el2 = document.getElementById('dash-criativos');
+      if(el2) el2.innerHTML = '<div style="color:#94a3b8;font-size:12px;text-align:center;padding:24px;grid-column:1/-1">⏳ Carregando anúncios...</div>';
       let allAds = [];
+      const fetchWithTimeout = (url, params, token, ms=8000) => {
+        return Promise.race([
+          metaGet(url, params, token),
+          new Promise((_,reject) => setTimeout(()=>reject(new Error('timeout')), ms))
+        ]);
+      };
       for(const campId of campIds.slice(0,5)) {
         try {
-          const r = await metaGet('/'+campId+'/ads',{
+          const r = await fetchWithTimeout('/'+campId+'/ads',{
             fields:'id,name,status,campaign_id,creative{id,name,thumbnail_url,object_story_spec}',
             limit:50
           },adsToken);
           allAds = allAds.concat((r.data||[]).filter(a=>a.status!=='DELETED'));
-        } catch(e) {}
+        } catch(e) { console.log('ads campanha erro:', e.message); }
+      }
+      if(!allAds.length) {
+        const el3 = document.getElementById('dash-criativos');
+        if(el3) el3.innerHTML = '<div style="color:#94a3b8;font-size:12px;text-align:center;padding:24px;grid-column:1/-1">Nenhum anúncio encontrado para esta campanha.</div>';
+        this.anuncios = [];
+        return;
       }
       const res = { data: allAds };
       const ads=(res.data||[]).filter(a=>a.status!=='DELETED');
@@ -5060,10 +5095,10 @@ const DS = {
     if(!v) return;
     MKT.config.adAccount = v;
     this.filtro = '';
-    this.filtroId = '';
-    const campSel = document.getElementById('dash-camp-sel');
-    if(campSel) campSel.innerHTML = '<option value="">Todas as campanhas</option>';
-    this.carregar();
+    this.filtroIds = [];
+    DM_CAMPS_SELECIONADAS.clear();
+    if(typeof dmAtualizarLabelCamp === 'function') dmAtualizarLabelCamp();
+    if(typeof dmCarregarListaCampanhas === 'function') dmCarregarListaCampanhas();
   }
 };
 
