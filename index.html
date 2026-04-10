@@ -7001,6 +7001,11 @@ async function abrirP(modulo){
     window._nivel2Ativo = true;
     document.getElementById('sixps-nivel2').style.display = 'none';
   }
+  // Sempre reabilitar input ao abrir qualquer P
+  const inpP = document.getElementById('sixps-msg');
+  if(inpP) { inpP.disabled = false; inpP.placeholder = 'Responda aqui...'; }
+  const sendP = document.getElementById('send-sixps');
+  if(sendP) sendP.disabled = false;
   SP.moduloAtivo=modulo;const cfg=SIXPS_CONFIG[modulo];
   document.getElementById('sixps-home').style.display='none';document.getElementById('sixps-modulo').style.display='block';
   document.getElementById('sixps-modulo-titulo').textContent=cfg.titulo;document.getElementById('sixps-modulo-sub').textContent=cfg.sub;
@@ -7279,7 +7284,18 @@ function buildSixpsContext(modulo) {
     ? `Persona: ${MZ.p5_persona_nome||'—'} — ${MZ.p5_persona_perfil||'—'}\nDor central: ${MZ.p5_dor_central||'—'}\nProposta de valor: ${MZ.p5_proposta_valor||'—'}\nDiferencial: ${MZ.p5_diferencial||'—'}\nCanais: ${MZ.p5_canais||'—'}`
     : (SP.dados.p5_resumo ? SP.dados.p5_resumo.slice(0,1200) : 'Ainda não mapeado');
 
-  return SIXPS_CONFIG[modulo].systemPrompt
+  const sinalConclusao = SIXPS_CONFIG[modulo]?.conclusaoSinal || ('✅ '+modulo.toUpperCase()+' concluído');
+  const regraFechamento = `
+
+REGRA CRÍTICA — FECHAMENTO DO MÓDULO:
+Quando este módulo estiver 100% completo, sua ÚLTIMA mensagem deve:
+1. Trazer o resumo final estruturado
+2. Terminar EXATAMENTE com: ${sinalConclusao}
+3. NÃO fazer perguntas do próximo módulo
+4. NÃO mencionar P${parseInt(modulo.replace('p',''))+1} na mesma mensagem
+O sistema detecta esse sinal e fecha o módulo automaticamente.`;
+
+  return (SIXPS_CONFIG[modulo].systemPrompt + regraFechamento)
     .replace('{CONTEXTO}', base)
     .replace('{P1}', p1)
     .replace('{P2}', p2)
@@ -7327,14 +7343,16 @@ async function iniciarAgenteSixps(modulo){
     SP.dados[modulo+'_resumo'] = reply;
     if(reply.length > 200) extrairEAtualizarMatriz(modulo, reply).catch(()=>{});
     try{await sb.from('sixps_progresso').update({[modulo+'_status']:'em_andamento'}).eq('user_id',S.user.id);}catch(e2){}
-    // Detecta sinal de conclusão também na abertura (ex: P6 já chega com análise completa)
-    const sinalInicial = SIXPS_CONFIG[modulo]?.conclusaoSinal||'';
-    if(sinalInicial && reply.includes(sinalInicial)) {
+    // Detecta sinal de conclusão na abertura
+    const cfgI = SIXPS_CONFIG[modulo] || {};
+    const modUp = modulo.toUpperCase();
+    const sinaisI = [cfgI.conclusaoSinal, '✅ '+modUp+' CONCLUÍDO', modUp+' JÁ FOI CONCLUÍDO',
+      modUp+' CONCLUÍDO', modUp+' concluído', '## ✅ '+modUp].filter(Boolean);
+    if(sinaisI.some(s => reply.includes(s))) {
       const statusEl = document.getElementById('sixps-status-label');
       if(statusEl) { statusEl.textContent='✅ Concluindo...'; statusEl.style.color='var(--success)'; statusEl.style.borderColor='var(--success)'; }
-      setTimeout(()=>concluirP(SP.moduloAtivo), 2000);
+      setTimeout(()=>concluirP(SP.moduloAtivo), 1200);
     } else {
-      // Mostra botão manual de conclusão
       mostrarBotaoConcluir(modulo);
     }
   } catch(e){document.getElementById(lid)?.remove();appendSixpsMsg('agent','❌ Erro: '+e.message);}
@@ -7374,11 +7392,28 @@ async function sendSixpsMsg(){
     const el=document.getElementById('sixps-dados-content');
     if(el){const resumo=SP.conversas[modulo].filter(c=>c.role==='assistant').slice(-1)[0]?.content||'';if(resumo.length>50)el.innerHTML=resumo.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');}
     // ── Detecção automática de conclusão ──
-    const sinal = cfg.conclusaoSinal||'';
-    if(sinal && reply.includes(sinal)) {
+    const moduloUp = modulo.toUpperCase(); // P1, P2...
+    const nomeP = cfg.titulo?.split('—')[0]?.trim() || moduloUp; // "P1 "
+    // Detecta qualquer variação de conclusão do agente
+    const sinais = [
+      cfg.conclusaoSinal,          // '✅ P1 concluído'
+      '✅ '+moduloUp+' CONCLUÍDO', // '✅ P1 CONCLUÍDO'
+      moduloUp+' JÁ FOI CONCLUÍDO',// 'P1 JÁ FOI CONCLUÍDO'
+      moduloUp+' CONCLUÍDO',       // 'P1 CONCLUÍDO'
+      moduloUp+' concluído',       // 'P1 concluído'
+      '## ✅ '+moduloUp,           // '## ✅ P1'
+    ].filter(Boolean);
+    const concluiuAgora = sinais.some(s => reply.includes(s));
+    if(concluiuAgora) {
       const statusEl = document.getElementById('sixps-status-label');
       if(statusEl) { statusEl.textContent='✅ Concluindo...'; statusEl.style.color='var(--success)'; statusEl.style.borderColor='var(--success)'; }
-      setTimeout(()=>concluirP(SP.moduloAtivo), 2000);
+      // Bloquear input para não receber mais mensagens deste módulo
+      const inp = document.getElementById('sixps-msg');
+      if(inp) { inp.disabled = true; inp.placeholder = 'Módulo concluído...'; }
+      const sendBtn = document.getElementById('send-sixps');
+      if(sendBtn) sendBtn.disabled = true;
+      setTimeout(()=>concluirP(SP.moduloAtivo), 1200);
+      return; // Para processamento — não mostra botão de concluir
     } else {
       mostrarBotaoConcluir(modulo);
     }
@@ -7406,6 +7441,12 @@ async function concluirP(moduloForce){
   // ── INTEGRAÇÃO ENTRE PILARES ──
   await sincronizarPilarComEcossistema(modulo);
 
+  // Reabilitar input para próximo uso
+  const inp = document.getElementById('sixps-msg');
+  if(inp) { inp.disabled = false; inp.placeholder = 'Responda aqui...'; }
+  const sendBtnFin = document.getElementById('send-sixps');
+  if(sendBtnFin) sendBtnFin.disabled = false;
+  
   // Verifica se estava no nível 2 e volta para lá
   const estavaNivel2 = document.getElementById('sixps-nivel2')?.style?.display === 'block' ||
     document.getElementById('sixps-nivel2')?.getAttribute('data-was-open') === '1';
