@@ -655,3 +655,90 @@ tbody tr:hover { background: #fafafb !important; }
   background: none !important;
   -webkit-background-clip: unset !important;
 }
+
+
+/* ══ Multi-select campanhas ══ */
+.dm-multisel-btn {
+  display: flex;
+  align-items: center;
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 500;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  color: #374151;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all .15s;
+  white-space: nowrap;
+  max-width: 220px;
+}
+.dm-multisel-btn:hover { background: #f1f5f9; border-color: #cbd5e1; }
+#dm-camp-list::-webkit-scrollbar { width: 4px; }
+#dm-camp-list::-webkit-scrollbar-track { background: transparent; }
+#dm-camp-list::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 2px; }
+
+/* ══ Criativos como seletor ══ */
+.dm-criat-selector { }
+.dm-criativo-card {
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all .2s;
+}
+.dm-criativo-card:hover {
+  border-color: #1e40af !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 16px rgba(30,64,175,.1) !important;
+}
+.dm-criativo-card.selecionado {
+  border-color: #1e40af !important;
+  box-shadow: 0 0 0 3px #bfdbfe !important;
+}
+
+/* Thumbnail do criativo */
+.dm-criativo-card img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  display: block;
+}
+.dm-criativo-info {
+  padding: 10px;
+  background: #fff;
+}
+.dm-criativo-nome {
+  font-size: 11px;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dm-criativo-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+}
+.dm-criativo-metric {
+  text-align: center;
+  background: #f8fafc;
+  border-radius: 6px;
+  padding: 4px;
+}
+.dm-criativo-metric-val {
+  font-size: 11px;
+  font-weight: 700;
+  color: #0f172a;
+  font-family: 'Syne', sans-serif;
+}
+.dm-criativo-metric-label {
+  font-size: 8px;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}

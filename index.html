@@ -1379,9 +1379,21 @@
                   <select id="dash-adacc-sel" onchange="DS.setAdAccount(this.value)" class="dm-select">
                     <option value="">⏳ Carregando contas...</option>
                   </select>
-                  <select id="dash-camp-sel" onchange="DS.setFiltro(this.value)" class="dm-select dm-select-wide">
-                    <option value="">Todas as campanhas</option>
-                  </select>
+                  <!-- Multi-select de campanhas -->
+                  <div id="dm-camp-dropdown" style="position:relative">
+                    <button onclick="dmToggleCampMenu()" id="dm-camp-btn" class="dm-multisel-btn">
+                      <span id="dm-camp-label">Todas as campanhas</span>
+                      <span style="color:#94a3b8;font-size:10px;margin-left:6px">▾</span>
+                    </button>
+                    <div id="dm-camp-menu" style="display:none;position:absolute;top:calc(100% + 6px);left:0;width:280px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 8px 24px rgba(15,23,42,.12);z-index:200;max-height:320px;overflow-y:auto">
+                      <div style="padding:10px 14px;border-bottom:1px solid #f1f5f9;display:flex;gap:8px">
+                        <button onclick="dmSelectAllCamps()" style="font-size:10px;font-weight:600;color:#1e40af;background:none;border:none;cursor:pointer;font-family:inherit">Todas</button>
+                        <button onclick="dmClearCamps()" style="font-size:10px;font-weight:600;color:#94a3b8;background:none;border:none;cursor:pointer;font-family:inherit">Limpar</button>
+                        <input id="dm-camp-search" placeholder="Buscar..." onkeyup="dmFilterCampMenu(this.value)" style="flex:1;font-size:11px;border:1px solid #e2e8f0;border-radius:6px;padding:3px 8px;outline:none;font-family:inherit">
+                      </div>
+                      <div id="dm-camp-list" style="padding:6px"></div>
+                    </div>
+                  </div>
                   <button onclick="DS.carregar()" class="dm-load-btn">↻ Carregar</button>
                   <span id="dash-last-update" class="dm-last-update"></span>
                   <span id="dash-criat-info" style="display:none"></span>
@@ -1423,6 +1435,23 @@
                     <div class="dm-kpi-label" style="color:rgba(255,255,255,.7)">ROAS</div>
                     <div class="dm-kpi-val" id="dk-roas" style="color:#fff">—</div>
                     <div class="dm-kpi-sub" style="color:rgba(255,255,255,.6)">retorno</div>
+                  </div>
+                </div>
+
+                <!-- ═══ CRIATIVOS — seletor visual de anúncios ═══ -->
+                <div class="dm-card dm-criat-selector" style="margin-bottom:16px">
+                  <div class="dm-card-header">
+                    <div>
+                      <span class="dm-card-title">Anúncios ativos</span>
+                      <span id="dm-criat-subtitle" style="font-size:10px;color:#94a3b8;margin-left:8px">selecione para analisar</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <span id="dm-criat-filtro-badge" style="display:none;font-size:10px;font-weight:600;background:#eff6ff;color:#1e40af;padding:2px 10px;border-radius:20px;border:1px solid #bfdbfe"></span>
+                      <button id="dm-criat-clear" onclick="dmClearCreativeFilter()" style="display:none;font-size:10px;color:#94a3b8;background:none;border:none;cursor:pointer">✕ Ver todos</button>
+                    </div>
+                  </div>
+                  <div id="dash-criativos" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;min-height:60px">
+                    <div style="color:#94a3b8;font-size:12px;text-align:center;padding:24px;grid-column:1/-1">Carregue os dados para ver os anúncios.</div>
                   </div>
                 </div>
 
@@ -1571,15 +1600,7 @@
                   </div>
                 </div>
 
-                <!-- ═══ ROW 6: CRIATIVOS ═══ -->
-                <div class="dm-card" style="margin-bottom:12px">
-                  <div class="dm-card-header">
-                    <span class="dm-card-title">Criativos — clique para analisar</span>
-                  </div>
-                  <div id="dash-criativos" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;padding:4px 0">
-                    <div style="color:#94a3b8;font-size:12px;text-align:center;padding:24px;grid-column:1/-1">Carregue os dados primeiro.</div>
-                  </div>
-                </div>
+
 
                 <!-- ═══ HEALTH + COMPARE (colapsados) ═══ -->
                 <div id="dash-health-wrap" style="display:none;margin-bottom:12px;background:#fff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden">
@@ -2631,6 +2652,120 @@ async function handleAuth() {
 
 function showMsg(t,c){const el=document.getElementById('auth-msg');el.textContent=t;el.className='auth-msg '+c;el.style.display='block';}
 async function logout(){await sb.auth.signOut();S.user=null;S.empresa=null;S.conversas=[];}
+
+// ══ MULTI-SELECT DE CAMPANHAS ══
+let DM_CAMPS_SELECIONADAS = new Set(); // ids selecionados
+let DM_CAMPS_TODAS = []; // [{id,name}]
+
+function dmToggleCampMenu() {
+  const menu = document.getElementById('dm-camp-menu');
+  if(!menu) return;
+  const aberto = menu.style.display !== 'none';
+  menu.style.display = aberto ? 'none' : 'block';
+  if(!aberto) document.getElementById('dm-camp-search')?.focus();
+}
+
+// Fechar ao clicar fora
+document.addEventListener('click', e => {
+  const wrap = document.getElementById('dm-camp-dropdown');
+  if(wrap && !wrap.contains(e.target)) {
+    const menu = document.getElementById('dm-camp-menu');
+    if(menu) menu.style.display = 'none';
+  }
+});
+
+function dmPopularCampMenu(camps) {
+  DM_CAMPS_TODAS = camps;
+  const list = document.getElementById('dm-camp-list');
+  if(!list) return;
+  list.innerHTML = camps.map(c => `
+    <label style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;cursor:pointer;font-size:12px;color:#374151;transition:background .1s" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+      <input type="checkbox" value="${c.id}" onchange="dmToggleCamp(this)" ${DM_CAMPS_SELECIONADAS.has(c.id)?'checked':''} style="accent-color:#0f172a;width:14px;height:14px;flex-shrink:0">
+      <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.name.replace(/\[.*?\]\s*/g,'')}</span>
+    </label>`).join('');
+  dmAtualizarLabelCamp();
+}
+
+function dmToggleCamp(checkbox) {
+  if(checkbox.checked) DM_CAMPS_SELECIONADAS.add(checkbox.value);
+  else DM_CAMPS_SELECIONADAS.delete(checkbox.value);
+  dmAtualizarLabelCamp();
+  DS.filtroIds = [...DM_CAMPS_SELECIONADAS];
+  DS.renderTudo();
+}
+
+function dmSelectAllCamps() {
+  DM_CAMPS_SELECIONADAS.clear();
+  document.querySelectorAll('#dm-camp-list input[type=checkbox]').forEach(cb => { cb.checked = false; });
+  dmAtualizarLabelCamp();
+  DS.filtroIds = [];
+  DS.renderTudo();
+}
+
+function dmClearCamps() {
+  DM_CAMPS_SELECIONADAS.clear();
+  document.querySelectorAll('#dm-camp-list input[type=checkbox]').forEach(cb => cb.checked = false);
+  dmAtualizarLabelCamp();
+  DS.filtroIds = [];
+  DS.renderTudo();
+}
+
+function dmFilterCampMenu(q) {
+  const lq = q.toLowerCase();
+  document.querySelectorAll('#dm-camp-list label').forEach(label => {
+    label.style.display = label.textContent.toLowerCase().includes(lq) ? 'flex' : 'none';
+  });
+}
+
+function dmAtualizarLabelCamp() {
+  const btn = document.getElementById('dm-camp-label');
+  if(!btn) return;
+  const n = DM_CAMPS_SELECIONADAS.size;
+  btn.textContent = n === 0 ? 'Todas as campanhas' : n === 1
+    ? DM_CAMPS_TODAS.find(c => DM_CAMPS_SELECIONADAS.has(c.id))?.name.replace(/\[.*?\]\s*/g,'').slice(0,24) || '1 campanha'
+    : n + ' campanhas selecionadas';
+}
+
+// ══ CRIATIVOS COMO SELETOR ══
+let DM_CRIATIVO_FILTRO = null; // id do criativo/anúncio selecionado
+
+function dmSelecionarCriativo(adId, nome) {
+  if(DM_CRIATIVO_FILTRO === adId) {
+    DM_CRIATIVO_FILTRO = null;
+  } else {
+    DM_CRIATIVO_FILTRO = adId;
+  }
+  // Atualizar visual dos criativos
+  document.querySelectorAll('.dm-criativo-card').forEach(card => {
+    const selecionado = card.dataset.adId === DM_CRIATIVO_FILTRO;
+    card.style.borderColor = selecionado ? '#1e40af' : '#e2e8f0';
+    card.style.boxShadow = selecionado ? '0 0 0 2px #bfdbfe' : 'none';
+    card.style.transform = selecionado ? 'translateY(-2px)' : '';
+  });
+  // Badge e botão limpar
+  const badge = document.getElementById('dm-criat-filtro-badge');
+  const clearBtn = document.getElementById('dm-criat-clear');
+  if(badge) { badge.textContent = DM_CRIATIVO_FILTRO ? nome.slice(0,30) : ''; badge.style.display = DM_CRIATIVO_FILTRO ? 'block' : 'none'; }
+  if(clearBtn) clearBtn.style.display = DM_CRIATIVO_FILTRO ? 'block' : 'none';
+  // Filtrar dados pelo anúncio selecionado
+  DS.filtroAdId = DM_CRIATIVO_FILTRO;
+  DS.renderTudo();
+}
+
+function dmClearCreativeFilter() {
+  DM_CRIATIVO_FILTRO = null;
+  DS.filtroAdId = null;
+  document.querySelectorAll('.dm-criativo-card').forEach(card => {
+    card.style.borderColor = '#e2e8f0';
+    card.style.boxShadow = 'none';
+    card.style.transform = '';
+  });
+  const badge = document.getElementById('dm-criat-filtro-badge');
+  const clearBtn = document.getElementById('dm-criat-clear');
+  if(badge) badge.style.display = 'none';
+  if(clearBtn) clearBtn.style.display = 'none';
+  DS.renderTudo();
+}
 
 // ══════════════════════════════════════════════════════════
 // ENGINE DE TAREFAS DO DIA — baseado nos KPIs reais do P6
@@ -4290,11 +4425,13 @@ let ADS_DATE_TO = null;
 // ═══════════════════════════════════════════
 const DS = {
   // Estado
-  preset: 'maximum',   // "Tudo" = maximum na API Meta
+  preset: 'maximum',
   dateFrom: null,
   dateTo: null,
-  filtro: '',          // id da campanha ou '' para todas
-  campanhas: [],       // [{id,name,status,spend,reach,impressions,clicks,cpm,cpc,ctr,leads}]
+  filtro: '',          // legado — id único (mantido por compatibilidade)
+  filtroIds: [],       // NOVO: array de ids selecionados (multi-select)
+  filtroAdId: null,    // NOVO: id de anúncio/criativo selecionado
+  campanhas: [],
   anuncios: [],        // [{id,name,campaign_id,creative,spend,impressions,clicks,ctr,cpm,cpc,leads}]
   roi: {},             // {[campId]: {vendas, ticket}}
   metricLinha: 'spend',
@@ -4585,7 +4722,12 @@ const DS = {
 
   // ── Render tudo com filtro aplicado ───────
   renderTudo() {
-    const camps=this.filtro?this.campanhas.filter(c=>c.id===this.filtro):this.campanhas;
+    // Multi-select: filtroIds tem prioridade sobre filtro legado
+    const camps = this.filtroIds && this.filtroIds.length > 0
+      ? this.campanhas.filter(c => this.filtroIds.includes(c.id))
+      : this.filtro
+        ? this.campanhas.filter(c => c.id === this.filtro)
+        : this.campanhas;
     this.renderKPIs(camps);
     this.renderFunil(camps);
     this.renderGauges(camps);
@@ -4697,7 +4839,12 @@ const DS = {
 
   renderLinha() {
     const ctx=document.getElementById('chart-linha'); if(!ctx)return;
-    const camps=this.filtro?this.campanhas.filter(c=>c.id===this.filtro):this.campanhas;
+    // Multi-select: filtroIds tem prioridade sobre filtro legado
+    const camps = this.filtroIds && this.filtroIds.length > 0
+      ? this.campanhas.filter(c => this.filtroIds.includes(c.id))
+      : this.filtro
+        ? this.campanhas.filter(c => c.id === this.filtro)
+        : this.campanhas;
     const m=this.metricLinha;
     const d=camps.filter(c=>c[m]>0).slice(0,10);
     if(!d.length)return;
@@ -4719,7 +4866,12 @@ const DS = {
 
   renderBarras() {
     const ctx=document.getElementById('chart-barras'); if(!ctx)return;
-    const camps=this.filtro?this.campanhas.filter(c=>c.id===this.filtro):this.campanhas;
+    // Multi-select: filtroIds tem prioridade sobre filtro legado
+    const camps = this.filtroIds && this.filtroIds.length > 0
+      ? this.campanhas.filter(c => this.filtroIds.includes(c.id))
+      : this.filtro
+        ? this.campanhas.filter(c => c.id === this.filtro)
+        : this.campanhas;
     const m=this.metricBarras;
     const d=camps.filter(c=>c[m]>0).slice(0,8);
     if(!d.length)return;
@@ -4769,13 +4921,13 @@ const DS = {
       return;
     }
     if(info)info.textContent=ads.length+' anúncios';
-    el.innerHTML=ads.slice(0,12).map((a,i)=>{
+    el.innerHTML=ads.slice(0,16).map((a,i)=>{
       const thumb=a.creative?.thumbnail_url;
-      const nome=(a.name||'Anúncio').replace(/\[.*?\]\s*/g,'').slice(0,22);
+      const nome=(a.name||'Anúncio').replace(/\[.*?\]\s*/g,'').slice(0,24);
       const hasData=a.impressions>0||a.spend>0;
-      return `<div onclick="DS.abrirCriativo(${i})" style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer;transition:all .2s"
-        onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateY(-2px)'"
-        onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+      const selecionado = DM_CRIATIVO_FILTRO === a.id;
+      return `<div data-ad-id="${a.id}" class="dm-criativo-card" onclick="dmSelecionarCriativo('${a.id}','${nome.replace(/'/g,"'")}');DS.abrirCriativo(${i})"
+        style="background:#ffffff;border:2px solid ${selecionado?'#1e40af':'#e2e8f0'};border-radius:14px;overflow:hidden;cursor:pointer;transition:all .2s;box-shadow:${selecionado?'0 0 0 3px #bfdbfe':'none'};transform:${selecionado?'translateY(-2px)':''}">
         <div style="height:85px;background:var(--surface);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
           ${thumb?`<img src="${thumb}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.querySelector('.fallback').style.display='flex';this.style.display='none'"><div class="fallback" style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;font-size:28px">🎨</div>`:'<div style="font-size:28px">🎨</div>'}
           <div style="position:absolute;inset:0;background:linear-gradient(transparent 55%,rgba(0,0,0,.75))"></div>
