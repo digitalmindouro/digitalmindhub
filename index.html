@@ -3764,39 +3764,57 @@ async function carregarContasDaBM() {
   if(!sel) return;
   const adsToken = MKT.config.adsToken || MKT.config.token;
   if(!adsToken) {
-    sel.innerHTML = '<option value="">Configure o token primeiro</option>';
+    sel.innerHTML = '<option value="">Configure o token ADS primeiro</option>';
     return;
   }
+  sel.innerHTML = '<option value="">⏳ Buscando contas...</option>';
+
   try {
+    // Busca todas as contas do usuário — inclui contas de clientes onde é admin
+    // Pagina automaticamente para garantir que retorna todas (>25)
     let contas = [];
-    const bizId = MKT.config.bizId;
-    if(bizId) {
-      const r = await fetch(`https://graph.facebook.com/v25.0/${bizId}/owned_ad_accounts?fields=id,name,account_status&limit=50&access_token=${adsToken}`);
+    let url = `https://graph.facebook.com/v25.0/me/adaccounts?fields=id,name,account_status&limit=200&access_token=${adsToken}`;
+
+    while(url) {
+      const r = await fetch(url);
       const d = await r.json();
-      if(d.data && d.data.length > 0) contas = d.data;
+      if(d.error) { console.log('Meta API erro:', d.error.message); break; }
+      if(d.data) contas = contas.concat(d.data);
+      // Paginação — segue next se houver mais
+      url = d.paging?.next || null;
     }
+
     if(contas.length === 0) {
-      const r2 = await fetch(`https://graph.facebook.com/v25.0/me/adaccounts?fields=id,name,account_status&limit=50&access_token=${adsToken}`);
-      const d2 = await r2.json();
-      if(d2.data) contas = d2.data;
-    }
-    if(contas.length === 0) {
-      sel.innerHTML = `<option value="${MKT.config.adAccount}">${MKT.config.adAccount} (conta manual)</option>`;
+      sel.innerHTML = `<option value="${MKT.config.adAccount}">${MKT.config.adAccount} (sem contas na API)</option>`;
       return;
     }
-    const ativas = contas.filter(c => !c.account_status || c.account_status === 1 || c.account_status === 2);
-    sel.innerHTML = ativas.map(c => {
+
+    // Ordena: ativas primeiro (status=1), depois por nome
+    contas.sort((a,b) => {
+      if(a.account_status === 1 && b.account_status !== 1) return -1;
+      if(a.account_status !== 1 && b.account_status === 1) return 1;
+      return (a.name||'').localeCompare(b.name||'', 'pt-BR');
+    });
+
+    const contaAtual = MKT.config.adAccount;
+    sel.innerHTML = contas.map(c => {
       const id = c.id.startsWith('act_') ? c.id : 'act_'+c.id;
-      const selected = id === MKT.config.adAccount ? 'selected' : '';
-      const status = c.account_status === 2 ? ' ⚠️' : '';
-      return `<option value="${id}" ${selected}>${c.name || id}${status}</option>`;
+      const selected = id === contaAtual ? 'selected' : '';
+      const inativa = c.account_status !== 1 ? ' ⚠️' : '';
+      return `<option value="${id}" ${selected}>${c.name || id}${inativa}</option>`;
     }).join('');
-    if(sel.options.length > 0 && !sel.value) {
-      sel.value = sel.options[0].value;
-      MKT.config.adAccount = sel.options[0].value;
+
+    // Se conta atual não está na lista, seleciona a primeira
+    if(!sel.value || sel.value !== contaAtual) {
+      const primeira = contas[0];
+      const primeiraId = primeira.id.startsWith('act_') ? primeira.id : 'act_'+primeira.id;
+      sel.value = primeiraId;
+      MKT.config.adAccount = primeiraId;
     }
+
+    console.log(`✅ ${contas.length} contas carregadas`);
   } catch(e) {
-    console.log('Erro contas BM:', e.message);
+    console.log('Erro ao carregar contas:', e.message);
     sel.innerHTML = `<option value="${MKT.config.adAccount}">${MKT.config.adAccount}</option>`;
   }
 }
