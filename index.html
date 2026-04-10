@@ -1278,10 +1278,17 @@
                     <button onclick="fecharNivel2()" style="display:flex;align-items:center;gap:6px;padding:7px 14px 7px 10px;background:transparent;border:1px solid #e2e8f0;border-radius:10px;cursor:pointer;font-size:12px;color:#64748b;font-family:inherit;transition:all .15s" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
                       ← Voltar
                     </button>
-                    <div>
+                    <div style="flex:1">
                       <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:#0f172a">Administrar minha empresa</div>
                       <div style="font-size:12px;color:#64748b;margin-top:2px">Consultoria estruturada em 6 módulos · clique para começar</div>
                     </div>
+                    <!-- Botão Revisar Global -->
+                    <button onclick="abrirModalRevisao('p1', getDiasP('p1'))" 
+                      style="display:flex;align-items:center;gap:7px;padding:9px 18px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;cursor:pointer;font-size:12px;font-weight:600;color:#475569;font-family:inherit;transition:all .15s;box-shadow:0 1px 4px rgba(15,23,42,.06)"
+                      onmouseover="this.style.borderColor='#0f172a';this.style.color='#0f172a'" 
+                      onmouseout="this.style.borderColor='#e2e8f0';this.style.color='#475569'">
+                      🔄 Novo ciclo de revisão
+                    </button>
                   </div>
 
                   <!-- Grade Netflix dos 6 módulos -->
@@ -6822,26 +6829,29 @@ function abrirRevisaoRapida() {
   if(pAlvo) abrirModalRevisao(pAlvo, maxDias);
 }
 
-async function abrirModalRevisao(modulo, dias) {
+function abrirModalRevisao(modulo, dias) {
   const modal = document.getElementById('modal-revisao-p');
-  if(!modal) return;
-  // Descobrir qual será o número da próxima versão (baseado no P1 como referência)
-  let proxVersao = 1;
-  try {
-    const { data } = await sb.from('sixps_versoes')
-      .select('versao').eq('user_id', S.user.id).eq('modulo', 'p1')
-      .order('versao', {ascending: false}).limit(1);
-    proxVersao = (data?.[0]?.versao || 0) + 1;
-  } catch(e) {}
-  const tituloVersao = String(proxVersao).padStart(2,'0') + ' Estrutura';
+  if(!modal) { console.log('modal-revisao-p não encontrado'); return; }
+  
+  // Mostrar modal IMEDIATAMENTE (sem esperar banco)
   const diasEl = document.getElementById('modal-revisao-dias');
   const tituloEl = document.getElementById('modal-revisao-titulo');
   const versaoEl = document.getElementById('modal-versao-nome');
   if(diasEl) diasEl.textContent = dias > 0 ? dias + ' dias atrás' : 'hoje';
   if(tituloEl) tituloEl.textContent = 'todos os 6 módulos';
-  if(versaoEl) versaoEl.textContent = tituloVersao;
+  if(versaoEl) versaoEl.textContent = '?? Estrutura';
   modal.dataset.modulo = modulo;
   modal.style.display = 'flex';
+  
+  // Buscar número da versão em background
+  sb.from('sixps_versoes')
+    .select('versao').eq('user_id', S.user.id).eq('modulo', 'p1')
+    .order('versao', {ascending: false}).limit(1)
+    .then(({data}) => {
+      const proxVersao = (data?.[0]?.versao || 0) + 1;
+      const tituloVersao = String(proxVersao).padStart(2,'0') + ' Estrutura';
+      if(versaoEl) versaoEl.textContent = tituloVersao;
+    }).catch(()=>{ if(versaoEl) versaoEl.textContent = 'Nova Estrutura'; });
 }
 
 function fecharModalRevisao() {
@@ -6893,36 +6903,52 @@ async function confirmarRevisao() {
     if(SP.progresso) Object.assign(SP.progresso, updates);
   } catch(e) { console.log('reset progresso erro:', e.message); }
 
-  // 5. Atualizar UI
+  // 5. Recarregar progresso do banco para garantir UI correta
+  try {
+    const { data: prog } = await sb.from('sixps_progresso').select('*').eq('user_id', S.user.id).limit(1);
+    if(prog?.[0]) SP.progresso = prog[0];
+  } catch(e) {}
+
+  // 6. Atualizar UI
   renderSixpsGrid();
   atualizarProgressoADM?.();
-  if(document.getElementById('sixps-nivel2')?.style?.display === 'block') {
-    renderNivel2Grid();
-  }
+  renderNivel2Grid?.();
 
-  // 6. Abrir P1 limpo
+  // 7. Abrir P1 limpo
   setTimeout(() => {
-    abrirP('p1');
+    // Garantir que vai para nivel2 + abre P1
+    if(document.getElementById('sixps-nivel2')) {
+      document.getElementById('sixps-home').style.display = 'none';
+      document.getElementById('sixps-nivel2').style.display = 'block';
+      renderNivel2Grid();
+    }
     setTimeout(() => {
-      appendSixpsMsg('agent', `🔄 **Novo ciclo de revisão iniciado!**\n\nTodos os 6 módulos foram salvos como **${tituloVersao}**. Consulte pelo botão 📚 Estruturas em qualquer módulo.\n\nVamos recomeçar pelo **P1 — Propósito**. O que mudou no seu negócio desde o último ciclo?`);
-    }, 600);
+      window._nivel2Ativo = true;
+      abrirP('p1');
+      setTimeout(() => {
+        appendSixpsMsg('agent', `🔄 **Novo ciclo de revisão iniciado!**\n\nTodos os 6 módulos foram salvos como **${tituloVersao}**. Consulte pelo botão 📚 Estruturas.\n\nVamos recomeçar pelo **P1 — Propósito**. O que mudou no seu negócio desde o último ciclo?`);
+      }, 600);
+    }, 200);
   }, 300);
 }
 
 
 async function salvarVersaoP(modulo) {
   if(!S.user) return;
-  // Guard: só salva uma vez por sessão de revisão
+  // Guard de sessão: só salva uma vez por ciclo de revisão
   if(window._versaoSalva?.[modulo]) {
-    console.log('Versão já salva para', modulo, '— ignorando duplicata');
     return window._versaoSalva[modulo];
   }
   try {
-    // Busca número da próxima versão
+    // Busca versões existentes
     const { data: versoes } = await sb.from('sixps_versoes')
-      .select('versao').eq('user_id', S.user.id).eq('modulo', modulo)
+      .select('versao,created_at').eq('user_id', S.user.id).eq('modulo', modulo)
       .order('versao', {ascending: false}).limit(1);
     
+    // Não duplica se já foi salvo hoje na mesma sessão de revisão
+    const hoje = new Date().toISOString().slice(0,10);
+    const ultimaHoje = versoes?.[0]?.created_at?.slice(0,10) === hoje;
+    // Se foi salvo hoje MAS o guard não estava setado, é uma nova sessão — salva
     const proxVersao = versoes && versoes.length > 0 ? versoes[0].versao + 1 : 1;
     const titulo = String(proxVersao).padStart(2,'0') + ' Estrutura';
     
@@ -7464,65 +7490,56 @@ async function concluirP(moduloForce){
   // ── INTEGRAÇÃO ENTRE PILARES ──
   await sincronizarPilarComEcossistema(modulo);
 
-  // Reabilitar input para próximo uso
+  // Reabilitar input
   const inp = document.getElementById('sixps-msg');
   if(inp) { inp.disabled = false; inp.placeholder = 'Responda aqui...'; }
   const sendBtnFin = document.getElementById('send-sixps');
   if(sendBtnFin) sendBtnFin.disabled = false;
-  
-  // Verifica se estava no nível 2 e volta para lá
-  const estavaNivel2 = document.getElementById('sixps-nivel2')?.style?.display === 'block' ||
-    document.getElementById('sixps-nivel2')?.getAttribute('data-was-open') === '1';
+
+  // CAPTURAR _nivel2Ativo ANTES de qualquer reset
+  const veioDoNivel2 = !!window._nivel2Ativo;
+  window._nivel2Ativo = false;
+
+  // Voltar para tela base
   voltarSixps();
-  atualizarProgressoADM?.();
   
-  if(estavaNivel2 || window._nivel2Ativo) {
+  // Atualizar progresso
+  atualizarProgressoADM?.();
+
+  // Se veio do nível 2, voltar para a grade de módulos atualizada
+  if(veioDoNivel2) {
     document.getElementById('sixps-home').style.display = 'none';
     document.getElementById('sixps-nivel2').style.display = 'block';
     renderNivel2Grid();
-    atualizarProgressoADM();
-    window._nivel2Ativo = false;
   } else {
     renderSixpsGrid();
-    atualizarProgressoADM();
-  }
-
-  // Atualiza painel de dados com a nova versão
-  const dadosEl = document.getElementById('sixps-dados-content');
-  const novoResumo = SP.dados?.[modulo+'_resumo'] || '';
-  if(dadosEl && novoResumo.length > 50) {
-    dadosEl.innerHTML = novoResumo
-      .replace(/\n/g,'<br>')
-      .replace(/\*\*(.*?)\*\*/g,'<strong style="color:#0f172a;font-weight:700">$1</strong>')
-      .replace(/^#{1,3}\s*(.+)$/gm,'<div style="font-size:11px;font-weight:800;color:var(--accent);letter-spacing:.5px;margin:10px 0 4px;text-transform:uppercase">$1</div>');
   }
 
   const prox = idx < ps.length-1 ? ps[idx+1] : null;
   const proxCfg = prox ? SIXPS_CONFIG[prox] : null;
 
-  // Mostrar card de conclusão no chat principal com ação clara
-  const msgConclusao = `✅ **${SIXPS_CONFIG[modulo].titulo}** revisado e concluído!\n\n` +
-    (proxCfg 
-      ? `🔓 **${proxCfg.titulo}** foi desbloqueado.`
-      : `🎉 Você completou todos os 6Ps!\n\n${getSincronizacaoMsg(modulo)}`);
-  
-  appendSpecialMsg('agent', msgConclusao, 'chat-adm');
-
-  // Mostrar botão de continuar para o próximo P
   if(proxCfg) {
-    setTimeout(() => {
-      const chatAdm = document.getElementById('chat-adm');
-      if(chatAdm) {
-        const btnDiv = document.createElement('div');
-        btnDiv.style.cssText = 'display:flex;justify-content:center;padding:12px 0';
-        const openNext = window._nivel2Ativo ? `fecharNivel2();setTimeout(()=>{renderNivel2Grid();},100)` : `abrirP('${prox}')`;
-        btnDiv.innerHTML = `<button onclick="${openNext}" style="padding:10px 28px;background:var(--accent);border:none;border-radius:10px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:8px;box-shadow:0 4px 12px rgba(37,99,235,.3);transition:all .2s" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
-          Ir para ${proxCfg.titulo} →
-        </button>`;
-        chatAdm.appendChild(btnDiv);
-        chatAdm.scrollTop = chatAdm.scrollHeight;
-      }
-    }, 400);
+    // Se veio do nível 2: mostrar mensagem no chat e botão para ir ao próximo via grade
+    if(veioDoNivel2) {
+      appendSpecialMsg('agent', `✅ **${SIXPS_CONFIG[modulo].titulo}** concluído!\n\n🔓 **${proxCfg.titulo}** foi desbloqueado. Clique no card para continuar.`, 'chat-adm');
+    } else {
+      // Se não veio do nível 2: mostrar botão direto no chat
+      appendSpecialMsg('agent', `✅ **${SIXPS_CONFIG[modulo].titulo}** concluído!\n\n🔓 **${proxCfg.titulo}** foi desbloqueado.`, 'chat-adm');
+      setTimeout(() => {
+        const chatAdm = document.getElementById('chat-adm');
+        if(chatAdm) {
+          const btnDiv = document.createElement('div');
+          btnDiv.style.cssText = 'display:flex;justify-content:center;padding:12px 0';
+          btnDiv.innerHTML = `<button onclick="abrirP('${prox}')" style="padding:10px 28px;background:var(--accent);border:none;border-radius:10px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 4px 12px rgba(37,99,235,.3)">
+            Ir para ${proxCfg.titulo} →
+          </button>`;
+          chatAdm.appendChild(btnDiv);
+          chatAdm.scrollTop = chatAdm.scrollHeight;
+        }
+      }, 400);
+    }
+  } else {
+    appendSpecialMsg('agent', `🎉 Você completou todos os 6Ps!\n\n${getSincronizacaoMsg(modulo)}`, 'chat-adm');
   }
 
   // Atualiza tarefas e matriz
