@@ -1390,60 +1390,39 @@
                 <!-- ═══ ROW 1: KPIs PRINCIPAIS ═══ -->
                 <div class="dm-kpi-row" id="dash-kpis">
                   <div class="dm-kpi">
-                    <div class="dm-kpi-icon" style="background:#fff1f2">💸</div>
-                    <div class="dm-kpi-body">
-                      <div class="dm-kpi-label">Investido</div>
-                      <div class="dm-kpi-val" id="dk-invest">—</div>
-                      <div class="dm-kpi-sub">período</div>
-                    </div>
+                    <div class="dm-kpi-label">Investido</div>
+                    <div class="dm-kpi-val" id="dk-invest">—</div>
+                    <div class="dm-kpi-sub">período</div>
                   </div>
                   <div class="dm-kpi">
-                    <div class="dm-kpi-icon" style="background:#f0fdf4">👥</div>
-                    <div class="dm-kpi-body">
-                      <div class="dm-kpi-label">Alcance</div>
-                      <div class="dm-kpi-val" id="dk-alcance">—</div>
-                      <div class="dm-kpi-sub">pessoas únicas</div>
-                    </div>
+                    <div class="dm-kpi-label">Alcance</div>
+                    <div class="dm-kpi-val" id="dk-alcance">—</div>
+                    <div class="dm-kpi-sub">pessoas únicas</div>
                   </div>
                   <div class="dm-kpi">
-                    <div class="dm-kpi-icon" style="background:#eff6ff">👁</div>
-                    <div class="dm-kpi-body">
-                      <div class="dm-kpi-label">Impressões</div>
-                      <div class="dm-kpi-val" id="dk-impr">—</div>
-                      <div class="dm-kpi-sub">total</div>
-                    </div>
+                    <div class="dm-kpi-label">Impressões</div>
+                    <div class="dm-kpi-val" id="dk-impr">—</div>
+                    <div class="dm-kpi-sub">total</div>
                   </div>
                   <div class="dm-kpi">
-                    <div class="dm-kpi-icon" style="background:#f0fdf4">🎯</div>
-                    <div class="dm-kpi-body">
-                      <div class="dm-kpi-label">Leads</div>
-                      <div class="dm-kpi-val" id="dk-leads" style="color:#16a34a">—</div>
-                      <div class="dm-kpi-sub">conversões</div>
-                    </div>
+                    <div class="dm-kpi-label">Leads</div>
+                    <div class="dm-kpi-val" id="dk-leads" style="color:#16a34a">—</div>
+                    <div class="dm-kpi-sub">conversões</div>
                   </div>
                   <div class="dm-kpi">
-                    <div class="dm-kpi-icon" style="background:#eff6ff">📊</div>
-                    <div class="dm-kpi-body">
-                      <div class="dm-kpi-label">CPM</div>
-                      <div class="dm-kpi-val" id="dk-cpm">—</div>
-                      <div class="dm-kpi-sub">custo / mil</div>
-                    </div>
+                    <div class="dm-kpi-label">CPM</div>
+                    <div class="dm-kpi-val" id="dk-cpm">—</div>
+                    <div class="dm-kpi-sub">custo / mil</div>
                   </div>
                   <div class="dm-kpi">
-                    <div class="dm-kpi-icon" style="background:#eff6ff">🖱</div>
-                    <div class="dm-kpi-body">
-                      <div class="dm-kpi-label">CPC</div>
-                      <div class="dm-kpi-val" id="dk-cpc">—</div>
-                      <div class="dm-kpi-sub">por clique</div>
-                    </div>
+                    <div class="dm-kpi-label">CPC</div>
+                    <div class="dm-kpi-val" id="dk-cpc">—</div>
+                    <div class="dm-kpi-sub">por clique</div>
                   </div>
                   <div class="dm-kpi dm-kpi-highlight">
-                    <div class="dm-kpi-icon" style="background:rgba(255,255,255,0.15)">📈</div>
-                    <div class="dm-kpi-body">
-                      <div class="dm-kpi-label" style="color:rgba(255,255,255,.7)">ROAS</div>
-                      <div class="dm-kpi-val" id="dk-roas" style="color:#fff">—</div>
-                      <div class="dm-kpi-sub" style="color:rgba(255,255,255,.6)">retorno</div>
-                    </div>
+                    <div class="dm-kpi-label" style="color:rgba(255,255,255,.7)">ROAS</div>
+                    <div class="dm-kpi-val" id="dk-roas" style="color:#fff">—</div>
+                    <div class="dm-kpi-sub" style="color:rgba(255,255,255,.6)">retorno</div>
                   </div>
                 </div>
 
@@ -1483,49 +1462,58 @@
                   </div>
                 </div>
 
-                <!-- ═══ ROW 3: FUNIL + GAUGES + DONUTS ═══ -->
-                <div class="dm-charts-row">
+                <!-- ═══ ROW 3: FUNIL + GAUGES + DONUTS + CIDADES ═══ -->
+                <div class="dm-row3">
                   <!-- Funil -->
-                  <div class="dm-card dm-card-funil">
+                  <div class="dm-card">
                     <div class="dm-card-header">
                       <span class="dm-card-title">Funil de Tráfego</span>
+                      <span id="dm-taxa-conv" style="font-size:11px;font-weight:700;color:#16a34a"></span>
                     </div>
                     <div id="dash-funil" class="dm-funil-body">
                       <div style="color:#94a3b8;font-size:12px;text-align:center;padding:24px">Carregue os dados</div>
                     </div>
                   </div>
-                  <!-- ROAS Gauge -->
-                  <div class="dm-card dm-card-gauge">
-                    <div class="dm-card-header"><span class="dm-card-title">ROAS</span></div>
-                    <div class="dm-gauge-wrap">
-                      <canvas id="gauge-roas" width="90" height="52"></canvas>
-                      <div class="dm-gauge-val" id="gauge-roas-val">—</div>
-                      <div class="dm-gauge-sub">receita/invest.</div>
+                  <!-- Gauges + Donuts em coluna -->
+                  <div class="dm-col2">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                      <div class="dm-card dm-card-gauge">
+                        <div class="dm-card-header"><span class="dm-card-title">ROAS</span></div>
+                        <div class="dm-gauge-wrap">
+                          <canvas id="gauge-roas" width="80" height="48"></canvas>
+                          <div class="dm-gauge-val" id="gauge-roas-val">—</div>
+                          <div class="dm-gauge-sub">receita/invest.</div>
+                        </div>
+                      </div>
+                      <div class="dm-card dm-card-gauge">
+                        <div class="dm-card-header"><span class="dm-card-title">Taxa Conv.</span></div>
+                        <div class="dm-gauge-wrap">
+                          <canvas id="gauge-taxa" width="80" height="48"></canvas>
+                          <div class="dm-gauge-val" id="gauge-taxa-val" style="color:#16a34a">—</div>
+                          <div class="dm-gauge-sub">cliques→leads</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+                      <div class="dm-card dm-card-donut">
+                        <div class="dm-card-header"><span class="dm-card-title">Gênero</span></div>
+                        <div style="position:relative;height:90px"><canvas id="chart-genero"></canvas></div>
+                        <div id="leg-genero" class="dm-legend" style="margin-top:8px"></div>
+                      </div>
+                      <div class="dm-card dm-card-donut">
+                        <div class="dm-card-header"><span class="dm-card-title">Faixa Etária</span></div>
+                        <div style="position:relative;height:90px"><canvas id="chart-etaria"></canvas></div>
+                        <div id="leg-etaria" class="dm-legend" style="margin-top:8px"></div>
+                      </div>
                     </div>
                   </div>
-                  <!-- Taxa Conv Gauge -->
-                  <div class="dm-card dm-card-gauge">
-                    <div class="dm-card-header"><span class="dm-card-title">Taxa Conv.</span></div>
-                    <div class="dm-gauge-wrap">
-                      <canvas id="gauge-taxa" width="90" height="52"></canvas>
-                      <div class="dm-gauge-val" id="gauge-taxa-val" style="color:#16a34a">—</div>
-                      <div class="dm-gauge-sub">cliques→leads</div>
+                  <!-- Cidades -->
+                  <div class="dm-card">
+                    <div class="dm-card-header">
+                      <span class="dm-card-title">Principais Cidades</span>
                     </div>
-                  </div>
-                  <!-- Gênero -->
-                  <div class="dm-card dm-card-donut">
-                    <div class="dm-card-header"><span class="dm-card-title">Gênero</span></div>
-                    <div class="dm-donut-wrap">
-                      <div style="position:relative;height:100px"><canvas id="chart-genero"></canvas></div>
-                      <div id="leg-genero" class="dm-legend"></div>
-                    </div>
-                  </div>
-                  <!-- Faixa Etária -->
-                  <div class="dm-card dm-card-donut">
-                    <div class="dm-card-header"><span class="dm-card-title">Faixa Etária</span></div>
-                    <div class="dm-donut-wrap">
-                      <div style="position:relative;height:100px"><canvas id="chart-etaria"></canvas></div>
-                      <div id="leg-etaria" class="dm-legend"></div>
+                    <div id="dash-cidades" class="dm-cidades-list">
+                      <div style="color:#94a3b8;font-size:12px;text-align:center;padding:24px">Carregue os dados</div>
                     </div>
                   </div>
                 </div>
@@ -4553,6 +4541,7 @@ const DS = {
 
       this.anuncios=withIns;
       this.renderCriativos();
+    this.renderCidades();
       console.log(`🎨 ${withIns.length} anúncios carregados · ${withIns.filter(a=>a.creative?.thumbnail_url).length} com thumbnail`);
     } catch(e){
       console.error('_carregarAnuncios:',e.message);
@@ -4841,6 +4830,62 @@ const DS = {
     const icon=document.getElementById('crit-icon');
     if(icon)icon.style.display=thumb?'none':'block';
     openModal('modal-criativo');
+  },
+
+  async renderCidades() {
+    const el = document.getElementById('dash-cidades');
+    if(!el) return;
+    const adsToken = MKT.config.adsToken || MKT.config.token;
+    const adAccount = MKT.config.adAccount;
+    if(!adsToken || !adAccount) {
+      el.innerHTML = '<div style="color:#94a3b8;font-size:11px;text-align:center;padding:16px">Configure o token ADS</div>';
+      return;
+    }
+    el.innerHTML = '<div style="color:#94a3b8;font-size:11px;text-align:center;padding:16px">⏳ Carregando...</div>';
+    try {
+      const pp = this._buildParams();
+      const res = await metaGet('/' + adAccount + '/insights', {
+        fields: 'spend,impressions,clicks',
+        breakdowns: 'region',
+        ...pp
+      }, adsToken);
+      const data = (res.data || [])
+        .map(d => ({
+          cidade: d.region || '—',
+          spend: parseFloat(d.spend || 0),
+          impressions: parseInt(d.impressions || 0),
+          clicks: parseInt(d.clicks || 0)
+        }))
+        .filter(d => d.spend > 0 || d.impressions > 0)
+        .sort((a, b) => b.impressions - a.impressions)
+        .slice(0, 8);
+
+      if(!data.length) {
+        el.innerHTML = '<div style="color:#94a3b8;font-size:11px;text-align:center;padding:16px">Sem dados de localização</div>';
+        return;
+      }
+      const maxImpr = data[0].impressions || 1;
+      el.innerHTML = data.map((d, i) => {
+        const pct = Math.round(d.impressions / maxImpr * 100);
+        return `<div style="margin-bottom:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:10px;font-weight:700;color:#94a3b8;width:16px;text-align:right">${i+1}</span>
+              <span style="font-size:12px;font-weight:600;color:#0f172a">${d.cidade}</span>
+            </div>
+            <div style="text-align:right">
+              <span style="font-size:11px;font-weight:700;color:#0f172a">${mktFmt(d.impressions)}</span>
+              <span style="font-size:9px;color:#94a3b8;margin-left:4px">impr.</span>
+            </div>
+          </div>
+          <div style="height:5px;background:#f1f5f9;border-radius:4px;overflow:hidden">
+            <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#0f172a,#1e40af);border-radius:4px;transition:width .8s ease"></div>
+          </div>
+        </div>`;
+      }).join('');
+    } catch(e) {
+      el.innerHTML = '<div style="color:#94a3b8;font-size:11px;text-align:center;padding:16px">Sem permissão de região</div>';
+    }
   },
 
   salvarROI() {
