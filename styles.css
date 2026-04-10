@@ -302,15 +302,22 @@ tbody tr:hover { background: #fafafb !important; }
 /* ── Barra de controle ── */
 #dm-dash-bar {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  align-items: flex-end;
+  gap: 16px;
   flex-wrap: wrap;
-  padding: 12px 16px;
+  padding: 16px 20px;
   background: #ffffff;
   border: 1px solid #e2e8f0;
-  border-radius: 14px;
+  border-radius: 16px;
   margin-bottom: 20px;
-  box-shadow: 0 1px 4px rgba(15,23,42,.06);
+  box-shadow: 0 2px 8px rgba(15,23,42,.06);
+}
+.dm-bar-divider {
+  color: #cbd5e1;
+  font-size: 16px;
+  align-self: flex-end;
+  margin-bottom: 6px;
+  font-weight: 300;
 }
 .dm-period-group {
   display: flex;

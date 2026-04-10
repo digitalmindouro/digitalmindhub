@@ -2691,7 +2691,10 @@ function dmToggleCamp(checkbox) {
   else DM_CAMPS_SELECIONADAS.delete(checkbox.value);
   dmAtualizarLabelCamp();
   DS.filtroIds = [...DM_CAMPS_SELECIONADAS];
+  // Atualiza visualização local imediatamente
   DS.renderTudo();
+  // Recarrega os anúncios da(s) campanha(s) selecionada(s)
+  DS._carregarAnuncios();
 }
 
 function dmSelectAllCamps() {
@@ -4042,6 +4045,8 @@ async function carregarContasDaBM() {
     }
 
     console.log(`✅ ${contas.length} contas carregadas`);
+    // Auto-carrega campanhas da conta selecionada
+    setTimeout(()=>DS._carregarListaCampanhas(), 200);
   } catch(e) {
     console.log('Erro ao carregar contas:', e.message);
     sel.innerHTML = `<option value="${MKT.config.adAccount}">${MKT.config.adAccount}</option>`;
@@ -4574,23 +4579,8 @@ const DS = {
         console.warn('insights conta falhou, tentando por campanha:', e2.message);
       }
 
-      // ── PASSO 3: Para campanhas sem dados no período, busca maximum em paralelo (1 chamada por campanha) ──
-      const semDados = camps.filter(c=>!acctIns[c.id]);
-      if(semDados.length && Object.keys(acctIns).length === 0) {
-        // Se a chamada da conta falhou totalmente, tenta por campanha em lotes
-        for(let i=0;i<camps.slice(0,20).length;i+=5){
-          const batch=camps.slice(i,i+5);
-          await Promise.all(batch.map(async c=>{
-            try{
-              const ins=await metaGet('/'+c.id+'/insights',{
-                fields:'spend,reach,impressions,clicks,cpm,cpc,ctr,actions',
-                date_preset:'maximum'
-              },adsToken);
-              if(ins.data?.[0]) acctIns[c.id]=ins.data[0];
-            }catch(e3){}
-          }));
-        }
-      }
+      // ── PASSO 3: Sem fallback para maximum — respeitar o período selecionado sempre ──
+      // Se não tem dados no período, mostra zerado (comportamento correto)
 
       // ── PASSO 4: Monta resultado ──
       const result = camps.map(c=>{
@@ -4640,10 +4630,30 @@ const DS = {
     const pp=this.getPeriodParams();
     try {
       // Busca ads com creative em uma chamada
-      const res=await metaGet('/'+MKT.config.adAccount+'/ads',{
-        fields:'id,name,status,campaign_id,creative{id,name,thumbnail_url,object_story_spec}',
-        limit:30
-      },adsToken);
+      // Filtra por campanhas selecionadas se houver
+      const campIds = this.filtroIds && this.filtroIds.length > 0 ? this.filtroIds
+        : this.filtro ? [this.filtro] : null;
+      
+      // Se nenhuma campanha selecionada, pede para selecionar
+      if(!campIds || campIds.length === 0) {
+        const el = document.getElementById('dash-criativos');
+        if(el) el.innerHTML = '<div style="color:#94a3b8;font-size:12px;text-align:center;padding:24px;grid-column:1/-1">Selecione uma ou mais campanhas para ver os anúncios.</div>';
+        this.anuncios = [];
+        return;
+      }
+
+      // Busca ads das campanhas selecionadas
+      let allAds = [];
+      for(const campId of campIds.slice(0,5)) {
+        try {
+          const r = await metaGet('/'+campId+'/ads',{
+            fields:'id,name,status,campaign_id,creative{id,name,thumbnail_url,object_story_spec}',
+            limit:50
+          },adsToken);
+          allAds = allAds.concat((r.data||[]).filter(a=>a.status!=='DELETED'));
+        } catch(e) {}
+      }
+      const res = { data: allAds };
       const ads=(res.data||[]).filter(a=>a.status!=='DELETED');
       if(!ads.length){ this.anuncios=[]; this.renderCriativos(); return; }
 
