@@ -2942,19 +2942,60 @@ let PLANO_PENDENTE = [];
 
 async function carregarTarefasDoDia() {
   if(!S.user) return;
-  // Mostrar estado de carregando no card
-  const listaC = document.getElementById('tarefas-lista-card');
-  if(listaC) listaC.innerHTML = '<div style="color:#94a3b8;font-size:12px;text-align:center;padding:16px">⏳ Carregando...</div>';
+  renderTarefasCard(); // Mostra estado carregando
   try {
     const hoje = new Date().toISOString().slice(0,10);
     const { data, error } = await sb.from('planos_acao')
       .select('*').eq('user_id', S.user.id)
       .eq('data_alvo', hoje).eq('status','ativo')
       .order('prioridade', {ascending:true});
-    if(error) { TAREFAS_DO_DIA = []; renderTarefasDoDia(); return; }
+    // 400 = tabela não existe — mostra estado vazio sem erro
+    if(error) { TAREFAS_DO_DIA = []; renderTarefasCard(); renderTarefasDoDia(); return; }
     TAREFAS_DO_DIA = data || [];
+    renderTarefasCard();
     renderTarefasDoDia();
-  } catch(e) { TAREFAS_DO_DIA = []; renderTarefasDoDia(); }
+  } catch(e) { TAREFAS_DO_DIA = []; renderTarefasCard(); renderTarefasDoDia(); }
+}
+
+// Renderiza APENAS o card fixo da página ADM — independente do popup
+function renderTarefasCard() {
+  const listaCard = document.getElementById('tarefas-lista-card');
+  const countCard = document.getElementById('tarefas-count-card');
+  const btnGerarCard = document.getElementById('btn-gerar-plano-card');
+  const dataCard = document.getElementById('tarefas-data-card');
+  if(!listaCard) return;
+
+  const hoje = new Date();
+  if(dataCard) dataCard.textContent = hoje.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'});
+
+  const p6ok = SP?.progresso?.p6_status === 'concluido' || MZ?.p6_concluido || (MZ?.p6_meta_receita > 0) || SP?.progresso?.p5_status === 'concluido';
+  if(btnGerarCard) btnGerarCard.style.display = (p6ok && TAREFAS_DO_DIA.length === 0) ? 'flex' : 'none';
+
+  const pendentes = (TAREFAS_DO_DIA || []).filter(t=>t.status_exec!=='concluida').length;
+  if(countCard) countCard.textContent = pendentes > 0 ? pendentes+' pendente'+(pendentes>1?'s':'') : '';
+
+  if(!TAREFAS_DO_DIA || TAREFAS_DO_DIA.length === 0) {
+    const msg = p6ok
+      ? 'Nenhuma tarefa para hoje. Clique em ⚡ Gerar.'
+      : 'Complete os 6Ps para ativar as tarefas do dia.';
+    listaCard.innerHTML = `<div style="color:#94a3b8;font-size:12px;text-align:center;padding:16px;line-height:1.5">${msg}</div>`;
+    return;
+  }
+
+  const concluidas = TAREFAS_DO_DIA.filter(t=>t.status_exec==='concluida').length;
+  if(countCard) countCard.textContent = concluidas+'/'+TAREFAS_DO_DIA.length+' concluídas';
+
+  listaCard.innerHTML = TAREFAS_DO_DIA.map(t => {
+    const feita = t.status_exec === 'concluida';
+    const corMod = {administrativo:'#2563eb',marketing:'#7c3aed',financeiro:'#d97706'}[t.modulo] || '#64748b';
+    return `<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:${feita?'#f8fafc':'#fff'};border:1px solid ${feita?'#f1f5f9':'#e2e8f0'};border-radius:8px;border-left:3px solid ${feita?'#e2e8f0':corMod}">
+      <button onclick="toggleTarefa('${t.id}','${feita?'ativo':'concluida'}')" style="width:18px;height:18px;border-radius:50%;border:2px solid ${feita?'#16a34a':corMod};background:${feita?'#16a34a':'transparent'};cursor:pointer;flex-shrink:0;font-size:9px;color:white;display:flex;align-items:center;justify-content:center">${feita?'✓':''}</button>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:11px;font-weight:600;color:#0f172a;${feita?'text-decoration:line-through;color:#94a3b8':''}">${t.titulo}</div>
+      </div>
+      <span style="font-size:9px;font-weight:600;padding:1px 6px;border-radius:8px;background:${corMod}18;color:${corMod};white-space:nowrap">${t.modulo||'geral'}</span>
+    </div>`;
+  }).join('');
 }
 
 function renderTarefasDoDia() {
@@ -3016,6 +3057,7 @@ async function toggleTarefa(id, novoStatus) {
     await sb.from('planos_acao').update({status_exec: novoStatus, updated_at: new Date().toISOString()}).eq('id', id);
     const t = TAREFAS_DO_DIA.find(x=>x.id==id);
     if(t) t.status_exec = novoStatus;
+    renderTarefasCard();
     renderTarefasDoDia();
   } catch(e) { console.log('toggle tarefa erro:', e.message); }
 }
