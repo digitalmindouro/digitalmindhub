@@ -1336,6 +1336,9 @@
                     <input type="date" id="dash-date-to" onchange="DS.dateTo=this.value;DS.preset=null;document.querySelectorAll('[id^=dashbtn-]').forEach(b=>b.classList.remove('active'))" style="font-size:11px;padding:4px 8px;background:var(--surface2);border:1px solid var(--border2);border-radius:7px;color:var(--text);outline:none">
                     <button onclick="DS.setPeriodCustom()" class="dash-filt-btn" style="border:1px solid var(--border);background:var(--accent);color:#fff">↵ Aplicar</button>
                   </div>
+                  <select id="dash-adacc-sel" onchange="DS.setAdAccount(this.value)" style="font-size:11px;padding:5px 10px;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;color:var(--text);outline:none;max-width:200px">
+                    <option value="">⏳ Carregando contas...</option>
+                  </select>
                   <select id="dash-camp-sel" onchange="DS.setFiltro(this.value)" style="font-size:11px;padding:5px 10px;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;color:var(--text);outline:none;max-width:220px">
                     <option value="">Todas as campanhas</option>
                   </select>
@@ -3585,7 +3588,7 @@ function mktTab(tab, btn) {
     const _c=document.querySelector('.content');if(_c)_c.scrollTop=0;
   });
   if(tab==='estrategia') { mktCarregarEstrategia(); }
-  if(tab==='campanhas') { mktInitCampanhas(); }
+  if(tab==='campanhas') { mktInitCampanhas(); setTimeout(carregarContasDaBM, 300); }
   if(tab==='crm') crmCarregar();
   if(tab==='calendario') { setTimeout(initCronograma, 100); }
   if(tab==='config') { mktPopulateConfig(); }
@@ -3751,8 +3754,51 @@ function mktSaveConfig(){
   delete MKT.config._pageToken;
   localStorage.setItem('dm_mkt', JSON.stringify(MKT.config));
   alert('✅ Config salvo! Carregando insights...');
+  setTimeout(carregarContasDaBM, 500);
   mktLoadInsights();
   DS.carregar();
+}
+
+async function carregarContasDaBM() {
+  const sel = document.getElementById('dash-adacc-sel');
+  if(!sel) return;
+  const adsToken = MKT.config.adsToken || MKT.config.token;
+  if(!adsToken) {
+    sel.innerHTML = '<option value="">Configure o token primeiro</option>';
+    return;
+  }
+  try {
+    let contas = [];
+    const bizId = MKT.config.bizId;
+    if(bizId) {
+      const r = await fetch(`https://graph.facebook.com/v25.0/${bizId}/owned_ad_accounts?fields=id,name,account_status&limit=50&access_token=${adsToken}`);
+      const d = await r.json();
+      if(d.data && d.data.length > 0) contas = d.data;
+    }
+    if(contas.length === 0) {
+      const r2 = await fetch(`https://graph.facebook.com/v25.0/me/adaccounts?fields=id,name,account_status&limit=50&access_token=${adsToken}`);
+      const d2 = await r2.json();
+      if(d2.data) contas = d2.data;
+    }
+    if(contas.length === 0) {
+      sel.innerHTML = `<option value="${MKT.config.adAccount}">${MKT.config.adAccount} (conta manual)</option>`;
+      return;
+    }
+    const ativas = contas.filter(c => !c.account_status || c.account_status === 1 || c.account_status === 2);
+    sel.innerHTML = ativas.map(c => {
+      const id = c.id.startsWith('act_') ? c.id : 'act_'+c.id;
+      const selected = id === MKT.config.adAccount ? 'selected' : '';
+      const status = c.account_status === 2 ? ' ⚠️' : '';
+      return `<option value="${id}" ${selected}>${c.name || id}${status}</option>`;
+    }).join('');
+    if(sel.options.length > 0 && !sel.value) {
+      sel.value = sel.options[0].value;
+      MKT.config.adAccount = sel.options[0].value;
+    }
+  } catch(e) {
+    console.log('Erro contas BM:', e.message);
+    sel.innerHTML = `<option value="${MKT.config.adAccount}">${MKT.config.adAccount}</option>`;
+  }
 }
 
 const META_BASE = 'https://graph.facebook.com/v25.0';
@@ -4678,6 +4724,16 @@ const DS = {
     localStorage.setItem('dm_ads_resultados',JSON.stringify(this.roi));
     const btn=document.querySelector('[onclick="DS.salvarROI()"]');
     if(btn){btn.textContent='✅';setTimeout(()=>btn.textContent='💾',1500);}
+  },
+
+  setAdAccount(v){
+    if(!v) return;
+    MKT.config.adAccount = v;
+    this.filtro = '';
+    this.filtroId = '';
+    const campSel = document.getElementById('dash-camp-sel');
+    if(campSel) campSel.innerHTML = '<option value="">Todas as campanhas</option>';
+    this.carregar();
   }
 };
 
