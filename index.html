@@ -279,13 +279,51 @@
     .dash-platform-card:hover { border-color:var(--border2);transform:translateY(-2px); }
     @media(max-width:768px){ .dash-kpi-row{grid-template-columns:1fr 1fr} .dash-grid-2{grid-template-columns:1fr} }
     /* ── DASHBOARD 360 ── */
-    .dash-filt-btn { padding:4px 10px;font-size:11px;border-radius:6px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s; }
-    .dash-filt-btn:hover { color:var(--text); }
-    .dash-filt-btn.active { background:var(--surface);color:var(--text);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.2); }
-    .dash-kpi-card { background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;border-top:2px solid var(--accent); }
-    .dkc-label { font-size:9px;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:5px; }
-    .dkc-val { font-size:19px;font-weight:800;font-family:'Syne',sans-serif;line-height:1; }
-    .dkc-sub { font-size:9px;color:var(--muted);margin-top:4px; }
+    /* ── Dashboard Marketing Premium ── */
+    .dash-filt-btn { padding:5px 12px;font-size:11px;border-radius:8px;border:none;background:transparent;color:#64748b;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;font-weight:500; }
+    .dash-filt-btn:hover { background:#f1f5f9;color:#0f172a; }
+    .dash-filt-btn.active { background:#0f172a;color:#ffffff;font-weight:700;box-shadow:0 2px 8px rgba(15,23,42,.25); }
+
+    .dash-kpi-card {
+      background:#ffffff;
+      border:1px solid #e8edf4;
+      border-radius:14px;
+      padding:16px 14px 12px;
+      box-shadow:0 2px 12px rgba(15,23,42,.06), 0 1px 3px rgba(15,23,42,.04);
+      transition:transform .2s, box-shadow .2s;
+      position:relative;
+      overflow:hidden;
+    }
+    .dash-kpi-card::before {
+      content:'';
+      position:absolute;
+      top:0;left:0;right:0;
+      height:3px;
+      background:linear-gradient(90deg,#0f172a,#1e40af);
+      border-radius:14px 14px 0 0;
+    }
+    .dash-kpi-card:hover { transform:translateY(-2px);box-shadow:0 8px 24px rgba(15,23,42,.12); }
+    .dkc-label { font-size:9px;color:#94a3b8;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;font-weight:600; }
+    .dkc-val { font-size:22px;font-weight:800;font-family:'Syne',sans-serif;line-height:1;color:#0f172a; }
+    .dkc-sub { font-size:10px;color:#94a3b8;margin-top:5px;font-weight:500; }
+
+    /* Seções do dashboard */
+    #mkt-panel-campanhas .dash-section {
+      background:#ffffff;
+      border:1px solid #e8edf4;
+      border-radius:16px;
+      box-shadow:0 2px 12px rgba(15,23,42,.06);
+      overflow:hidden;
+    }
+    .dash-section-header {
+      padding:14px 18px;
+      border-bottom:1px solid #f1f5f9;
+      display:flex;align-items:center;justify-content:space-between;
+    }
+    .dash-section-title {
+      font-size:11px;font-weight:700;color:#475569;
+      text-transform:uppercase;letter-spacing:1px;
+    }
     .dash-plat-card { background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;border-left:3px solid transparent;display:flex;flex-direction:column;gap:5px; }
     .dpc-header { display:flex;align-items:center;gap:7px;margin-bottom:7px; }
     .dpc-icon { width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:11px;flex-shrink:0; }
@@ -1321,9 +1359,9 @@
                 <div id="mkt-token-warn" style="display:none;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--fin);margin-bottom:12px">
                   ⚠️ Token não configurado. <button onclick="mktTab('config',document.getElementById('mktab-config'))" style="background:none;border:none;color:var(--fin);font-weight:700;cursor:pointer;text-decoration:underline">Configurar →</button>
                 </div>
-                <!-- FILTROS -->
-                <div style="display:flex;gap:8px;align-items:center;margin-bottom:14px;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:10px;flex-wrap:wrap">
-                  <div style="display:flex;gap:1px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:2px">
+                <!-- FILTROS — barra premium -->
+                <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px;padding:12px 16px;background:#ffffff;border:1px solid #e8edf4;border-radius:14px;flex-wrap:wrap;box-shadow:0 2px 8px rgba(15,23,42,.05)">
+                  <div style="display:flex;gap:2px;background:#f8fafc;border:1px solid #e8edf4;border-radius:10px;padding:3px">
                     <button onclick="DS.setPeriod('last_7d',this)" id="dashbtn-7d" class="dash-filt-btn">7d</button>
                     <button onclick="DS.setPeriod('last_30d',this)" id="dashbtn-30d" class="dash-filt-btn">30d</button>
                     <button onclick="DS.setPeriod('last_90d',this)" id="dashbtn-90d" class="dash-filt-btn">90d</button>
@@ -1345,57 +1383,86 @@
                   <button onclick="DS.carregar()" style="padding:6px 16px;font-size:12px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer;font-family:inherit;font-weight:700">↻ Carregar</button>
                   <span id="dash-last-update" style="font-size:10px;color:var(--muted);margin-left:auto"></span>
                 </div>
-                <!-- KPIs — Ads + Orgânico integrados -->
-                <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:8px" id="dash-kpis">
-                  <div class="dash-kpi-card" style="border-top:2px solid var(--fin)"><div class="dkc-label">Investido</div><div class="dkc-val" id="dk-invest" style="color:var(--fin)">—</div><div class="dkc-sub">período</div></div>
-                  <div class="dash-kpi-card" style="border-top:2px solid #60a5fa"><div class="dkc-label">Alcance</div><div class="dkc-val" id="dk-alcance" style="color:#60a5fa">—</div><div class="dkc-sub">pessoas</div></div>
-                  <div class="dash-kpi-card" style="border-top:2px solid #a78bfa"><div class="dkc-label">Impressões</div><div class="dkc-val" id="dk-impr" style="color:#a78bfa">—</div><div class="dkc-sub">total</div></div>
-                  <div class="dash-kpi-card" style="border-top:2px solid #34d399"><div class="dkc-label">Leads</div><div class="dkc-val" id="dk-leads" style="color:#34d399">—</div><div class="dkc-sub">conversões</div></div>
-                  <div class="dash-kpi-card" style="border-top:2px solid #fbbf24"><div class="dkc-label">CPM</div><div class="dkc-val" id="dk-cpm" style="color:#fbbf24">—</div><div class="dkc-sub">custo/mil</div></div>
-                  <div class="dash-kpi-card" style="border-top:2px solid #f472b6"><div class="dkc-label">CPC</div><div class="dkc-val" id="dk-cpc" style="color:#f472b6">—</div><div class="dkc-sub">por clique</div></div>
-                  <div class="dash-kpi-card" style="border-top:2px solid var(--accent2)"><div class="dkc-label">ROAS</div><div class="dkc-val" id="dk-roas" style="color:var(--accent2)">—</div><div class="dkc-sub">retorno</div></div>
+                <!-- KPIs Ads — premium navy cards -->
+                <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:12px" id="dash-kpis">
+                  <div class="dash-kpi-card">
+                    <div class="dkc-label">Investido</div>
+                    <div class="dkc-val" id="dk-invest" style="color:#dc2626">—</div>
+                    <div class="dkc-sub">período</div>
+                  </div>
+                  <div class="dash-kpi-card">
+                    <div class="dkc-label">Alcance</div>
+                    <div class="dkc-val" id="dk-alcance" style="color:#0f172a">—</div>
+                    <div class="dkc-sub">pessoas</div>
+                  </div>
+                  <div class="dash-kpi-card">
+                    <div class="dkc-label">Impressões</div>
+                    <div class="dkc-val" id="dk-impr" style="color:#0f172a">—</div>
+                    <div class="dkc-sub">total</div>
+                  </div>
+                  <div class="dash-kpi-card">
+                    <div class="dkc-label">Leads</div>
+                    <div class="dkc-val" id="dk-leads" style="color:#16a34a">—</div>
+                    <div class="dkc-sub">conversões</div>
+                  </div>
+                  <div class="dash-kpi-card">
+                    <div class="dkc-label">CPM</div>
+                    <div class="dkc-val" id="dk-cpm" style="color:#0f172a">—</div>
+                    <div class="dkc-sub">custo/mil</div>
+                  </div>
+                  <div class="dash-kpi-card">
+                    <div class="dkc-label">CPC</div>
+                    <div class="dkc-val" id="dk-cpc" style="color:#0f172a">—</div>
+                    <div class="dkc-sub">por clique</div>
+                  </div>
+                  <div class="dash-kpi-card">
+                    <div class="dkc-label">ROAS</div>
+                    <div class="dkc-val" id="dk-roas" style="color:#1e40af">—</div>
+                    <div class="dkc-sub">retorno</div>
+                  </div>
                 </div>
-                <!-- KPIs Orgânicos — FB + IG + WPP integrados -->
-                <div style="display:grid;grid-template-columns:repeat(3,1fr) 2px repeat(3,1fr) 2px repeat(2,1fr);gap:8px;margin-bottom:12px;align-items:center">
-                  <!-- Facebook -->
-                  <div class="dash-kpi-card" style="border-top:2px solid #2563eb;position:relative">
-                    <div style="position:absolute;top:8px;right:8px;width:16px;height:16px;background:#a08020;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:9px;font-weight:900">f</div>
-                    <div class="dkc-label">FB Seguidores</div><div class="dkc-val" id="mk-fans" style="color:#60a5fa">—</div><div class="dkc-sub">página</div>
+                <!-- KPIs Orgânicos — FB · IG · WPP redesenhados -->
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px">
+
+                  <!-- FACEBOOK -->
+                  <div style="background:#ffffff;border:1px solid #e8edf4;border-radius:16px;padding:16px;box-shadow:0 2px 12px rgba(15,23,42,.06);position:relative;overflow:hidden">
+                    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#1877f2,#42a5f5)"></div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+                      <span style="font-size:10px;font-weight:700;color:#475569;letter-spacing:.8px;text-transform:uppercase">Facebook</span>
+                      <div style="width:24px;height:24px;background:#1877f2;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff">f</div>
+                    </div>
+                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+                      <div><div class="dkc-label">Seguidores</div><div class="dkc-val" id="mk-fans" style="color:#0f172a;font-size:18px">—</div></div>
+                      <div><div class="dkc-label">Views</div><div class="dkc-val" id="mk-views" style="color:#0f172a;font-size:18px">—</div><div class="dkc-sub" id="mk-fb-status">7d</div></div>
+                      <div><div class="dkc-label">Engaj.</div><div class="dkc-val" id="mk-eng" style="color:#0f172a;font-size:18px">—</div><div class="dkc-sub"><span id="mk-cta">—</span> CTA</div></div>
+                    </div>
                   </div>
-                  <div class="dash-kpi-card" style="border-top:2px solid #2563eb">
-                    <div class="dkc-label">FB Views</div><div class="dkc-val" id="mk-views" style="color:#60a5fa">—</div><div class="dkc-sub" id="mk-fb-status">7d</div>
+
+                  <!-- INSTAGRAM -->
+                  <div style="background:#ffffff;border:1px solid #e8edf4;border-radius:16px;padding:16px;box-shadow:0 2px 12px rgba(15,23,42,.06);position:relative;overflow:hidden">
+                    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#833ab4,#fd1d1d,#fcb045)"></div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+                      <span style="font-size:10px;font-weight:700;color:#475569;letter-spacing:.8px;text-transform:uppercase">Instagram</span>
+                      <div style="width:24px;height:24px;background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff">📷</div>
+                    </div>
+                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+                      <div><div class="dkc-label">Seguidores</div><div class="dkc-val" id="mk-ig-fans" style="color:#0f172a;font-size:18px">—</div><div class="dkc-sub" id="mk-ig-status">—</div></div>
+                      <div><div class="dkc-label">Alcance</div><div class="dkc-val" id="mk-ig-reach" style="color:#0f172a;font-size:18px">—</div><div class="dkc-sub"><span id="mk-ig-imp">—</span> impr.</div></div>
+                      <div><div class="dkc-label">Posts</div><div class="dkc-val" id="mk-ig-posts" style="color:#0f172a;font-size:18px">—</div><div class="dkc-sub"><span id="mk-ig-eng">—</span> curtidas</div></div>
+                    </div>
                   </div>
-                  <div class="dash-kpi-card" style="border-top:2px solid #2563eb">
-                    <div class="dkc-label">FB Engaj.</div><div class="dkc-val" id="mk-eng" style="color:#60a5fa">—</div>
-                    <div class="dkc-sub" style="display:flex;gap:4px"><span id="mk-cta" style="color:var(--muted)">—</span><span style="color:var(--muted)">CTA</span></div>
-                  </div>
-                  <!-- Divider -->
-                  <div style="width:1px;background:var(--border);height:100%;min-height:60px"></div>
-                  <!-- Instagram -->
-                  <div class="dash-kpi-card" style="border-top:2px solid #e1306c;position:relative">
-                    <div style="position:absolute;top:8px;right:8px;font-size:12px">📷</div>
-                    <div class="dkc-label">IG Seguidores</div><div class="dkc-val" id="mk-ig-fans" style="color:#f472b6">—</div>
-                    <div class="dkc-sub" id="mk-ig-status">instagram</div>
-                  </div>
-                  <div class="dash-kpi-card" style="border-top:2px solid #e1306c">
-                    <div class="dkc-label">IG Alcance</div><div class="dkc-val" id="mk-ig-reach" style="color:#f472b6">—</div>
-                    <div class="dkc-sub"><span id="mk-ig-imp" style="color:var(--muted)">—</span> impr.</div>
-                  </div>
-                  <div class="dash-kpi-card" style="border-top:2px solid #e1306c">
-                    <div class="dkc-label">IG Posts</div><div class="dkc-val" id="mk-ig-posts" style="color:#f472b6">—</div>
-                    <div class="dkc-sub"><span id="mk-ig-eng" style="color:var(--muted)">—</span> curtidas</div>
-                  </div>
-                  <!-- Divider -->
-                  <div style="width:1px;background:var(--border);height:100%;min-height:60px"></div>
-                  <!-- WhatsApp -->
-                  <div class="dash-kpi-card" style="border-top:2px solid #059669;position:relative">
-                    <div style="position:absolute;top:8px;right:8px;font-size:12px">💬</div>
-                    <div class="dkc-label">WPP Conv.</div><div class="dkc-val" id="mk-wpp-conv" style="color:#34d399">—</div>
-                    <div class="dkc-sub"><span id="mk-wpp-camps" style="color:var(--muted)">—</span> camp.</div>
-                  </div>
-                  <div class="dash-kpi-card" style="border-top:2px solid #059669">
-                    <div class="dkc-label">WPP Invest.</div><div class="dkc-val" id="mk-wpp-spend" style="color:#34d399">—</div>
-                    <div class="dkc-sub"><span id="mk-wpp-cpc" style="color:var(--muted)">—</span>/conv.</div>
+
+                  <!-- WHATSAPP -->
+                  <div style="background:#ffffff;border:1px solid #e8edf4;border-radius:16px;padding:16px;box-shadow:0 2px 12px rgba(15,23,42,.06);position:relative;overflow:hidden">
+                    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#25d366,#128c7e)"></div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+                      <span style="font-size:10px;font-weight:700;color:#475569;letter-spacing:.8px;text-transform:uppercase">WhatsApp</span>
+                      <div style="width:24px;height:24px;background:#25d366;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px">💬</div>
+                    </div>
+                    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
+                      <div><div class="dkc-label">Conversões</div><div class="dkc-val" id="mk-wpp-conv" style="color:#16a34a;font-size:18px">—</div><div class="dkc-sub"><span id="mk-wpp-camps">—</span> camp.</div></div>
+                      <div><div class="dkc-label">Investido</div><div class="dkc-val" id="mk-wpp-spend" style="color:#dc2626;font-size:18px">—</div><div class="dkc-sub"><span id="mk-wpp-cpc">—</span>/conv.</div></div>
+                    </div>
                   </div>
                 </div>
                 <!-- Hidden compat elements -->
@@ -1406,8 +1473,8 @@
                 <div id="mk-video" style="display:none"></div>
                 <!-- LINHA 2: Funil + Gauges + Gênero + Etária -->
                 <div style="display:grid;grid-template-columns:1fr 120px 120px 155px 155px;gap:10px;margin-bottom:10px">
-                  <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px">
-                    <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">● Funil de Tráfego</div>
+                  <div style="background:#ffffff;border:1px solid #e8edf4;border-radius:16px;padding:18px;box-shadow:0 2px 12px rgba(15,23,42,.06)">
+                    <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">● Funil de Tráfego</div>
                     <div id="dash-funil"><div style="color:var(--muted);font-size:11px;text-align:center;padding:16px">Carregue os dados</div></div>
                   </div>
                   <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;flex-direction:column;align-items:center;justify-content:center">
@@ -1422,12 +1489,12 @@
                     <div style="font-size:18px;font-weight:900;color:#34d399" id="gauge-taxa-val">—</div>
                     <div style="font-size:9px;color:var(--muted)">cliques→leads</div>
                   </div>
-                  <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;flex-direction:column">
+                  <div style="background:#ffffff;border:1px solid #e8edf4;border-radius:16px;padding:16px;box-shadow:0 2px 12px rgba(15,23,42,.06);display:flex;flex-direction:column">
                     <div style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Gênero</div>
                     <div style="position:relative;height:90px;flex:1"><canvas id="chart-genero"></canvas></div>
                     <div id="leg-genero" style="display:flex;flex-direction:column;gap:2px;margin-top:6px"></div>
                   </div>
-                  <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;flex-direction:column">
+                  <div style="background:#ffffff;border:1px solid #e8edf4;border-radius:16px;padding:16px;box-shadow:0 2px 12px rgba(15,23,42,.06);display:flex;flex-direction:column">
                     <div style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Faixa Etária</div>
                     <div style="position:relative;height:90px;flex:1"><canvas id="chart-etaria"></canvas></div>
                     <div id="leg-etaria" style="display:flex;flex-direction:column;gap:2px;margin-top:6px"></div>
@@ -1435,7 +1502,7 @@
                 </div>
                 <!-- LINHA 3: Gráfico linha + Pizza -->
                 <div style="display:grid;grid-template-columns:1fr 210px;gap:10px;margin-bottom:10px">
-                  <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px">
+                  <div style="background:#ffffff;border:1px solid #e8edf4;border-radius:16px;padding:18px;box-shadow:0 2px 12px rgba(15,23,42,.06)">
                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
                       <span style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px">📈 Evolução por Campanha</span>
                       <div style="display:flex;gap:3px">
@@ -1455,7 +1522,7 @@
                 </div>
                 <!-- LINHA 4: Barras + ROI manual -->
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-                  <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px">
+                  <div style="background:#ffffff;border:1px solid #e8edf4;border-radius:16px;padding:18px;box-shadow:0 2px 12px rgba(15,23,42,.06)">
                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
                       <span style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px">📊 CPM · CPC · CTR</span>
                       <div style="display:flex;gap:3px">
@@ -1466,7 +1533,7 @@
                     </div>
                     <div style="height:140px;position:relative"><canvas id="chart-barras"></canvas></div>
                   </div>
-                  <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px">
+                  <div style="background:#ffffff;border:1px solid #e8edf4;border-radius:16px;padding:18px;box-shadow:0 2px 12px rgba(15,23,42,.06)">
                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
                       <span style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px">💰 ROI por Campanha</span>
                       <button onclick="DS.salvarROI()" class="dash-filt-btn" style="font-size:9px;padding:2px 7px;border:1px solid var(--border)">💾</button>
@@ -1479,7 +1546,7 @@
                   </div>
                 </div>
                 <!-- LINHA 5: Criativos -->
-                <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px">
+                <div style="background:#ffffff;border:1px solid #e8edf4;border-radius:16px;padding:18px;margin-bottom:12px;box-shadow:0 2px 12px rgba(15,23,42,.06)">
                   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
                     <span style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px">🎨 Criativos — clique para analisar</span>
                     <span style="font-size:10px;color:var(--muted)" id="dash-criat-info">Carregando após campanhas...</span>
@@ -1489,7 +1556,7 @@
                   </div>
                 </div>
                 <!-- ── SCORE DE SAÚDE — colapsado por padrão ── -->
-                <div id="dash-health-wrap" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;display:none;overflow:hidden">
+                <div id="dash-health-wrap" style="background:#ffffff;border:1px solid #e8edf4;border-radius:16px;margin-bottom:12px;display:none;overflow:hidden;box-shadow:0 2px 12px rgba(15,23,42,.06)">
                   <div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.querySelector('.health-arrow').textContent=this.nextElementSibling.style.display==='none'?'▼':'▲'"
                     style="padding:10px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none">
                     <span style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px">🩺 Score de Saúde — Campanhas</span>
@@ -1502,7 +1569,7 @@
                 </div>
 
                 <!-- ── COMPARATIVO DE PERÍODOS ── -->
-                <div id="dash-compare-wrap" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;display:none">
+                <div id="dash-compare-wrap" style="background:#ffffff;border:1px solid #e8edf4;border-radius:16px;padding:16px 18px;margin-bottom:12px;display:none;box-shadow:0 2px 12px rgba(15,23,42,.06)">
                   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
                     <span style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px">📅 Comparativo — Período atual vs anterior</span>
                     <span id="dash-compare-label" style="font-size:10px;color:var(--muted)"></span>
@@ -1511,7 +1578,7 @@
                 </div>
 
                 <!-- ── WEBHOOK STATUS ── -->
-                <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:4px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                <div style="background:#f8fafc;border:1px solid #e8edf4;border-radius:12px;padding:10px 16px;margin-bottom:4px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
                   <span style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px">🔄 Sync Automático</span>
                   <span id="webhook-status" style="font-size:11px;display:flex;align-items:center;gap:5px;color:var(--muted)"><span style="width:6px;height:6px;border-radius:50%;background:var(--muted);display:inline-block"></span>Inativo</span>
                   <div style="margin-left:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap">
@@ -8596,9 +8663,9 @@ function previsaoRender(dias = 60) {
       {label:'Saídas', data:dataSaidas, borderColor:'#ef4444', borderDash:[4,4], borderWidth:1.5, tension:.3}
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:'#8080a0',font:{size:11}}},tooltip:{backgroundColor:'#1a1a26',titleColor:'#f0f0f5',bodyColor:'#8080a0'}},
-      scales:{x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#8080a0',font:{size:10}}},
-        y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#8080a0',font:{size:10},callback:v=>'R$'+v},beginAtZero:false}}}
+      plugins:{legend:{labels:{color:'#475569',font:{size:11}}},tooltip:{backgroundColor:'#0f172a',titleColor:'#f8fafc',bodyColor:'#94a3b8',borderColor:'#1e293b',borderWidth:1,cornerRadius:10,padding:10}},
+      scales:{x:{grid:{color:'rgba(15,23,42,.05)'},ticks:{color:'#94a3b8',font:{size:10}}},
+        y:{grid:{color:'rgba(15,23,42,.05)'},ticks:{color:'#94a3b8',font:{size:10},callback:v=>'R$'+v},beginAtZero:false}}}
   });
 
   // Lista de eventos futuros
