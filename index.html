@@ -7188,9 +7188,45 @@ async function concluirP(moduloForce){
   await sincronizarPilarComEcossistema(modulo);
 
   voltarSixps();renderSixpsGrid();
-  const prox=idx<ps.length-1?SIXPS_CONFIG[ps[idx+1]].titulo:null;
-  appendSpecialMsg('agent',`✅ **${SIXPS_CONFIG[modulo].titulo}** concluído!${prox?`\n\n🔓 **${prox}** foi desbloqueado. Clique para continuar.`:'\n\n🎉 Você completou todos os 6Ps!'}\n\n${getSincronizacaoMsg(modulo)}`,'chat-adm');
-  // Atualiza tarefas do dia com base nos novos dados
+  
+  // Atualiza painel de dados com a nova versão
+  const dadosEl = document.getElementById('sixps-dados-content');
+  const novoResumo = SP.dados?.[modulo+'_resumo'] || '';
+  if(dadosEl && novoResumo.length > 50) {
+    dadosEl.innerHTML = novoResumo
+      .replace(/\n/g,'<br>')
+      .replace(/\*\*(.*?)\*\*/g,'<strong style="color:#0f172a;font-weight:700">$1</strong>')
+      .replace(/^#{1,3}\s*(.+)$/gm,'<div style="font-size:11px;font-weight:800;color:var(--accent);letter-spacing:.5px;margin:10px 0 4px;text-transform:uppercase">$1</div>');
+  }
+
+  const prox = idx < ps.length-1 ? ps[idx+1] : null;
+  const proxCfg = prox ? SIXPS_CONFIG[prox] : null;
+
+  // Mostrar card de conclusão no chat principal com ação clara
+  const msgConclusao = `✅ **${SIXPS_CONFIG[modulo].titulo}** revisado e concluído!\n\n` +
+    (proxCfg 
+      ? `🔓 **${proxCfg.titulo}** foi desbloqueado.`
+      : `🎉 Você completou todos os 6Ps!\n\n${getSincronizacaoMsg(modulo)}`);
+  
+  appendSpecialMsg('agent', msgConclusao, 'chat-adm');
+
+  // Mostrar botão de continuar para o próximo P
+  if(proxCfg) {
+    setTimeout(() => {
+      const chatAdm = document.getElementById('chat-adm');
+      if(chatAdm) {
+        const btnDiv = document.createElement('div');
+        btnDiv.style.cssText = 'display:flex;justify-content:center;padding:12px 0';
+        btnDiv.innerHTML = `<button onclick="abrirP('${prox}')" style="padding:10px 28px;background:var(--accent);border:none;border-radius:10px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:8px;box-shadow:0 4px 12px rgba(37,99,235,.3);transition:all .2s" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
+          Ir para ${proxCfg.titulo} →
+        </button>`;
+        chatAdm.appendChild(btnDiv);
+        chatAdm.scrollTop = chatAdm.scrollHeight;
+      }
+    }, 400);
+  }
+
+  // Atualiza tarefas e matriz
   setTimeout(async () => {
     await matrizCarregar();
     await carregarTarefasDoDia();
@@ -7310,11 +7346,13 @@ async function sincronizarPilarComEcossistema(modulo) {
   if(modulo==='p5') await sincP5CRM(resumo);
   if(modulo==='p6') await sincP6Metas(resumo);
 
-  // Recarrega o painel de Dados do P aberto (para refletir alterações imediatamente)
+  // Atualiza painel Dados se este módulo estiver aberto
   if(SP.moduloAtivo === modulo) {
     const dadosEl = document.getElementById('sixps-dados-content');
-    if(dadosEl && resumo.length > 50) {
-      dadosEl.innerHTML = resumo
+    // Usar o resumo mais recente (das conversas novas, não da versão antiga)
+    const resumoAtual = SP.dados?.[modulo+'_resumo'] || resumo;
+    if(dadosEl && resumoAtual.length > 50) {
+      dadosEl.innerHTML = resumoAtual
         .replace(/\n/g,'<br>')
         .replace(/\*\*(.*?)\*\*/g,'<strong style="color:#0f172a;font-weight:700">$1</strong>')
         .replace(/^#{1,3}\s*(.+)$/gm,'<div style="font-size:11px;font-weight:800;color:var(--accent);letter-spacing:.5px;margin:10px 0 4px;text-transform:uppercase">$1</div>');
